@@ -1,0 +1,128 @@
+[gd_scene load_steps=12 format=3 uid="uid://jteokm0diwvn"]
+
+[ext_resource type="PackedScene" uid="uid://ba1pl1rxplo8v" path="res://Components/starlight/StarSky.tscn" id="2_nsea3"]
+[ext_resource type="PackedScene" uid="uid://c7d6xs8i0quml" path="res://Components/MusicPlayer.tscn" id="5_lf0gk"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nsea3"]
+sky_top_color = Color(0.24299335, 0.44807208, 1, 1)
+sky_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
+sky_curve = 0.06091904
+sky_energy_multiplier = 0.9
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
+ground_curve = 0.06091904
+ground_energy_multiplier = 0.9
+sun_angle_max = 15.0
+
+[sub_resource type="Sky" id="Sky_1w6v2"]
+sky_material = SubResource("ProceduralSkyMaterial_nsea3")
+
+[sub_resource type="Environment" id="Environment_i1ny0"]
+resource_local_to_scene = true
+background_mode = 2
+sky = SubResource("Sky_1w6v2")
+tonemap_mode = 4
+ssr_enabled = true
+ssr_fade_in = 0.424264
+ssr_fade_out = 0.554785
+ssao_enabled = true
+ssao_radius = 0.2
+ssao_intensity = 16.0
+ssao_light_affect = 0.48
+ssao_ao_channel_affect = 1.0
+ssil_enabled = true
+sdfgi_enabled = true
+sdfgi_min_cell_size = 0.1875
+glow_enabled = true
+glow_levels/1 = 2.0
+glow_levels/2 = 1.0
+glow_levels/3 = 0.0
+glow_levels/4 = 1.0
+glow_levels/5 = 0.0
+glow_levels/6 = 1.0
+glow_intensity = 0.73
+glow_strength = 0.67
+glow_blend_mode = 1
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+volumetric_fog_albedo = Color(0.5362243, 0.7478665, 1, 1)
+volumetric_fog_length = 100.0
+adjustment_enabled = true
+adjustment_brightness = 1.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_twgwy"]
+auto_exposure_enabled = true
+auto_exposure_scale = 0.65
+dof_blur_near_distance = 0.5
+dof_blur_near_transition = 0.5
+
+[sub_resource type="Compositor" id="Compositor_0qcgs"]
+
+[sub_resource type="GDScript" id="GDScript_v1oql"]
+resource_name = "WorldEnvironment"
+script/source = "extends WorldEnvironment
+
+var motion_blur_compositor : Compositor = compositor
+
+func _enter_tree() -> void:
+	Global.World = self
+
+func motion_blur(active : bool):
+	if active:
+		compositor = motion_blur_compositor
+	else:
+		compositor = null
+"
+
+[sub_resource type="FontVariation" id="FontVariation_bhqmr"]
+variation_transform = Transform2D(1, 0.14, 0, 1, 0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pgbrn"]
+font = SubResource("FontVariation_bhqmr")
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.65098)
+
+[sub_resource type="GDScript" id="GDScript_fj76g"]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = str(Engine.get_frames_per_second()) + \" FPS\"
+"
+
+[node name="BaseWorld" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_i1ny0")
+camera_attributes = SubResource("CameraAttributesPractical_twgwy")
+compositor = SubResource("Compositor_0qcgs")
+script = SubResource("GDScript_v1oql")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.652222, 0.0596517, -0.755677, -0.421248, 0.800272, 0.426749, 0.630204, 0.596663, -0.496827, -15.4092, 10.5306, 0)
+light_color = Color(1, 0.9992683, 0.9544457, 1)
+light_energy = 3.0
+shadow_enabled = true
+
+[node name="MusicPlayer" parent="." instance=ExtResource("5_lf0gk")]
+volume_db = -45.0
+bus = &"Music"
+
+[node name="MainUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="MainUI"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 9.0
+offset_right = 70.0
+offset_bottom = 32.0
+text = "100 FPS"
+label_settings = SubResource("LabelSettings_pgbrn")
+script = SubResource("GDScript_fj76g")
+
+[node name="StarSky" parent="." instance=ExtResource("2_nsea3")]

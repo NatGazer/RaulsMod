@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=3 uid="uid://cdhl7t2v8xuqt"]
+
+[sub_resource type="GDScript" id="GDScript_62lli"]
+resource_name = "VehicleSwitching"
+script/source = "extends Node
+
+## Logic to switch between vehicles and any kind of machine
+## Requires Global.Player
+## Requires all machines to be in group scene \"machines\"
+## Each machine must have a sensed_radius and an activate/deactivate function 
+
+var controling_player : bool = true
+var current_machine : Node3D = null
+
+func getallchildren(node : Node):
+	var node_list : Array = []
+	for child in node.get_children():
+		if child.get_child_count() > 0:
+			node_list.append(child)
+			node_list.append_array(getallchildren(child))
+		else:
+			node_list.append(child)
+	return node_list
+
+func _ready() -> void:
+	## Ensure unmodified objects have collision mask full on
+	var node_list : Array = getallchildren(owner)
+	for node : Node in node_list:
+		if node is PhysicsBody3D and node.collision_mask == 1:
+			node.collision_mask = 0b11111111_11111111_11111111_11111111
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"Enter\"):
+		var machines : Array[Node] = get_tree().get_nodes_in_group(\"machines\")
+		
+		# Get out of machine
+		if not controling_player:
+			current_machine.deactivate()
+			Global.Player.activate()
+			controling_player = true
+			print(\"Controlling Player\")
+			return
+		
+		# Get in closest machine within it's sensed radius
+		for machine : Node3D in machines:
+			var player_dist : float = machine.distance_to_player()
+			if \"sensed_radius\" not in machine:
+				print(\"Error: \", machine.name, \" not configured\")
+			if player_dist < machine.sensed_radius:
+				current_machine = machine
+				current_machine.activate()
+				Global.Player.deactivate()
+				controling_player = false
+				print(\"Controlling \", machine.name)
+				return
+"
+
+[node name="MachineSwitching" type="Node"]
+script = SubResource("GDScript_62lli")

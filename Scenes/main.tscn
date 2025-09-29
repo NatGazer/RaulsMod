@@ -1,0 +1,817 @@
+[gd_scene load_steps=39 format=3 uid="uid://d171ldr3x265t"]
+
+[ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_yaehf"]
+[ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="2_4c57u"]
+[ext_resource type="Material" uid="uid://d0qswfyc1o6ec" path="res://Materials/[2K]Copper_tiles/copper_tiles.tres" id="2_5vw27"]
+[ext_resource type="PackedScene" uid="uid://bwbe0aprocknu" path="res://Components/TestGround.tscn" id="2_vivmo"]
+[ext_resource type="PackedScene" uid="uid://cdjervgyjww03" path="res://LogicObjects/SempreEmPe/SempreEmPe.tscn" id="5_efxa6"]
+[ext_resource type="PackedScene" uid="uid://divon04875xo7" path="res://LogicObjects/MegaPlane/mega_plane.tscn" id="6_dg77c"]
+[ext_resource type="PackedScene" uid="uid://dhlpsnomij3fr" path="res://LogicObjects/Vehicles/Pickup/Pickup.tscn" id="7_5vw27"]
+[ext_resource type="PackedScene" uid="uid://ct3gx1tr0ylba" path="res://Components/FootballPlayer/football_player_builder.tscn" id="7_272bh"]
+[ext_resource type="PackedScene" uid="uid://blb2qxfu7qptn" path="res://LogicObjects/Worm/worm.tscn" id="7_ycdy4"]
+[ext_resource type="PackedScene" uid="uid://cdhl7t2v8xuqt" path="res://Components/MachineSwitching.tscn" id="8_5vw27"]
+[ext_resource type="PackedScene" uid="uid://7ehbqwwwipec" path="res://Components/BrickWall.tscn" id="9_kek77"]
+[ext_resource type="PackedScene" uid="uid://dou7bvmqww75" path="res://LogicObjects/Ramp/ramp.tscn" id="11_efxa6"]
+[ext_resource type="PackedScene" uid="uid://bj4xmnjraoag2" path="res://LogicObjects/Vehicles/Tractor/Tractor.tscn" id="12_dg77c"]
+[ext_resource type="PackedScene" uid="uid://c6fjavnshe1xi" path="res://LogicObjects/FractalPlant/FractalPlant.tscn" id="14_w48qg"]
+[ext_resource type="PackedScene" uid="uid://bif7a5hfilsvn" path="res://LogicObjects/Wako/Wako.tscn" id="15_ee4r6"]
+[ext_resource type="PackedScene" uid="uid://epwspn6srsj8" path="res://Components/AudioReact.tscn" id="16_2cqfq"]
+[ext_resource type="PackedScene" uid="uid://dbgv686nn1t5d" path="res://LogicObjects/RobotArm/RobotArm.tscn" id="17_yaehf"]
+[ext_resource type="ArrayMesh" uid="uid://luykacs3ttax" path="res://LogicObjects/BoidPlane/BoidPlane_Plane.res" id="20_82xsv"]
+[ext_resource type="PackedScene" uid="uid://bwl5wr22vkunp" path="res://LogicObjects/RobotArmGoose/RobotArmGoose.tscn" id="22_d13ii"]
+[ext_resource type="PackedScene" uid="uid://bwjbc0axpyqyd" path="res://LogicObjects/OldStyleChair/OldStyleChair.tscn" id="22_ryguw"]
+[ext_resource type="PackedScene" uid="uid://dpfa767m8tfny" path="res://LogicObjects/ExplosiveBarrel/ExplosiveBarrel.tscn" id="23_d13ii"]
+[ext_resource type="PackedScene" uid="uid://hn8bb2yq3tqo" path="res://Scenes/Forest.tscn" id="23_gt3je"]
+[ext_resource type="PackedScene" uid="uid://bs32p1862kxfr" path="res://LogicObjects/Ship/Ship.tscn" id="24_1u8w0"]
+
+[sub_resource type="TorusMesh" id="TorusMesh_g4437"]
+inner_radius = 0.6
+
+[sub_resource type="GDScript" id="GDScript_ljs26"]
+resource_name = "Attractor"
+script/source = "extends MeshInstance3D
+
+var time : float
+
+func _process(delta: float) -> void:
+	time += delta
+	
+	position.z = 3 * sin(time)
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"K\"):
+		position.x += 4
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_psp7o"]
+height = 1.89697
+radius = 0.200195
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_v5kyb"]
+top_radius = 0.2
+bottom_radius = 0.1
+height = 1.9
+
+[sub_resource type="GDScript" id="GDScript_dg77c"]
+resource_name = "WakoSpawner"
+script/source = "extends Node3D
+
+@export var wako : PackedScene
+
+func _ready() -> void:
+	for i in range(100):
+		var angle = randf_range(-PI, PI)
+		var radius = sqrt(randf()) * 10
+		var wako_instance = wako.instantiate()
+		wako_instance.position = position + Vector3(sin(angle), 0, cos(angle)) * radius
+		add_child(wako_instance)
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vivmo"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_vivmo"]
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_2iain"]
+noise_type = 2
+frequency = 0.0202
+fractal_type = 2
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_exo6x"]
+noise = SubResource("FastNoiseLite_2iain")
+as_normal_map = true
+bump_strength = 7.1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_p3xrg"]
+cull_mode = 2
+albedo_color = Color(0.722607, 0.738281, 0.593625, 1)
+normal_enabled = true
+normal_texture = SubResource("NoiseTexture2D_exo6x")
+
+[sub_resource type="MultiMesh" id="MultiMesh_getpj"]
+transform_format = 1
+mesh = ExtResource("20_82xsv")
+
+[sub_resource type="GDScript" id="GDScript_getpj"]
+resource_name = "Boids"
+script/source = "extends MultiMeshInstance3D
+
+func _ready() -> void:
+	multimesh.instance_count = 0
+	multimesh.buffer.clear()
+	multimesh.instance_count = 1000
+	multimesh.buffer.clear()
+	for idx in multimesh.instance_count:
+		var boid_position := Vector3(randf_range(-2, 2), randf_range(-2, 2), randf_range(-2, 2))
+		var boid_orientation := Basis(Quaternion.from_euler(Vector3(randf_range(0.0, TAU), randf_range(0.0, TAU), randf_range(0.0, TAU))))
+		multimesh.set_instance_transform(idx, Transform3D(boid_orientation, boid_position))
+
+func _physics_process(delta: float) -> void:
+	for idx in multimesh.instance_count:
+		var boid_transf : Transform3D = multimesh.get_instance_transform(idx)
+		
+		boid_transf.origin += -boid_transf.basis.z.normalized() * delta
+		
+		multimesh.set_instance_transform(idx, boid_transf)
+	
+	
+"
+
+[sub_resource type="Shader" id="Shader_1u8w0"]
+code = "shader_type spatial;
+render_mode unshaded, cull_disabled, depth_draw_never;
+
+//https://godotshaders.com/shader/protean-clouds-2/
+
+// builtins / replacements for canvas -> spatial
+#define iTime TIME
+#define iResolution 1.0/VIEWPORT_SIZE   // 1.0/VIEWPORT_SIZE ~ SCREEN_PIXEL_SIZE equivalent
+
+uniform vec2 disp_ = vec2(0.5);
+uniform float speed : hint_range(0.0, 20.0, 0.1) = 3.0;
+uniform vec3 color1 = vec3(0.005, .045, .075);
+uniform vec3 color2 = vec3(0.033, 0.07, 0.03);
+
+// New controls
+uniform float brightness : hint_range(-1.0, 1.0, 0.01) = 0.0;
+uniform float contrast   : hint_range(0.0, 2.0, 0.01) = 1.0;
+
+// Protean clouds by nimitz (twitter: @stormoid)
+// https://www.shadertoy.com/view/3l23Rh
+// License Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License
+
+uniform mat3 m3 = mat3(vec3(0.65, 1.12, -1.43), vec3(-1.75, 0.65, -0.3), vec3(0.3, 1.4, 1.22));
+
+mat2 rot(in float a){ float c = cos(a), s = sin(a); return mat2(vec2(c,s), vec2(-s,c)); }
+float mag2(vec2 p){ return dot(p,p); }
+float linstep(in float mn, in float mx, in float x){ return clamp((x - mn)/(mx - mn), 0., 1.); }
+
+vec2 disp(float t){ return vec2(sin(t*0.22)*1., cos(t*0.175)*1.)*2.; }
+
+vec2 map(vec3 p, float prm1, vec2 bsMo)
+{
+    vec3 p2 = p;
+    p2.xy -= disp(p.z).xy;
+    p.xy *= rot(sin(p.z + iTime)*(0.1 + prm1*0.05) + iTime*0.09);
+    float cl = mag2(p2.xy);
+    float d = 0.;
+    p *= .61;
+    float z = 1.;
+    float trk = 1.;
+    float dspAmp = 0.1 + prm1*0.2;
+    for(int i = 0; i < 5; i++)
+    {
+        p += sin(p.zxy*0.75*trk + iTime*trk*.8)*dspAmp;
+        d -= abs(dot(cos(p), sin(p.yzx)) * z);
+        z *= 0.57;
+        trk *= 1.4;
+        p = p*m3;
+    }
+    d = abs(d + prm1*3.) + prm1*.3 - 2.5 + bsMo.y;
+    return vec2(d + cl*.2 + 0.25, cl);
+}
+
+vec4 render(in vec3 ro, in vec3 rd, float time, float prm1, vec2 bsMo)
+{
+    vec4 rez = vec4(0.);
+    const float ldst = 8.;
+    vec3 lpos = vec3(disp(time + ldst)*0.5, time + ldst);
+    float t = 1.5;
+    float fogT = 0.;
+    for(int i = 0; i < 130; i++)
+    {
+        if (rez.a > 0.99) break;
+
+        vec3 pos = ro + t*rd;
+        vec2 mpv = map(pos, prm1, bsMo);
+        float den = clamp(mpv.x - 0.3, 0., 1.) * 1.12;
+        float dn = clamp((mpv.x + 2.), 0., 3.);
+
+        vec4 col = vec4(0.);
+        if (mpv.x > 0.6)
+        {
+            col = vec4(sin(vec3(5.,0.4,0.2) + mpv.y*0.1 + sin(pos.z*0.4)*0.5 + 1.8)*0.5 + 0.5, 0.08);
+            col *= den*den*den;
+            col.rgb *= linstep(4., -2.5, mpv.x)*2.3;
+            float dif = clamp((den - map(pos + .8, prm1, bsMo).x)/9., 0.001, 1.);
+            dif += clamp((den - map(pos + .35, prm1, bsMo).x)/2.5, 0.001, 1.);
+            col.xyz *= den*(color1 + 1.5*color2*dif);
+        }
+
+        float fogC = exp(t*0.2 - 2.2);
+        col.rgba += vec4(0.06, 0.11, 0.11, 0.1)*clamp(fogC - fogT, 0., 1.);
+        fogT = fogC;
+        rez = rez + col*(1. - rez.a);
+        t += clamp(0.5 - dn*dn*.05, 0.09, 0.3);
+    }
+    return clamp(rez, 0.0, 1.0);
+}
+
+float getsat(vec3 c)
+{
+    float mi = min(min(c.x, c.y), c.z);
+    float ma = max(max(c.x, c.y), c.z);
+    return (ma - mi)/(ma + 1e-7);
+}
+
+vec3 iLerp(in vec3 a, in vec3 b, in float x)
+{
+    vec3 ic = mix(a, b, x) + vec3(1e-6, 0., 0.);
+    float sd = abs(getsat(ic) - mix(getsat(a), getsat(b), x));
+    vec3 dir = normalize(vec3(2.*ic.x - ic.y - ic.z, 2.*ic.y - ic.x - ic.z, 2.*ic.z - ic.y - ic.x));
+    float lgt = dot(vec3(1.0), ic);
+    float ff = dot(dir, normalize(ic));
+    ic += 1.5 * dir * sd * ff * lgt;
+    return clamp(ic, 0., 1.);
+}
+
+void fragment()
+{
+    float prm1 = 0.;
+    vec2 bsMo = vec2(0);
+    // NOTE: use UV (mesh UV) in spatial shader. To emulate screen UV, use a fullscreen quad or viewport.
+    vec2 q = UV;
+    vec2 p = q - 0.5;
+    bsMo = q - disp_;
+
+    float time = iTime * speed;
+    vec3 ro = vec3(0, 0, time);
+
+    ro += vec3(sin(iTime)*0.5, sin(iTime*1.)*0., 0);
+
+    float dspAmp = .85;
+    ro.xy += disp(ro.z) * dspAmp;
+    float tgtDst = 3.5;
+
+    vec3 target = normalize(ro - vec3(disp(time + tgtDst) * dspAmp, time + tgtDst));
+    ro.x -= bsMo.x * 2.;
+    vec3 rightdir = normalize(cross(target, vec3(0, 1, 0)));
+    vec3 updir = normalize(cross(rightdir, target));
+    rightdir = normalize(cross(updir, target));
+    vec3 rd = normalize((p.x * rightdir + p.y * updir) * 1. - target);
+    rd.xy *= rot(-disp(time + 3.5).x*0.2 + bsMo.x);
+    prm1 = smoothstep(-0.4, 0.4, sin(iTime * 0.3));
+    vec4 scn = render(ro, rd, time, prm1, bsMo);
+
+    vec3 col = scn.rgb;
+    col = iLerp(col.bgr, col.rgb, clamp(1. - prm1, 0.05, 1.));
+    col = pow(col, vec3(.55, 0.65, 0.6)) * vec3(1., .97, .9);
+
+    // Vign (UV-based)
+    col *= pow(16.0 * q.x * q.y * (1.0 - q.x) * (1.0 - q.y), 0.12) * 0.7 + 0.3;
+
+    // Apply contrast around mid-gray, then brightness offset
+    col = (col - 0.5) * contrast + 0.5 + brightness;
+
+    // clamp final color to [0,1] to avoid extreme bright edges
+    col = clamp(col, vec3(0.0), vec3(1.0));
+
+    // outputs for spatial shader:
+    ALBEDO = col;
+    EMISSION = col;
+    ALPHA = 1.0;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_0odxb"]
+render_priority = 0
+shader = SubResource("Shader_1u8w0")
+shader_parameter/disp_ = Vector2(0.5, 0.5)
+shader_parameter/speed = 3.0
+shader_parameter/color1 = Vector3(0.005, 0.045, 0.075)
+shader_parameter/color2 = Vector3(0.033, 0.07, 0.03)
+shader_parameter/brightness = 0.25
+shader_parameter/contrast = 1.61
+shader_parameter/m3 = Basis(0.65, 1.12, -1.43, -1.75, 0.65, -0.3, 0.3, 1.4, 1.22)
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1u8w0"]
+
+[node name="Main" type="Node"]
+
+[node name="BaseWorld" parent="." instance=ExtResource("1_yaehf")]
+
+[node name="TestGround" parent="." instance=ExtResource("2_vivmo")]
+
+[node name="CharacterRB" parent="." instance=ExtResource("2_4c57u")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.988, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.87067, -0.0845823, 5.06201)
+material_override = ExtResource("2_5vw27")
+gi_mode = 2
+mesh = SubResource("TorusMesh_g4437")
+script = SubResource("GDScript_ljs26")
+
+[node name="Pilar18" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.09426, 0.9, 13.5482)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Pilar18"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.000732422, 0)
+shape = SubResource("CylinderShape3D_psp7o")
+
+[node name="Pilar18" type="MeshInstance3D" parent="Pilar18"]
+material_override = ExtResource("2_5vw27")
+mesh = SubResource("CylinderMesh_v5kyb")
+skeleton = NodePath("../..")
+
+[node name="Label3D" type="Label3D" parent="Pilar18/Pilar18"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.07103, 0)
+pixel_size = 0.003
+billboard = 2
+double_sided = false
+text = "1.8m"
+font_size = 64
+outline_size = 24
+
+[node name="SempreEmPe" parent="." instance=ExtResource("5_efxa6")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 9.89424, 0, 5.03602)
+
+[node name="MegaPlane" parent="." instance=ExtResource("6_dg77c")]
+transform = Transform3D(4.36904, 0, 0, 0, 4.36904, 0, 0, 0, 4.36904, 34.2805, 14.5183, 14.8638)
+
+[node name="TYCS" parent="." instance=ExtResource("7_ycdy4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82.3348, 13.6757, 17.4081)
+nSegments = 60
+
+[node name="FootballPlayerBuilder" parent="." instance=ExtResource("7_272bh")]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10.1229, 0, 13.5707)
+global_thickness = 0.055
+
+[node name="Pickup2" parent="." instance=ExtResource("7_5vw27")]
+transform = Transform3D(-0.999848, 8.74094e-08, 0.0174524, 9.86408e-08, 1, 5.90054e-07, -0.0174524, 6.19896e-07, -0.999848, -10.822053, 0.28498057, 20.916279)
+
+[node name="ExplosiveBarrel" parent="Pickup2" instance=ExtResource("23_d13ii")]
+transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 0.989726, -1.10203e-08)
+
+[node name="ExplosiveBarrel2" parent="Pickup2" instance=ExtResource("23_d13ii")]
+transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 1.51191, 0.460514)
+
+[node name="ExplosiveBarrel3" parent="Pickup2" instance=ExtResource("23_d13ii")]
+transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 1.57721, -0.395195)
+
+[node name="MachineSwitching" parent="." instance=ExtResource("8_5vw27")]
+
+[node name="BrickWall" parent="." instance=ExtResource("9_kek77")]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -21.8634, 0.0834956, -15.695)
+
+[node name="ramp" parent="." instance=ExtResource("11_efxa6")]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -144.26, 0, 2.78465)
+
+[node name="Tractor" parent="." instance=ExtResource("12_dg77c")]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.19153672, 8.92878e-05, 4.719249)
+
+[node name="WakoSpawner" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.7934, 1.90735e-06, 31.6273)
+script = SubResource("GDScript_dg77c")
+wako = ExtResource("15_ee4r6")
+
+[node name="FractalPlant" parent="." instance=ExtResource("14_w48qg")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.6324, 0, -0.306029)
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+transform = Transform3D(0.999908, 0.0135432, 0, -0.0135432, 0.999908, 0, 0, 0, 1, 7.46043, -0.0949342, 2.40158)
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("BoxShape3D_vivmo")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="StaticBody3D"]
+material_override = ExtResource("2_5vw27")
+mesh = SubResource("BoxMesh_vivmo")
+skeleton = NodePath("../..")
+
+[node name="AudioReact" parent="." instance=ExtResource("16_2cqfq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.79496, 0, 13.7084)
+
+[node name="RobotArm" parent="." instance=ExtResource("17_yaehf")]
+transform = Transform3D(0.6, 0, 0, 0, 0.6, 0, 0, 0, 0.6, 6.74783, -9.53674e-07, 10.4715)
+
+[node name="Boids" type="MultiMeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 11.8197, 1.64135, 26.7611)
+material_override = SubResource("StandardMaterial3D_p3xrg")
+multimesh = SubResource("MultiMesh_getpj")
+script = SubResource("GDScript_getpj")
+
+[node name="OldStyleChair" parent="." instance=ExtResource("22_ryguw")]
+transform = Transform3D(-0.594261, 0, -0.804272, 0, 1, 0, 0.804272, 0, -0.594261, 12.2598, 7.34736e-08, 12.9807)
+
+[node name="RobotArmGoose" parent="." instance=ExtResource("22_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 0.999939, -0.0110652, 0, 0.0110652, 0.999939, 2.35069, 0.00872042, 14.0347)
+
+[node name="Ship" parent="." instance=ExtResource("24_1u8w0")]
+transform = Transform3D(-0.820162, 0, 0.572132, 0, 1, 0, -0.572132, 0, -0.820162, -6.5025, 0.645618, 40.118)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.32465, -1.46059, -5.81475e-08, 0, -8.15947e-08, 1.70011, -2.92102, -1.16239, -4.62758e-08, 14.3018, 1.62866, 0.8841)
+material_override = SubResource("ShaderMaterial_0odxb")
+mesh = SubResource("PlaneMesh_1u8w0")
+
+[node name="ExplosiveBarrels" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 193.263, 0, 72.519)
+
+[node name="ExplosiveBarrel" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+
+[node name="ExplosiveBarrel2" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.45405, 0, 0)
+
+[node name="ExplosiveBarrel3" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.34475, 0, 0.0227528)
+
+[node name="ExplosiveBarrel4" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.21573, 0, 0)
+
+[node name="ExplosiveBarrel5" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -12.6698, 0, 0)
+
+[node name="ExplosiveBarrel6" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.5205, 0, 0)
+
+[node name="ExplosiveBarrel7" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -18.6911, 0, 0)
+
+[node name="ExplosiveBarrel8" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -22.1452, 0, 0)
+
+[node name="ExplosiveBarrel9" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -24.9959, 0, 0)
+
+[node name="ExplosiveBarrel10" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -27.5445, 0, 0)
+
+[node name="ExplosiveBarrel11" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.9986, 0, 0)
+
+[node name="ExplosiveBarrel12" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -33.8493, 0, 0)
+
+[node name="ExplosiveBarrel13" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.6801, 0, 0)
+
+[node name="ExplosiveBarrel14" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.1341, 0, 0)
+
+[node name="ExplosiveBarrel15" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.9849, 0, 0)
+
+[node name="ExplosiveBarrel16" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -46.0567, 0, 0)
+
+[node name="ExplosiveBarrel17" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -49.5108, 0, 0)
+
+[node name="ExplosiveBarrel18" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -52.3615, 0, 0)
+
+[node name="ExplosiveBarrel19" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -55.2724, 0, 0)
+
+[node name="ExplosiveBarrel20" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -58.7265, 0, 0)
+
+[node name="ExplosiveBarrel21" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -61.5772, 0, 0)
+
+[node name="ExplosiveBarrel22" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -64.7478, 0, 0)
+
+[node name="ExplosiveBarrel23" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68.2019, 0, 0)
+
+[node name="ExplosiveBarrel24" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -71.0526, 0, 0)
+
+[node name="ExplosiveBarrel25" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -73.6012, 0, 0)
+
+[node name="ExplosiveBarrel26" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -77.0553, 0, 0)
+
+[node name="ExplosiveBarrel27" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -79.906, 0, 0)
+
+[node name="ExplosiveBarrel28" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -82.7368, 0, 0)
+
+[node name="ExplosiveBarrel29" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -86.1908, 0, 0)
+
+[node name="ExplosiveBarrel30" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -89.0416, 0, 0)
+
+[node name="ExplosiveBarrel31" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -92.3207, 0, 0)
+
+[node name="ExplosiveBarrel32" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -95.7748, 0, 0)
+
+[node name="ExplosiveBarrel33" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -98.6255, 0, 0)
+
+[node name="ExplosiveBarrel34" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -101.536, 0, 0)
+
+[node name="ExplosiveBarrel35" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -104.991, 0, 0)
+
+[node name="ExplosiveBarrel36" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -107.841, 0, 0)
+
+[node name="ExplosiveBarrel37" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -111.012, 0, 0)
+
+[node name="ExplosiveBarrel38" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -114.466, 0, 0)
+
+[node name="ExplosiveBarrel39" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -117.317, 0, 0)
+
+[node name="ExplosiveBarrel40" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -119.865, 0, 0)
+
+[node name="ExplosiveBarrel41" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -123.319, 0, 0)
+
+[node name="ExplosiveBarrel42" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -126.17, 0, 0)
+
+[node name="ExplosiveBarrel43" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -129.001, 0, 0)
+
+[node name="ExplosiveBarrel44" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -132.455, 0, 0)
+
+[node name="ExplosiveBarrel45" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -135.306, 0, 0)
+
+[node name="ExplosiveBarrel46" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -138.315, 0, 0)
+
+[node name="ExplosiveBarrel47" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -141.769, 0, 0)
+
+[node name="ExplosiveBarrel48" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -144.619, 0, 0)
+
+[node name="ExplosiveBarrel49" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -147.53, 0, 0)
+
+[node name="ExplosiveBarrel50" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -150.984, 0, 0)
+
+[node name="ExplosiveBarrel51" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -153.835, 0, 0)
+
+[node name="ExplosiveBarrel52" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -157.006, 0, 0)
+
+[node name="ExplosiveBarrel53" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -160.46, 0, 0)
+
+[node name="ExplosiveBarrel54" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -163.31, 0, 0)
+
+[node name="ExplosiveBarrel55" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -165.859, 0, 0)
+
+[node name="ExplosiveBarrel56" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -169.313, 0, 0)
+
+[node name="ExplosiveBarrel57" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -172.164, 0, 0)
+
+[node name="ExplosiveBarrel58" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -174.995, 0, 0)
+
+[node name="ExplosiveBarrel59" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -178.449, 0, 0)
+
+[node name="ExplosiveBarrel60" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -181.299, 0, 0)
+
+[node name="ExplosiveBarrel61" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -184.371, 0, 0)
+
+[node name="ExplosiveBarrel62" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -187.825, 0, 0)
+
+[node name="ExplosiveBarrel63" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -190.676, 0, 0)
+
+[node name="ExplosiveBarrel64" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -193.587, 0, 0)
+
+[node name="ExplosiveBarrel65" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -197.041, 0, 0)
+
+[node name="ExplosiveBarrel66" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -199.892, 0, 0)
+
+[node name="ExplosiveBarrel67" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -203.062, 0, 0)
+
+[node name="ExplosiveBarrel68" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -206.516, 0, 0)
+
+[node name="ExplosiveBarrel69" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -209.367, 0, 0)
+
+[node name="ExplosiveBarrel70" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -211.916, 0, 0)
+
+[node name="ExplosiveBarrel71" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -215.37, 0, 0)
+
+[node name="ExplosiveBarrel72" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -218.221, 0, 0)
+
+[node name="ExplosiveBarrel73" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -221.051, 0, 0)
+
+[node name="ExplosiveBarrel74" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -224.505, 0, 0)
+
+[node name="ExplosiveBarrel75" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -227.356, 0, 0)
+
+[node name="ExplosiveBarrel76" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -230.635, 0, 0)
+
+[node name="ExplosiveBarrel77" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -234.089, 0, 0)
+
+[node name="ExplosiveBarrel78" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -236.94, 0, 0)
+
+[node name="ExplosiveBarrel79" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -239.851, 0, 0)
+
+[node name="ExplosiveBarrel80" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -243.305, 0, 0)
+
+[node name="ExplosiveBarrel81" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -246.156, 0, 0)
+
+[node name="ExplosiveBarrel82" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -249.326, 0, 0)
+
+[node name="ExplosiveBarrel83" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -252.78, 0, 0)
+
+[node name="ExplosiveBarrel84" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -255.631, 0, 0)
+
+[node name="ExplosiveBarrel85" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -258.18, 0, 0)
+
+[node name="ExplosiveBarrel86" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -261.634, 0, 0)
+
+[node name="ExplosiveBarrel87" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -264.485, 0, 0)
+
+[node name="ExplosiveBarrel88" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -267.315, 0, 0)
+
+[node name="ExplosiveBarrel89" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -270.769, 0, 0)
+
+[node name="ExplosiveBarrel90" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -273.62, 0, 0)
+
+[node name="ExplosiveBarrel91" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -277.537, 0, 0)
+
+[node name="ExplosiveBarrel92" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -280.991, 0, 0)
+
+[node name="ExplosiveBarrel93" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -283.842, 0, 0)
+
+[node name="ExplosiveBarrel94" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -286.753, 0, 0)
+
+[node name="ExplosiveBarrel95" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -290.207, 0, 0)
+
+[node name="ExplosiveBarrel96" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -293.058, 0, 0)
+
+[node name="ExplosiveBarrel97" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -296.228, 0, 0)
+
+[node name="ExplosiveBarrel98" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -299.682, 0, 0)
+
+[node name="ExplosiveBarrel99" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -302.533, 0, 0)
+
+[node name="ExplosiveBarrel100" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -305.082, 0, 0)
+
+[node name="ExplosiveBarrel101" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -308.536, 0, 0)
+
+[node name="ExplosiveBarrel102" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -311.386, 0, 0)
+
+[node name="ExplosiveBarrel103" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -314.217, 0, 0)
+
+[node name="ExplosiveBarrel104" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -317.671, 0, 0)
+
+[node name="ExplosiveBarrel105" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -320.522, 0, 0)
+
+[node name="ExplosiveBarrel106" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -323.594, 0, 0)
+
+[node name="ExplosiveBarrel107" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -327.048, 0, 0)
+
+[node name="ExplosiveBarrel108" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -329.898, 0, 0)
+
+[node name="ExplosiveBarrel109" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -332.809, 0, 0)
+
+[node name="ExplosiveBarrel110" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -336.263, 0, 0)
+
+[node name="ExplosiveBarrel111" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -339.114, 0, 0)
+
+[node name="ExplosiveBarrel112" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -342.285, 0, 0)
+
+[node name="ExplosiveBarrel113" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -345.739, 0, 0)
+
+[node name="ExplosiveBarrel114" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -348.59, 0, 0)
+
+[node name="ExplosiveBarrel115" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -351.138, 0, 0)
+
+[node name="ExplosiveBarrel116" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -354.592, 0, 0)
+
+[node name="ExplosiveBarrel117" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -357.443, 0, 0)
+
+[node name="ExplosiveBarrel118" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -360.274, 0, 0)
+
+[node name="ExplosiveBarrel119" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -363.728, 0, 0)
+
+[node name="ExplosiveBarrel120" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -366.579, 0, 0)
+
+[node name="ExplosiveBarrel121" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -369.858, 0, 0)
+
+[node name="ExplosiveBarrel122" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -373.312, 0, 0)
+
+[node name="ExplosiveBarrel123" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -376.163, 0, 0)
+
+[node name="ExplosiveBarrel124" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -379.073, 0, 0)
+
+[node name="ExplosiveBarrel125" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -382.528, 0, 0)
+
+[node name="ExplosiveBarrel126" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -385.378, 0, 0)
+
+[node name="ExplosiveBarrel127" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -388.549, 0, 0)
+
+[node name="ExplosiveBarrel128" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -392.003, 0, 0)
+
+[node name="ExplosiveBarrel129" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -394.854, 0, 0)
+
+[node name="ExplosiveBarrel130" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -397.402, 0, 0)
+
+[node name="ExplosiveBarrel131" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -400.856, 0, 0)
+
+[node name="ExplosiveBarrel132" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -403.707, 0, 0)
+
+[node name="ExplosiveBarrel133" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -406.538, 0, 0)
+
+[node name="ExplosiveBarrel134" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -409.992, 0, 0)
+
+[node name="ExplosiveBarrel135" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -412.843, 0, 0)
+
+[node name="Forest" parent="." instance=ExtResource("23_gt3je")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -95.0593, 0.335555, 48.4352)

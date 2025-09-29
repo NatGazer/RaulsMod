@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d34spinnvcukg"
+path="res://.godot/imported/Malik Bash - Ghosts [NCS Release].mp3-4f2ad52510fc76256a15b1d4a4d99dad.mp3str"
+
+[deps]
+
+source_file="res://Music/Malik Bash - Ghosts [NCS Release].mp3"
+dest_files=["res://.godot/imported/Malik Bash - Ghosts [NCS Release].mp3-4f2ad52510fc76256a15b1d4a4d99dad.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

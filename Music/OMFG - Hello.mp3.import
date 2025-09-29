@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://42d3orvlsyan"
+path="res://.godot/imported/OMFG - Hello.mp3-4567cc67bbe9b8ce85b13128b97f694d.mp3str"
+
+[deps]
+
+source_file="res://Music/OMFG - Hello.mp3"
+dest_files=["res://.godot/imported/OMFG - Hello.mp3-4567cc67bbe9b8ce85b13128b97f694d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

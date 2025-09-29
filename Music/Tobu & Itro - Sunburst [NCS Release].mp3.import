@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cgidmk2ha47nq"
+path="res://.godot/imported/Tobu & Itro - Sunburst [NCS Release].mp3-6f6a6bd7d873c6c47cc4324876e181b4.mp3str"
+
+[deps]
+
+source_file="res://Music/Tobu & Itro - Sunburst [NCS Release].mp3"
+dest_files=["res://.godot/imported/Tobu & Itro - Sunburst [NCS Release].mp3-6f6a6bd7d873c6c47cc4324876e181b4.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

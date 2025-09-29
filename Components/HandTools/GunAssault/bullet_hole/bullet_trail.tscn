@@ -1,0 +1,108 @@
+[gd_scene load_steps=8 format=3 uid="uid://3d8eef3b767c"]
+
+[sub_resource type="GDScript" id="GDScript_yjywl"]
+resource_name = "BulletTrail"
+script/source = "extends Node3D
+
+var time : float = 0.0
+var length_fade : float = 0.0
+
+func set_length(size : float) -> void:
+	$BulletTrailMesh.mesh.height = size
+
+
+func _process(delta: float) -> void:
+	time += delta
+	
+	if length_fade < 1.2:
+		length_fade += time*0.1
+	else:
+		queue_free()
+		
+	$BulletTrailMesh.material_override.set_shader_parameter(\"length_fade\", length_fade)
+"
+
+[sub_resource type="Shader" id="Shader_yjywl"]
+code = "// NOTE: Shader automatically converted from Godot Engine 4.4.1.stable's StandardMaterial3D.
+
+shader_type spatial;
+render_mode blend_mix, depth_draw_opaque, cull_back, diffuse_burley, specular_schlick_ggx;
+
+uniform vec4 albedo : source_color;
+uniform sampler2D texture_albedo : source_color, filter_linear_mipmap, repeat_enable;
+uniform float alpha_hash_scale : hint_range(0.0, 2.0, 0.01);
+
+uniform float roughness : hint_range(0.0, 1.0);
+uniform float specular : hint_range(0.0, 1.0, 0.01);
+uniform float metallic : hint_range(0.0, 1.0, 0.01);
+uniform float length_fade : hint_range(0.0, 1.2, 0.0);
+
+uniform vec3 uv1_scale;
+uniform vec3 uv1_offset;
+uniform vec3 uv2_scale;
+uniform vec3 uv2_offset;
+
+void vertex() {
+	UV = UV * uv1_scale.xy + uv1_offset.xy;
+}
+
+void fragment() {
+	vec2 base_uv = UV;
+
+	vec4 albedo_tex = texture(texture_albedo, base_uv);
+	ALBEDO = albedo.rgb * albedo_tex.rgb;
+
+	METALLIC = metallic;
+	SPECULAR = specular;
+
+	ROUGHNESS = roughness;
+	ALPHA *= albedo.a * albedo_tex.a * min(1, (pow(base_uv.y, 0.35)-length_fade));
+	ALPHA_HASH_SCALE = alpha_hash_scale;
+}
+"
+
+[sub_resource type="Gradient" id="Gradient_vf7dt"]
+colors = PackedColorArray(0.136719, 0.136719, 0.136719, 1, 0.507813, 0.507813, 0.507813, 0.196078)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_0tb5b"]
+frequency = 0.0222
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_3pmx8"]
+width = 4
+height = 500
+color_ramp = SubResource("Gradient_vf7dt")
+noise = SubResource("FastNoiseLite_0tb5b")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_psqes"]
+resource_local_to_scene = true
+render_priority = 0
+shader = SubResource("Shader_yjywl")
+shader_parameter/albedo = Color(1, 1, 1, 1)
+shader_parameter/texture_albedo = SubResource("NoiseTexture2D_3pmx8")
+shader_parameter/alpha_hash_scale = 0.67
+shader_parameter/roughness = 0.0
+shader_parameter/specular = 0.5
+shader_parameter/metallic = 0.0
+shader_parameter/length_fade = 0.0
+shader_parameter/uv1_scale = Vector3(2.255, 2.255, 2.255)
+shader_parameter/uv1_offset = Vector3(0, 0, 0)
+shader_parameter/uv2_scale = Vector3(1, 1, 1)
+shader_parameter/uv2_offset = Vector3(0, 0, 0)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_et7iv"]
+resource_local_to_scene = true
+top_radius = 0.015
+bottom_radius = 0.015
+radial_segments = 4
+rings = 0
+cap_top = false
+cap_bottom = false
+
+[node name="BulletTrail" type="Node3D"]
+script = SubResource("GDScript_yjywl")
+
+[node name="BulletTrailMesh" type="MeshInstance3D" parent="."]
+transform = Transform3D(-0.926266, -1.03896e-07, -0.376871, 0.376871, -4.04884e-08, -0.926266, 8.09767e-08, -1, 7.66585e-08, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_psqes")
+gi_mode = 2
+mesh = SubResource("CylinderMesh_et7iv")

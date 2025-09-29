@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwbw27xxvol2"
+path="res://.godot/imported/DJ ASSASS1N - Frag Out [NCS Release].mp3-5ad20768f7870160b6b5cde57bcfccd5.mp3str"
+
+[deps]
+
+source_file="res://Music/DJ ASSASS1N - Frag Out [NCS Release].mp3"
+dest_files=["res://.godot/imported/DJ ASSASS1N - Frag Out [NCS Release].mp3-5ad20768f7870160b6b5cde57bcfccd5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://wy4vx075vmn1"
+path="res://.godot/imported/Razihel - Love U [NCS Release].mp3-0d714dda63ec9584f177a8e74da63f16.mp3str"
+
+[deps]
+
+source_file="res://Music/Razihel - Love U [NCS Release].mp3"
+dest_files=["res://.godot/imported/Razihel - Love U [NCS Release].mp3-0d714dda63ec9584f177a8e74da63f16.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

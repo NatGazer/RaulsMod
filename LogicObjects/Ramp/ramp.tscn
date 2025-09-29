@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://dou7bvmqww75"]
+
+[ext_resource type="PackedScene" uid="uid://i8oh5167tke8" path="res://LogicObjects/Ramp/ramp.blend" id="1_3sskp"]
+[ext_resource type="Material" uid="uid://d0qswfyc1o6ec" path="res://Materials/[2K]Copper_tiles/copper_tiles.tres" id="2_tbetn"]
+
+[node name="ramp" instance=ExtResource("1_3sskp")]
+
+[node name="Plane" parent="." index="0"]
+material_override = ExtResource("2_tbetn")

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://beskxa4pj6q78"
+path="res://.godot/imported/Desmeon - Hellcat [NCS Release].mp3-49ac9d635db3010217ef7915e3dc28f2.mp3str"
+
+[deps]
+
+source_file="res://Music/Desmeon - Hellcat [NCS Release].mp3"
+dest_files=["res://.godot/imported/Desmeon - Hellcat [NCS Release].mp3-49ac9d635db3010217ef7915e3dc28f2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c8g2k4xo3emib"
+path="res://.godot/imported/Ahrix - Nova [NCS Release].mp3-e1524dd9ec3a17d74c100573a737a8a4.mp3str"
+
+[deps]
+
+source_file="res://Music/Ahrix - Nova [NCS Release].mp3"
+dest_files=["res://.godot/imported/Ahrix - Nova [NCS Release].mp3-e1524dd9ec3a17d74c100573a737a8a4.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

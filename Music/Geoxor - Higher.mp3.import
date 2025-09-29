@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dmyubif2ro85l"
+path="res://.godot/imported/Geoxor - Higher.mp3-13f725134636a05093b13dc461caa846.mp3str"
+
+[deps]
+
+source_file="res://Music/Geoxor - Higher.mp3"
+dest_files=["res://.godot/imported/Geoxor - Higher.mp3-13f725134636a05093b13dc461caa846.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

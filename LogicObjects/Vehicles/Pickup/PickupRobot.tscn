@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://2hlofa5jrnuc"]
+
+[ext_resource type="PackedScene" uid="uid://dhlpsnomij3fr" path="res://LogicObjects/Vehicles/Pickup/Pickup.tscn" id="1_6gk5x"]
+[ext_resource type="PackedScene" uid="uid://dbgv686nn1t5d" path="res://LogicObjects/RobotArm/RobotArm.tscn" id="2_y0sfl"]
+
+[node name="PickupRobot" type="Node3D"]
+
+[node name="Pickup" parent="." instance=ExtResource("1_6gk5x")]
+
+[node name="RobotArm" parent="." instance=ExtResource("2_y0sfl")]
+transform = Transform3D(-0.00995836, 0, 0.599917, 0, 0.6, 0, -0.599917, 0, -0.00995836, -2.98325, 0.667965, -0.00614452)

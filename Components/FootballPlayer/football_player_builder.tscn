@@ -1,0 +1,301 @@
+[gd_scene load_steps=3 format=3 uid="uid://ct3gx1tr0ylba"]
+
+[ext_resource type="Script" uid="uid://jfe1cysuye6c" path="res://Components/FootballPlayer/FootballPlayer.gd" id="1_h6jjn"]
+[ext_resource type="Material" uid="uid://iko4sa4l3dea" path="res://Materials/[2K]Tiles12/check_board_tile.tres" id="2_jkcyl"]
+
+[node name="FootballPlayerBuilder" type="Node3D"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+script = ExtResource("1_h6jjn")
+global_thickness = 0.057
+global_material = ExtResource("2_jkcyl")
+
+[node name="rhand" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.335, 0.624729, 0)
+metadata/b_mass = 1.0
+
+[node name="Head" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.97476, 0)
+metadata/b_mass = 1.0
+
+[node name="head_chest" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.61541, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/head")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/chest")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="chest_abdomen" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.275, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/chest")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/abdomen")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="abdomen_hip" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.866, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/abdomen")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lhip")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="head_lshoulder" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.61541, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/head")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lshoulder")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="head_rshoulder" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.615, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/head")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rshoulder")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="lshoulder_arm" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.334879, 1.61072, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lshoulder")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/larm")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="rshoulder_arm" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.335, 1.61031, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rshoulder")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rarm")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="larm_forearm" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.334879, 1.15545, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/larm")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lforeharm")
+angular_limit_x/upper_angle = 2.96706
+angular_limit_x/lower_angle = 0.174533
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_x/equilibrium_point = 0.349066
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="rarm_forearm" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.335, 1.15504, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rarm")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rforeharm")
+angular_limit_x/upper_angle = 2.96706
+angular_limit_x/lower_angle = 0.174533
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_x/equilibrium_point = 0.349066
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="lforeharm_hand" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.334879, 0.76335, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lforeharm")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/@RigidBody3D@21936")
+angular_limit_x/upper_angle = 0.261799
+angular_limit_x/lower_angle = -0.349066
+angular_limit_y/upper_angle = 0.174533
+angular_limit_y/lower_angle = -0.174533
+angular_limit_z/upper_angle = 0.785398
+angular_limit_z/lower_angle = -0.785398
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 1.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 1.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 1.0
+metadata/b_mass = 0.3
+
+[node name="rforeharm_hand" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.335, 0.762939, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rforeharm")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/@RigidBody3D@21945")
+angular_limit_x/upper_angle = 0.261799
+angular_limit_x/lower_angle = -0.349066
+angular_limit_y/upper_angle = 0.174533
+angular_limit_y/lower_angle = -0.174533
+angular_limit_z/upper_angle = 0.785398
+angular_limit_z/lower_angle = -0.785398
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 1.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 1.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 1.0
+metadata/b_mass = 0.3
+
+[node name="lhand" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.334879, 0.62514, 0)
+metadata/b_mass = 1.0
+
+[node name="rhip_thigh" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.190427, 0.866113, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lhip")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rthigh")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="rthigh_leg" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.190427, 0.477602, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rthigh")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rleg")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="rleg_foot" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.190427, 0.14423, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/rleg")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/@RigidBody3D@21959")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="rFoot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.178028, 0.130405, 0.23375)
+
+[node name="lhip_thigh" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.183252, 0.866113, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lhip")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lthigh")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="lthigh_leg" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.183252, 0.482064, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lthigh")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lleg")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="lleg_foot" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.183252, 0.130405, 0)
+node_a = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/lleg")
+node_b = NodePath("/root/@EditorNode@21272/@Panel@14/@VBoxContainer@15/DockHSplitLeftL/DockHSplitLeftR/DockHSplitMain/@VBoxContainer@26/DockVSplitCenter/@VSplitContainer@54/@VBoxContainer@55/@EditorMainScreen@102/MainScreen/@CanvasItemEditor@11482/@VSplitContainer@11134/@HSplitContainer@11136/@HSplitContainer@11138/@Control@11139/@SubViewportContainer@11140/@SubViewport@11141/FootballPlayerBuilder/@RigidBody3D@21952")
+angular_motor_x/force_limit = 500.0
+angular_motor_y/force_limit = 500.0
+angular_motor_z/force_limit = 500.0
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 100.0
+angular_spring_y/enabled = true
+angular_spring_y/stiffness = 100.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 100.0
+metadata/b_mass = 0.3
+
+[node name="lFoot" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.183252, 0.130405, 0.23375)

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://c6y5yx3l3k74v"
+path="res://.godot/imported/Tobu - Hope [NCS Release].mp3-6863e2139058644846d204a13c69ad19.mp3str"
+
+[deps]
+
+source_file="res://Music/Tobu - Hope [NCS Release].mp3"
+dest_files=["res://.godot/imported/Tobu - Hope [NCS Release].mp3-6863e2139058644846d204a13c69ad19.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

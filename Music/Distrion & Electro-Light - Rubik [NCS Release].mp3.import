@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://thucy5g3gege"
+path="res://.godot/imported/Distrion & Electro-Light - Rubik [NCS Release].mp3-b9a898c410316af7a855bd284c0e499d.mp3str"
+
+[deps]
+
+source_file="res://Music/Distrion & Electro-Light - Rubik [NCS Release].mp3"
+dest_files=["res://.godot/imported/Distrion & Electro-Light - Rubik [NCS Release].mp3-b9a898c410316af7a855bd284c0e499d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

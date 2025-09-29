@@ -1,0 +1,157 @@
+[gd_scene load_steps=4 format=3 uid="uid://c0bhsyc56nvvr"]
+
+[ext_resource type="Texture2D" uid="uid://brvgr5d5bbrrw" path="res://Images&Textures/dot.png" id="1_y50e8"]
+
+[sub_resource type="GDScript" id="GDScript_jmlhf"]
+resource_name = "RBgrabber"
+script/source = "extends Generic6DOFJoint3D
+
+@export var grab_distance = 5.0
+
+signal rigidbody_detected()
+signal no_rigidbody_detected()
+
+var grabbed_body: RigidBody3D
+var grab_pos : Vector3
+var animatable_body : AnimatableBody3D
+
+func _ready():
+	# Create Animatable body to be the joint support
+	animatable_body = AnimatableBody3D.new()
+	
+	Global.Camera.get_parent().add_child.call_deferred(animatable_body)
+	await get_tree().process_frame
+	node_a = animatable_body.get_path()
+
+func _process(_delta):
+	# Animatable Body follows camera motion
+	animatable_body.global_transform = Global.Camera.global_transform
+	
+	# If not grabbing
+	if node_b == NodePath(\"\"):
+		_check_for_rigidbody()
+	# If grabbing
+	else:
+		pass
+		#Utils.draw_line(grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 1.0), 1, false)
+		#Utils.draw_line(grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 0.2), 1, true)
+
+func _input(event):
+	if event.is_action_pressed(\"left_click\"):
+		_try_grab()
+	elif event.is_action_released(\"left_click\"):
+		_release()
+
+func _check_for_rigidbody():
+	var ray_origin = get_parent().global_position
+	var ray_direction = -get_parent().global_transform.basis.z
+
+	var space_state = get_world_3d().direct_space_state
+	var query = PhysicsRayQueryParameters3D.new()
+	query.from = ray_origin
+	query.to = ray_origin + ray_direction * grab_distance
+	query.exclude = [get_parent()]
+
+	var result = space_state.intersect_ray(query)
+
+	if result.size() > 0:
+		var collider = result.collider
+		if collider is RigidBody3D:
+			if grabbed_body == null:
+				emit_signal(\"rigidbody_detected\")
+			grabbed_body = collider
+			grab_pos = result.position
+		else:
+			if grabbed_body != null: #check to avoid unecessary calls
+				grabbed_body = null
+				emit_signal(\"no_rigidbody_detected\")		
+	elif grabbed_body != null: #check to avoid unecessary calls
+		grabbed_body = null
+		emit_signal(\"no_rigidbody_detected\")
+
+func _try_grab():
+	# If not rigid body detected return
+	if not grabbed_body:
+		return
+	
+	global_position = grab_pos
+	
+	# Convert grab_pos to local
+	grab_pos -= grabbed_body.global_position
+	grab_pos = grab_pos * grabbed_body.basis
+	
+	# Activate the joint only when grabbing
+	node_b = grabbed_body.get_path()
+	#enabled = true
+
+
+func _release():
+	if node_b != NodePath(\"\"):
+		# Deactivate the joint on release
+		node_b = NodePath(\"\")
+		grabbed_body = null
+		emit_signal(\"no_rigidbody_detected\")
+"
+
+[sub_resource type="GDScript" id="GDScript_cngya"]
+resource_name = "AimUI"
+script/source = "extends TextureRect
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	owner.rigidbody_detected.connect(_rigidbody_detected)
+	owner.no_rigidbody_detected.connect(_no_rigidbody_detected)
+
+func _rigidbody_detected() -> void:
+	modulate.a = 0.99
+
+func _no_rigidbody_detected() -> void:
+	modulate.a = 0.5
+"
+
+[node name="RBgrabber" type="Generic6DOFJoint3D"]
+linear_limit_x/enabled = false
+linear_limit_y/enabled = false
+linear_limit_z/enabled = false
+linear_spring_x/enabled = true
+linear_spring_x/stiffness = 20000.0
+linear_spring_x/damping = 10.0
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 20000.0
+linear_spring_y/damping = 10.0
+linear_spring_z/enabled = true
+linear_spring_z/stiffness = 20000.0
+linear_spring_z/damping = 10.0
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+angular_spring_x/enabled = true
+angular_spring_x/stiffness = 0.01
+angular_spring_x/damping = 2.0
+angular_spring_y/stiffness = 0.01
+angular_spring_y/damping = 2.0
+angular_spring_z/enabled = true
+angular_spring_z/stiffness = 0.01
+angular_spring_z/damping = 2.0
+script = SubResource("GDScript_jmlhf")
+grab_distance = 20.0
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+
+[node name="AimUI" type="TextureRect" parent="CenterContainer"]
+modulate = Color(1, 1, 1, 0.509804)
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("1_y50e8")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_cngya")

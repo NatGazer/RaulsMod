@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://438s6mpk4efg"]
+
+[resource]
+resource_name = "Glossy_Abstract_Material"
+cull_mode = 2
+albedo_color = Color(0.867188, 0.867188, 0.867188, 1)
+metallic = 1.0
+roughness = 0.16

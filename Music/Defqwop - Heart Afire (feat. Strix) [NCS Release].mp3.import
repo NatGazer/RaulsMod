@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bfiqmm6ru0b1t"
+path="res://.godot/imported/Defqwop - Heart Afire (feat. Strix) [NCS Release].mp3-7a2758c28b5aaa97ca5c704b8df0f4b3.mp3str"
+
+[deps]
+
+source_file="res://Music/Defqwop - Heart Afire (feat. Strix) [NCS Release].mp3"
+dest_files=["res://.godot/imported/Defqwop - Heart Afire (feat. Strix) [NCS Release].mp3-7a2758c28b5aaa97ca5c704b8df0f4b3.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

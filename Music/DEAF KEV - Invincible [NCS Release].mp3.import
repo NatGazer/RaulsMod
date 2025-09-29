@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://3trs7uxpmp35"
+path="res://.godot/imported/DEAF KEV - Invincible [NCS Release].mp3-1f23f6163b6259e3d5b55e4eb1a4b36b.mp3str"
+
+[deps]
+
+source_file="res://Music/DEAF KEV - Invincible [NCS Release].mp3"
+dest_files=["res://.godot/imported/DEAF KEV - Invincible [NCS Release].mp3-1f23f6163b6259e3d5b55e4eb1a4b36b.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

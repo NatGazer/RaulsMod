@@ -1,0 +1,179 @@
+[gd_scene load_steps=4 format=3 uid="uid://blb2qxfu7qptn"]
+
+[sub_resource type="GDScript" id="GDScript_pssg7"]
+resource_name = "TYCS"
+script/source = "@tool
+extends Node3D
+
+## Export variables ##
+@export var nSegments : int = 5:
+	set(new_nSegments):
+		nSegments = new_nSegments
+		if Engine.is_editor_hint():
+			_ready()
+
+@export var run : bool = true
+@export var velocity : float = 5
+@export var angryness : float = 1
+@export var segment_distance : float = 1
+@export var stiffness : float = 0.01
+@export var curviness : float = 1.1
+@export var atractor_force : float = 1.1
+@export var eye_tilt : float = 0.8
+
+## General Variables ##
+var time : float = 0.0
+var segments : Array[Node3D]
+var head_velo : Vector3
+var old_head_pos : Vector3
+var eye_mesh : Node3D
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	# Execute only when in editor
+	if Engine.is_editor_hint():
+		# Clear previous worm
+		for segment:Node3D in segments:
+			if is_instance_valid(segment):
+				segment.queue_free()
+		segments.clear()
+	
+	if not %MeshModeler: return
+	
+	# Spawn Head
+	var head_mesh : Node3D = %MeshModeler.get_head().instantiate()
+	add_child(head_mesh)
+	segments.append(head_mesh)
+	old_head_pos = head_mesh.position
+	
+	# Spawn Eye
+	eye_mesh = %MeshModeler.get_eye().instantiate()
+	head_mesh.add_child(eye_mesh)
+	eye_mesh.position.x += 0.4
+	eye_mesh.rotate_y(PI/2)
+	
+	# Spawn Segments
+	var body_mesh : PackedScene = %MeshModeler.get_body()
+	for i:int in nSegments-1:
+		var seg_scale : float = sin(PI * i / nSegments)
+				
+		var body : Node3D = body_mesh.instantiate()
+		add_child(body)
+		body.position = Vector3.LEFT * (i+1)*segment_distance
+		body.scale = Vector3.ONE * (-seg_scale*0.25+1)
+		segments.append(body)
+		
+func _process(delta: float) -> void:
+	#Update Velocity FIXME FIXME FIXME FIXME FIXME 
+	head_velo = segments[0].position - old_head_pos
+	
+	if run:
+		time += delta
+	
+		# Head trajectory
+		var attractor_disp : Vector3 = $Attractor.position - segments[0].position
+		var turbulence_decay : float = 1 - 1.2**(-attractor_disp.length())
+		var attractor : Vector3 = attractor_disp.normalized() * atractor_force
+		var turbulence : Vector3 = Utils.perlin_vector3(time, angryness * velocity) * turbulence_decay
+		segments[0].position += (turbulence + attractor) * delta * velocity
+		
+		# Eye tracking
+		eye_mesh.look_at($Attractor.global_position, segments[0].basis.y)
+		eye_mesh.rotation = eye_mesh.rotation.clamp(Vector3(-eye_tilt, -eye_tilt-PI/2, -eye_tilt),
+													Vector3(eye_tilt, eye_tilt-PI/2, eye_tilt)) 
+	
+	var wheighted_stiffness : float = clampf(stiffness * velocity*1000*delta,0.0, 0.98)
+	
+	for i in range(nSegments-1):
+		# segments follow each other at a certain distance
+		var last : Vector3 = segments[i].position
+		var target : Vector3 = last - (last - segments[i+1].position).normalized() * segment_distance
+		segments[i+1].position += (target - segments[i+1].position) * wheighted_stiffness
+		
+		# Curviness
+		if i < nSegments-2:
+			var after : Vector3 = segments[i+2].position
+			segments[i+1].position += Utils.perpendicular_vector_crossing(
+				last, after, segments[i+1].position)*wheighted_stiffness*curviness*head_velo
+	
+	#Set head direction
+	var direction : Vector3 = -segments[0].position + segments[1].position
+	var head_basis = Basis.looking_at(direction,Vector3.UP)
+	segments[0].global_transform.basis = head_basis.rotated(head_basis.y, -PI/2)
+
+	#Set position for next velocity iteration
+	old_head_pos  = segments[0].position
+"
+
+[sub_resource type="GDScript" id="GDScript_i7xb7"]
+resource_name = "Attractor"
+script/source = "extends Marker3D
+
+func _ready() -> void:
+	$\"..\".run = true
+	$\"..\".atractor_force = 1
+	$\"..\".curviness = 0.1
+	$\"..\".velocity = 8
+	$\"..\".angryness = 0.1
+
+func _process(_delta: float) -> void:
+	if Global.Player:
+		global_position = Global.Player.position + Vector3(0, 10, 0)
+	
+"
+
+[sub_resource type="GDScript" id="GDScript_mptos"]
+resource_name = "MeshModeler"
+script/source = "@tool
+extends Node3D
+
+enum HeadEnum {Normal, example, example2}
+@export var head: HeadEnum
+
+enum EyeEnum {Yellow}
+@export var eye: EyeEnum
+
+enum BodyEnum {Normal, example, example2}
+@export var body: BodyEnum
+
+@export var heads : Array = [
+	\"res://LogicObjects/Worm/worm_head_normal.blend\",
+	\"res://LogicObjects/Worm/worm_head_normal.blend\",
+	\"res://LogicObjects/Worm/worm_head_normal.blend\"
+]
+
+@export var eyes : Array = [
+	\"res://LogicObjects/Worm/Eye/worm_eye.blend\"
+]
+
+@export var bodies : Array = [
+	\"res://LogicObjects/Worm/worm_body_normal.blend\",
+	\"res://LogicObjects/Worm/worm_body_normal.blend\",
+	\"res://LogicObjects/Worm/worm_body_normal.blend\"
+]
+
+func get_head() -> PackedScene:
+	return load(heads[head])
+
+func get_eye() -> PackedScene:
+	return load(eyes[eye])
+
+func get_body() -> PackedScene:
+	return load(bodies[body])
+"
+
+[node name="TYCS" type="Node3D"]
+script = SubResource("GDScript_pssg7")
+nSegments = 62
+angryness = 0.1
+segment_distance = 0.74
+curviness = 9e+06
+atractor_force = 1.0
+
+[node name="Attractor" type="Marker3D" parent="."]
+transform = Transform3D(40.4772, 0, 0, 0, 40.4772, 0, 0, 0, 40.4772, -17.0931, 4.91452, -10.6952)
+script = SubResource("GDScript_i7xb7")
+
+[node name="MeshModeler" type="Node3D" parent="."]
+unique_name_in_owner = true
+script = SubResource("GDScript_mptos")

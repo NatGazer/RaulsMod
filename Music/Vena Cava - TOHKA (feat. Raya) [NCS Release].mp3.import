@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://bvm0i2sspcosx"
+path="res://.godot/imported/Vena Cava - TOHKA (feat. Raya) [NCS Release].mp3-04b231a62969dfcb4e8522926d5c036e.mp3str"
+
+[deps]
+
+source_file="res://Music/Vena Cava - TOHKA (feat. Raya) [NCS Release].mp3"
+dest_files=["res://.godot/imported/Vena Cava - TOHKA (feat. Raya) [NCS Release].mp3-04b231a62969dfcb4e8522926d5c036e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

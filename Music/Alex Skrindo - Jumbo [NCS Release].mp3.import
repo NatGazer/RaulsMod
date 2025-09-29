@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cpdpvw013nrpe"
+path="res://.godot/imported/Alex Skrindo - Jumbo [NCS Release].mp3-d54dd4ffabb3e0deb7f9c147156b2d3e.mp3str"
+
+[deps]
+
+source_file="res://Music/Alex Skrindo - Jumbo [NCS Release].mp3"
+dest_files=["res://.godot/imported/Alex Skrindo - Jumbo [NCS Release].mp3-d54dd4ffabb3e0deb7f9c147156b2d3e.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

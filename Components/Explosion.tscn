@@ -1,0 +1,172 @@
+[gd_scene load_steps=16 format=3 uid="uid://bkmlov5517mvt"]
+
+[ext_resource type="Texture2D" uid="uid://dm0s03qhan6gc" path="res://Images&Textures/Smoke - 640x614.png" id="1_cujql"]
+[ext_resource type="Texture2D" uid="uid://c307hdmos4gtm" path="res://demo/assets/textures/rock023_nrm_rgh.png" id="2_1r686"]
+
+[sub_resource type="GDScript" id="GDScript_cujql"]
+resource_name = "Explosion"
+script/source = "extends Node3D
+
+signal finished
+
+func _ready() -> void:
+	## Initiate Explosion and get longest lifetime
+	## to auto queue_free
+	var biggest_life_time : float = 0.0
+	for child in get_children():
+		if child is GPUParticles3D:
+			child.emitting = true
+			child.one_shot = true
+			
+			if child.lifetime > biggest_life_time:
+				biggest_life_time = child.lifetime
+
+	get_tree().create_timer(biggest_life_time).timeout.connect(_on_paticles_finished)
+	
+	# Smoothly show decal rotated randomly
+	$Decal.global_basis = Basis.IDENTITY
+	$Decal.rotate_y(randf_range(-PI, PI))
+	$Decal.modulate.a = 0.0
+	var tween : Tween = get_tree().create_tween()
+	tween.tween_property($Decal, \"modulate:a\", 1.0, 0.2)
+
+
+func _on_paticles_finished() -> void:
+	# Smoothly hide decal and then queue_free
+	var tween : Tween = get_tree().create_tween()
+	tween.tween_interval(2.0)
+	tween.tween_property($Decal, \"modulate:a\", 0.0, 10)
+	tween.tween_callback(queue_free)
+	tween.tween_callback(finished.emit)
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cujql"]
+albedo_color = Color(1, 0.899456, 0.00458819, 1)
+emission_enabled = true
+emission = Color(1, 0.899456, 0.00458819, 1)
+emission_energy_multiplier = 11.76
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_nedih"]
+direction = Vector3(0, 1, 0)
+spread = 109.912
+initial_velocity_min = 2.0
+initial_velocity_max = 15.0
+sub_emitter_mode = 1
+sub_emitter_frequency = 10.0
+sub_emitter_keep_velocity = true
+
+[sub_resource type="SphereMesh" id="SphereMesh_nedih"]
+radius = 0.25
+height = 0.5
+radial_segments = 6
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nedih"]
+cull_mode = 2
+shading_mode = 0
+albedo_color = Color(10, 8, 0, 1)
+disable_receive_shadows = true
+use_particle_trails = true
+
+[sub_resource type="RibbonTrailMesh" id="RibbonTrailMesh_cujql"]
+material = SubResource("StandardMaterial3D_nedih")
+size = 0.05
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1r686"]
+transparency = 3
+alpha_hash_scale = 0.06
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_color = Color(0.878906, 0.878906, 0.878906, 1)
+albedo_texture = ExtResource("1_cujql")
+billboard_keep_scale = true
+
+[sub_resource type="Curve" id="Curve_v2d57"]
+_data = [Vector2(0, 0.157303), 0.0, 2.06122, 0, 0, Vector2(0.805263, 0.898876), -3.25308, -3.25308, 0, 0, Vector2(0.942105, 0), -0.0618792, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_e7b2p"]
+curve = SubResource("Curve_v2d57")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_fj2bb"]
+lifetime_randomness = 0.55
+emission_shape = 1
+emission_sphere_radius = 2.0
+angle_min = -90.0
+angle_max = 90.0
+spread = 180.0
+initial_velocity_max = 5.0
+gravity = Vector3(0, 2, 0)
+damping_min = 0.5
+damping_max = 0.5
+scale_min = 0.3
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_e7b2p")
+turbulence_enabled = true
+turbulence_influence_min = 0.02
+turbulence_influence_max = 0.02
+
+[sub_resource type="SphereMesh" id="SphereMesh_cujql"]
+radius = 1.5
+height = 3.0
+radial_segments = 8
+rings = 5
+
+[sub_resource type="Gradient" id="Gradient_v2d57"]
+offsets = PackedFloat32Array(0.336735)
+colors = PackedColorArray(1, 1, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_fj2bb"]
+gradient = SubResource("Gradient_v2d57")
+width = 1
+
+[node name="Explosion" type="Node3D"]
+script = SubResource("GDScript_cujql")
+
+[node name="Spheres" type="GPUParticles3D" parent="."]
+layers = 2
+material_override = SubResource("StandardMaterial3D_cujql")
+cast_shadow = 0
+gi_mode = 2
+emitting = false
+amount = 128
+sub_emitter = NodePath("../Trails")
+lifetime = 5.0
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_nedih")
+draw_pass_1 = SubResource("SphereMesh_nedih")
+
+[node name="Trails" type="GPUParticles3D" parent="."]
+layers = 2
+cast_shadow = 0
+gi_mode = 2
+emitting = false
+amount = 128
+lifetime = 5.0
+explosiveness = 1.0
+trail_enabled = true
+trail_lifetime = 1.88
+process_material = SubResource("ParticleProcessMaterial_nedih")
+draw_passes = 2
+draw_pass_1 = SubResource("RibbonTrailMesh_cujql")
+draw_pass_2 = null
+
+[node name="Smoke" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58766, 0)
+layers = 2
+material_override = SubResource("StandardMaterial3D_1r686")
+custom_aabb = AABB(-45, -8.57, -45, 90, 90, 90)
+amount = 256
+lifetime = 15.0
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_fj2bb")
+draw_pass_1 = SubResource("SphereMesh_cujql")
+
+[node name="Decal" type="Decal" parent="."]
+size = Vector3(20, 20, 20)
+texture_albedo = ExtResource("1_cujql")
+texture_normal = ExtResource("2_1r686")
+texture_orm = SubResource("GradientTexture1D_fj2bb")
+modulate = Color(0, 0, 0, 1)
+
+[connection signal="finished" from="Spheres" to="." method="_on_paticles_finished"]

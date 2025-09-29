@@ -1,0 +1,107 @@
+[gd_scene load_steps=12 format=3 uid="uid://epwspn6srsj8"]
+
+[sub_resource type="GDScript" id="GDScript_rwc4w"]
+resource_name = "AudioReact"
+script/source = "extends Node
+
+var audio_react : float
+
+var spectrum = AudioServer.get_bus_effect_instance(1,0)
+
+func _process(delta: float) -> void:
+	var audio_magnitude : float = spectrum.get_magnitude_for_frequency_range(20, 250).length()
+	
+	audio_react = lerp(audio_react, audio_magnitude*1500, delta * 35)
+	
+	%Light.scale.y = audio_react
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6fuad"]
+albedo_color = Color(0, 0.106406, 1, 1)
+emission_enabled = true
+emission = Color(0, 0.106406, 1, 1)
+emission_energy_multiplier = 1600.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_rwc4w"]
+
+[sub_resource type="Curve" id="Curve_rwc4w"]
+_data = [Vector2(0, 1), 0.0, -0.152909, 0, 0, Vector2(0.524823, 0.791241), -0.688092, -0.688092, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_0hwur"]
+curve = SubResource("Curve_rwc4w")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rwc4w"]
+direction = Vector3(0, 1, 0)
+spread = 90.0
+initial_velocity_min = 1.0
+initial_velocity_max = 1.0
+gravity = Vector3(0, 1, 0)
+radial_accel_min = -0.800002
+radial_accel_max = -0.800002
+tangential_accel_min = 0.199998
+tangential_accel_max = 0.199998
+scale_curve = SubResource("CurveTexture_0hwur")
+turbulence_enabled = true
+turbulence_noise_strength = 0.05
+turbulence_noise_scale = 0.05
+turbulence_influence_min = 0.007
+turbulence_influence_max = 0.007
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k3rd4"]
+albedo_color = Color(1, 0.988018, 0, 1)
+emission_enabled = true
+emission = Color(1, 0.988018, 0, 1)
+emission_energy_multiplier = 50.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_i5bsh"]
+material = SubResource("StandardMaterial3D_k3rd4")
+radius = 0.05
+height = 0.1
+radial_segments = 4
+rings = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rwc4w"]
+albedo_color = Color(0.982107, 1, 0, 1)
+emission_enabled = true
+emission = Color(0.982107, 1, 0, 1)
+emission_energy_multiplier = 4.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0hwur"]
+albedo_color = Color(0.195313, 0.195313, 0.195313, 1)
+roughness = 0.59
+
+[sub_resource type="TorusMesh" id="TorusMesh_6fuad"]
+material = SubResource("StandardMaterial3D_0hwur")
+inner_radius = 0.098
+outer_radius = 0.348
+
+[node name="AudioReact" type="Node3D"]
+
+[node name="Logic" type="Node" parent="."]
+script = SubResource("GDScript_rwc4w")
+
+[node name="Light" type="Node3D" parent="."]
+unique_name_in_owner = true
+
+[node name="Light" type="MeshInstance3D" parent="Light"]
+transform = Transform3D(0.20101, 0, 0, 0, 0.625642, 0, 0, 0, 0.20101, 0, 0.928283, 0)
+material_override = SubResource("StandardMaterial3D_6fuad")
+mesh = SubResource("SphereMesh_rwc4w")
+skeleton = NodePath("../..")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Light/Light"]
+transform = Transform3D(4.97489, 0, 0, 0, 1.59836, 0, 0, 0, 4.97489, 0, 0.135552, 0)
+amount = 128
+lifetime = 5.0
+process_material = SubResource("ParticleProcessMaterial_rwc4w")
+draw_pass_1 = SubResource("SphereMesh_i5bsh")
+
+[node name="Light" type="MeshInstance3D" parent="Light/Light"]
+transform = Transform3D(1.98995, 0, 0, 0, 1.98995, 0, 0, 0, 1.98995, 0, -0.684549, 0)
+material_override = SubResource("StandardMaterial3D_rwc4w")
+mesh = SubResource("SphereMesh_rwc4w")
+skeleton = NodePath("../../..")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+mesh = SubResource("TorusMesh_6fuad")

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://hudyc0blhhfa"
+path="res://.godot/imported/Axol & The Tech Thieves - Bleed [NCS Release].mp3-12723df5f0f4253b0fbfc1e995f86742.mp3str"
+
+[deps]
+
+source_file="res://Music/Axol & The Tech Thieves - Bleed [NCS Release].mp3"
+dest_files=["res://.godot/imported/Axol & The Tech Thieves - Bleed [NCS Release].mp3-12723df5f0f4253b0fbfc1e995f86742.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

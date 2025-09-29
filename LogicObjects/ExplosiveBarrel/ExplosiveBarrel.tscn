@@ -1,0 +1,95 @@
+[gd_scene load_steps=5 format=3 uid="uid://dpfa767m8tfny"]
+
+[ext_resource type="PackedScene" uid="uid://6hx1iad7dgxj" path="res://LogicObjects/ExplosiveBarrel/Barrel_01_2k.gltf" id="1_33mbd"]
+
+[sub_resource type="GDScript" id="GDScript_33mbd"]
+resource_name = "ExplosionRB"
+script/source = "extends Node
+
+@export var rigid_body : RigidBody3D
+@export var trigger_acceleration : float = 5
+@export var explosion_area : Area3D
+@export var explosion_area_force : float = 200000
+
+const particle_scene : PackedScene = preload(\"res://Components/Explosion.tscn\")
+var particle_inst : Node3D
+
+var exploded : bool = false
+var old_velocity : Vector3
+var old_ang_velocity : Vector3
+var impact : float
+var _inertia : Vector3
+
+func _ready() -> void:
+	_inertia = PhysicsServer3D.body_get_direct_state(
+		rigid_body.get_rid()).inverse_inertia.inverse()
+	
+	particle_inst = particle_scene.instantiate()
+
+func _physics_process(delta: float) -> void:
+	if exploded: return # RigidBody exploded and this script will terminate soon
+	
+	var linear_acc : Vector3 = (rigid_body.linear_velocity - old_velocity)*delta
+	var angular_acc : Vector3 = (rigid_body.angular_velocity - old_ang_velocity)*delta
+	
+	var linear_impact : Vector3 = linear_acc * rigid_body.mass
+	var angular_impact : Vector3 = angular_acc * _inertia
+	
+	impact = linear_impact.length() + angular_impact.length()
+	
+	if impact > trigger_acceleration:
+		exploded = true
+		await get_tree().create_timer(0.15).timeout
+		explode()
+		impact_surroudings()
+	
+	old_velocity = rigid_body.linear_velocity
+	old_ang_velocity = rigid_body.angular_velocity
+
+func explode() -> void:
+	particle_inst.position = rigid_body.position
+	add_child(particle_inst)
+	particle_inst.finished.connect(_finished)
+	rigid_body.queue_free()
+
+func impact_surroudings() -> void:
+	for rb in explosion_area.get_overlapping_bodies():
+		if rb is RigidBody3D:
+			var disp : Vector3 = rb.global_position - explosion_area.global_position
+			var dist : float = max(1, disp.length())
+			rb.apply_central_force(explosion_area_force * disp/(dist*dist))
+
+func _finished() -> void:
+	queue_free()
+	
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1u8w0"]
+height = 0.873406
+radius = 0.274902
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_33mbd"]
+radius = 11.6003
+
+[node name="ExplosionRB" type="Node3D" node_paths=PackedStringArray("rigid_body", "explosion_area")]
+script = SubResource("GDScript_33mbd")
+rigid_body = NodePath("ExplosiveBarrel")
+trigger_acceleration = 2.0
+explosion_area = NodePath("ExplosiveBarrel/Area3D")
+explosion_area_force = 1e+06
+
+[node name="ExplosiveBarrel" type="RigidBody3D" parent="."]
+mass = 80.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExplosiveBarrel"]
+transform = Transform3D(1.42242, 0, 0, 0, 1.42242, 0, 0, 0, 1.42242, 0, 0.614029, 0)
+shape = SubResource("CylinderShape3D_1u8w0")
+
+[node name="Barrel_01_2k" parent="ExplosiveBarrel" instance=ExtResource("1_33mbd")]
+transform = Transform3D(1.42242, 0, 0, 0, 1.42242, 0, 0, 0, 1.42242, 0, -0.00140369, 0)
+
+[node name="Area3D" type="Area3D" parent="ExplosiveBarrel"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.614029, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="ExplosiveBarrel/Area3D"]
+shape = SubResource("SphereShape3D_33mbd")

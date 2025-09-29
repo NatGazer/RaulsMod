@@ -1,0 +1,21 @@
+[gd_scene load_steps=2 format=3 uid="uid://dvlb7w7ebgrrb"]
+
+[sub_resource type="GDScript" id="GDScript_t8ete"]
+resource_name = "Duplicator"
+script/source = "extends Node3D
+
+var DUPLICATE : bool = false
+
+func _ready() -> void:
+	if DUPLICATE:
+		var duplicated_worm : Node3D = $\"..\".duplicate()
+		duplicated_worm.position.x += 30
+		duplicated_worm.get_node(\"Duplicator\").DUPLICATE = false
+		
+		$\"../..\".add_child.call_deferred(duplicated_worm)
+		
+"
+
+[node name="Duplicator" type="Node3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.70378, -21.0829, -1.05579)
+script = SubResource("GDScript_t8ete")

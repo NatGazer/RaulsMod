@@ -1,0 +1,191 @@
+[gd_scene load_steps=9 format=3 uid="uid://cdjervgyjww03"]
+
+[ext_resource type="PackedScene" uid="uid://dphxutyejtlt6" path="res://LogicObjects/SempreEmPe/SempreEmPeHead.tscn" id="1_6mvcx"]
+[ext_resource type="PackedScene" uid="uid://cc1rdsim0lfko" path="res://LogicObjects/SempreEmPe/SempreEmPeFoot.tscn" id="2_6mvcx"]
+
+[sub_resource type="GDScript" id="GDScript_relfh"]
+resource_name = "Player"
+script/source = "extends Node3D
+
+var center_of_mass : Vector3
+
+func get_center_of_mass() -> Vector3:
+	center_of_mass = Vector3.ZERO
+	var nRigidBodies : int = 0
+	for node in get_children(true):
+		if node is RigidBody3D:
+			nRigidBodies += 1
+			center_of_mass += node.global_position + node.center_of_mass
+	return center_of_mass / nRigidBodies
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_1qhwq"]
+
+[sub_resource type="GDScript" id="GDScript_myjsm"]
+resource_name = "trunk_Legs"
+script/source = "extends Generic6DOFJoint3D
+
+const MAX_WILL : float = 2
+const GIVE_UP_DISTANCE : float = 0.35
+
+var timer : float = 0.0
+
+var instability : Vector3
+var integral_instability : Vector3
+var derivative_instability : Vector3
+
+var will : Vector3
+var integral_will : Vector3
+var derivative_will : Vector3
+
+func _physics_process(delta: float) -> void:
+	timer += delta
+	if timer < 1: return
+	%Trunk.sleeping = false
+	
+	## Player center of mass
+	var center_of_mass : Vector3 = owner.get_center_of_mass()
+	#Utils.draw_line(center_of_mass, center_of_mass+Vector3(0, 10, 0), Color.BLUE, 1)
+	##### DRAW LINE became TOO EXPENSIVE IN GODOT 4.4.1??
+	## Legs contact point
+	var leg_contact_pos : Vector3 = %Legs.get_contact_position()
+
+	# Physics server not running or not touching the ground
+	if leg_contact_pos == Vector3.INF:
+		return
+	
+	#Utils.draw_line(leg_contact_pos, leg_contact_pos+Vector3(0, 10, 0), Color.RED, 1)
+	
+	derivative_instability = instability
+
+	instability = center_of_mass - leg_contact_pos
+	instability.y=0
+	
+	#In case of fall, give up trying to get up and wait help
+	if instability.length() > GIVE_UP_DISTANCE:
+		return
+	
+	derivative_will = will
+	
+	# Will Vector Management
+	will = %Legs.global_position - $\"../../MeshInstance3D\".global_position
+	var will_length : float = will.length()
+	var will_versor : Vector3 = will / will_length
+	will = min(will_length, MAX_WILL) * will_versor
+	will.y=0
+	
+	derivative_instability -= instability
+	integral_instability += instability
+	
+	var m : float = 2.0
+	
+	## PID for stability
+	var sP : float = 28E4 * m
+	var sD : float = 19E5 * m
+	var sI : float = 50 * m
+	
+	var stability_torque : Vector3 = (instability * sP
+									+ integral_instability * sI
+									- derivative_instability * sD)
+
+	derivative_will -= will
+	derivative_will = derivative_will.limit_length(0.01)
+	
+	integral_will += will
+	
+	## PID to reach target
+	var wP : float = 180E2 * m
+	var wD : float = 1.5E6 * m
+	var wI : float = 0 * m
+	
+	var will_force : Vector3 = (will * wP
+							   + integral_will * wI
+							   - derivative_will * wD)
+	
+	%Legs.apply_force(will_force * delta)
+	
+	var total_torque : Vector3 = stability_torque * delta
+	%Legs.apply_torque(Vector3(total_torque.z, 0, -total_torque.x))
+	
+
+	
+"
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8jcc2"]
+friction = 15.0
+rough = true
+
+[sub_resource type="GDScript" id="GDScript_7tx8e"]
+resource_name = "Legs"
+script/source = "extends RigidBody3D
+
+var contact_position : Vector3 = Vector3.INF
+
+var state : PhysicsDirectBodyState3D
+
+func _ready() -> void:
+	contact_monitor = true
+	max_contacts_reported = 5
+	state = PhysicsServer3D.body_get_direct_state(get_rid())
+
+
+## MUST BE RUN IN PHYSICS-PROCESS
+func get_contact_position() -> Vector3:	
+	var contact_count : int = get_contact_count()
+	if contact_count == 0:
+		return Vector3.INF
+	
+	# Due to bug in Jolt, if the body sleeps, no contact point is returned (Godot 4.3)
+	if not sleeping and contact_count > 0:
+		contact_position = Vector3.ZERO
+		for i in contact_count:
+			contact_position += state.get_contact_collider_position(i)
+		contact_position /= contact_count
+		return contact_position
+	else:
+		return contact_position
+"
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_i6rb2"]
+
+[node name="SempreEmPe" type="Node3D"]
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 0, 0, 0)
+script = SubResource("GDScript_relfh")
+metadata/_edit_group_ = true
+
+[node name="Trunk" type="RigidBody3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mass = 40.0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Trunk"]
+shape = SubResource("BoxShape3D_1qhwq")
+
+[node name="SempreEmPeHead" parent="Trunk" instance=ExtResource("1_6mvcx")]
+
+[node name="SempreEmPeHead2" parent="Trunk" instance=ExtResource("1_6mvcx")]
+
+[node name="Trunk_Legs" type="Generic6DOFJoint3D" parent="."]
+transform = Transform3D(-4.37114e-08, 0, 1, 0.000244707, 1, 1.06965e-11, -1, 0.000244707, -4.37114e-08, 0, 0.5, 0)
+node_a = NodePath("../Trunk")
+node_b = NodePath("../Legs")
+angular_limit_x/enabled = false
+angular_limit_y/enabled = false
+angular_limit_z/enabled = false
+script = SubResource("GDScript_myjsm")
+
+[node name="Legs" type="RigidBody3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+mass = 50.0
+physics_material_override = SubResource("PhysicsMaterial_8jcc2")
+contact_monitor = true
+max_contacts_reported = 5
+script = SubResource("GDScript_7tx8e")
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Legs"]
+shape = SubResource("SphereShape3D_i6rb2")
+
+[node name="SempreEmPeFoot" parent="Legs" instance=ExtResource("2_6mvcx")]

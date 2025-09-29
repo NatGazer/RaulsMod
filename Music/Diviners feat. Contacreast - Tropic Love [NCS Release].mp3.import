@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cwmgxdoe57xtw"
+path="res://.godot/imported/Diviners feat. Contacreast - Tropic Love [NCS Release].mp3-e3f49e5277b793d8dbe526f8a58959aa.mp3str"
+
+[deps]
+
+source_file="res://Music/Diviners feat. Contacreast - Tropic Love [NCS Release].mp3"
+dest_files=["res://.godot/imported/Diviners feat. Contacreast - Tropic Love [NCS Release].mp3-e3f49e5277b793d8dbe526f8a58959aa.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

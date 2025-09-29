@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://drd71xsdfbwhu"
+path="res://.godot/imported/Lensko - Let's Go! [NCS Release].mp3-a56fd84530863599de91b5e28c896ebd.mp3str"
+
+[deps]
+
+source_file="res://Music/Lensko - Let's Go! [NCS Release].mp3"
+dest_files=["res://.godot/imported/Lensko - Let's Go! [NCS Release].mp3-a56fd84530863599de91b5e28c896ebd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

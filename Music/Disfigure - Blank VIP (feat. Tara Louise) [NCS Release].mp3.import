@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://chhc8yo3hciqt"
+path="res://.godot/imported/Disfigure - Blank VIP (feat. Tara Louise) [NCS Release].mp3-1cf45ae99ab2772c2931dcafd1f38283.mp3str"
+
+[deps]
+
+source_file="res://Music/Disfigure - Blank VIP (feat. Tara Louise) [NCS Release].mp3"
+dest_files=["res://.godot/imported/Disfigure - Blank VIP (feat. Tara Louise) [NCS Release].mp3-1cf45ae99ab2772c2931dcafd1f38283.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://d1njwyn4ky5yt"
+path="res://.godot/imported/Raven & Kreyn - In The Air [NCS Release].mp3-d45df55399c5a1c15cf584eb176cc2cd.mp3str"
+
+[deps]
+
+source_file="res://Music/Raven & Kreyn - In The Air [NCS Release].mp3"
+dest_files=["res://.godot/imported/Raven & Kreyn - In The Air [NCS Release].mp3-d45df55399c5a1c15cf584eb176cc2cd.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

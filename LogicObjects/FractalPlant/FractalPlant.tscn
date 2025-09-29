@@ -1,0 +1,62 @@
+[gd_scene load_steps=3 format=3 uid="uid://c6fjavnshe1xi"]
+
+[sub_resource type="GDScript" id="GDScript_kulb6"]
+resource_name = "FractalPlant"
+script/source = "extends Node3D
+
+var leaf : PackedScene = preload(\"res://LogicObjects/FractalPlant/Leaf.tscn\")
+
+var generation_delay : float = 0.5
+var time : float = generation_delay
+var generation : int = 0
+var position_y : float = 0.0
+var leaf_group_rotation : float = 0.0
+var leaf_scale : float = 1.0
+
+var leafs_per_layer : float = 4
+var max_generations : int = 50
+var bump_generation : int = 35
+
+
+func generate_leaf_layer() -> void:
+	var y_angle : float = 0.0
+	for i in leafs_per_layer:
+		var leaf_instance : Node3D = leaf.instantiate()
+		leaf_instance.rotate_y(y_angle + leaf_group_rotation)
+		leaf_instance.translate(Vector3(0, position_y, 0))
+		leaf_instance.scale = Vector3.ONE * leaf_scale
+		$RigidBody3D.add_child(leaf_instance)
+		y_angle += 2*PI / leafs_per_layer
+
+func _process(delta: float) -> void:
+	time += delta
+	if time > generation_delay and generation < max_generations:
+		time = 0.0
+		generation += 1
+		generate_leaf_layer()
+		position_y += 0.08 * leaf_scale
+		leaf_group_rotation += 1#deg_to_rad(30)
+		leaf_scale *= 0.95
+		
+		if generation == bump_generation:
+			leaf_scale *= 1.5
+		
+		if generation == max_generations:
+			for child in $RigidBody3D.get_children():
+				if child.has_node(\"%AnimationPlayer\"):
+					child.get_node(\"%AnimationPlayer\").pause()
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_kulb6"]
+height = 1.15771
+radius = 1.02295
+
+[node name="FractalPlant" type="Node3D"]
+script = SubResource("GDScript_kulb6")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+mass = 20.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.578857, 0)
+shape = SubResource("CylinderShape3D_kulb6")

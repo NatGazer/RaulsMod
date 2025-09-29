@@ -1,0 +1,78 @@
+[gd_scene load_steps=3 format=3 uid="uid://bif7a5hfilsvn"]
+
+[ext_resource type="PackedScene" uid="uid://i8c7pij5i3sp" path="res://LogicObjects/Wako/Wako.blend" id="1_rfspj"]
+
+[sub_resource type="GDScript" id="GDScript_jywg5"]
+resource_name = "StateMachine"
+script/source = "extends Node
+
+enum St { IDLE, WALK }
+var state = St.IDLE
+
+@onready var anim_player = %Wako/AnimationPlayer
+
+var time : float = 0.0
+var noise : FastNoiseLite = FastNoiseLite.new()
+
+const BLEND_TIME : float = 0.5
+var blend_ratio : float = 0.0
+
+var speed : float = randf_range(2, 5)
+var idle_time : float = randf_range(0.5, 3)
+var walk_time : float = randf_range(3, 8)
+var turn_speed : float = randf_range(0.5, 2.5)
+
+func _ready():
+	noise.seed = randi()
+	start_state(St.WALK)
+
+func _process(delta: float) -> void:
+	time += delta
+	
+	## Process State Dynamics ##
+	match state:
+		St.IDLE:
+			if blend_ratio > 0: blend_ratio -= delta
+			walk_random(delta*speed*blend_ratio/BLEND_TIME)
+		St.WALK:
+			if blend_ratio < BLEND_TIME: blend_ratio += delta
+			walk_random(delta*speed*blend_ratio/BLEND_TIME)
+
+func start_state(new_state: St) -> void:
+	state = new_state
+	
+	## Change State Logic ##
+	match state:
+		St.IDLE:
+			anim_player.play(\"wk_idle\", BLEND_TIME)
+			wait(idle_time, _change_state)
+		St.WALK:
+			anim_player.play(\"wk_walkcycle\", BLEND_TIME, speed)
+			wait(walk_time, _change_state)
+
+func _change_state() -> void:
+	match state:
+		St.IDLE:
+			start_state(St.WALK)
+		St.WALK:
+			start_state(St.IDLE)
+
+func walk_random(velocity : float):
+	var direction : float = turn_speed*PI*noise.get_noise_1d(turn_speed*time*5) # -PI to PI 
+	%Wako.rotation = Vector3(0, direction, 0)
+	%Wako.position.z += -velocity * cos(direction)
+	%Wako.position.x += -velocity * sin(direction)
+
+func wait(wait_time : float, callable : Callable):
+	get_tree().create_timer(wait_time).timeout.connect(callable)
+"
+
+[node name="Wako" type="Node3D"]
+
+[node name="StateMachine" type="Node" parent="."]
+script = SubResource("GDScript_jywg5")
+
+[node name="Timer" type="Timer" parent="."]
+
+[node name="Wako" parent="." instance=ExtResource("1_rfspj")]
+unique_name_in_owner = true

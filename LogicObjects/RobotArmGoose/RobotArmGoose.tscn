@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://bwl5wr22vkunp"]
+
+[ext_resource type="PackedScene" uid="uid://bfxxdvin4rl34" path="res://LogicObjects/RobotArmGoose/RobotArmGoose.blend" id="1_qg5t6"]
+
+[node name="RobotArmGoose" type="Node3D"]
+
+[node name="RobotArmGoose" parent="." instance=ExtResource("1_qg5t6")]

@@ -1,0 +1,322 @@
+[gd_scene load_steps=11 format=3 uid="uid://brive52b6wa42"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_x050b"]
+friction = 1.6
+rough = true
+
+[sub_resource type="GDScript" id="GDScript_7fd3y"]
+script/source = "extends RigidBody3D
+
+const walk_force = 30000.0
+const run_force  = 35000.0
+
+const walk_speed = 8.0
+const run_speed = 12.0
+
+const equilibrium = 1500000.0
+var gravity_direction := Vector3(0, 1, 0)
+const jump_impulse = 150000.0
+const cam_sensitivity = 3
+var on_ground : bool = true
+var softned_direction : Vector3
+
+@onready var cam_holder : Node3D = %cam_holder
+var active : bool = true
+
+signal just_activated()
+signal just_deactivated()
+
+func activate() -> void:
+	active = true
+	process_mode = Node.PROCESS_MODE_ALWAYS # Enables collisions and RBgrabber
+	Global.Camera.set_parent(%cam_holder)
+	just_activated.emit()
+
+func deactivate() -> void:
+	active = false
+	process_mode = Node.PROCESS_MODE_DISABLED # Disables collisions and RBgrabber
+	just_deactivated.emit()
+
+func get_camera() -> Camera3D:
+	return %cam
+
+func _enter_tree() -> void:
+	Global.Player = self
+
+func _ready() -> void:
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _input(event : InputEvent) -> void:
+	if not active: return
+	
+	# Mouse Direction
+	if event is InputEventMouseMotion:
+		%cam_holder.rotation.y -= event.relative.x / 1000 * cam_sensitivity
+		%cam_holder.rotation.x -= event.relative.y / 1000 * cam_sensitivity
+		%cam_holder.rotation.x = clamp(%cam_holder.rotation.x, PI/-2, PI/2)
+
+func _physics_process(delta: float) -> void:
+	# Angular Equilibrium
+	var current_up = global_transform.basis.y
+	var alignment_error = current_up.cross(-gravity_direction.normalized())
+	var equilibrium_by_velocity : float = clampf(20-0.5*linear_velocity.length(), 0, 1) #Unstabilize with great velocities
+	apply_torque(-alignment_error * equilibrium * equilibrium_by_velocity * delta)
+	
+	if not active: return
+	
+	# Absolute direction based on input
+	var raw_direction := Vector3(
+			float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A)),
+			float(Input.is_physical_key_pressed(KEY_E)) - float(Input.is_physical_key_pressed(KEY_Q)), 
+			float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
+		).normalized()
+	
+	# Soften Direction input
+	softned_direction = lerp(softned_direction, raw_direction, 1-exp(-delta*10))
+
+	# Convert direction to local coordinates
+	var direction : Vector3 = basis * softned_direction
+	
+	# Rotate direction so that forward is where the camera is pointing
+	direction = direction.rotated(basis.y, %cam_holder.rotation.y)
+	
+	#Direction is contrained to the Y plane, no up or down force
+	direction.y = 0
+	
+	# Apply force multiplier run/walk and damp max velocity
+	if Input.is_physical_key_pressed(KEY_SHIFT):
+		direction *= run_force * (Vector3.ONE * run_speed - abs(linear_velocity))
+	elif Input.is_physical_key_pressed(KEY_ALT):
+		direction *= walk_force * (Vector3.ONE * 0.5 * walk_speed - abs(linear_velocity))
+	else:
+		direction *= walk_force * (Vector3.ONE * walk_speed - abs(linear_velocity))
+	
+	# Greatly reduce motion if in mid air
+	if not on_ground:
+		direction *= 0.2
+	
+	apply_central_force(direction*delta)
+	
+	# Avoid jump when not touching anything
+	if not on_ground:
+		return
+	
+	# Impulse Jump + Climbing
+	if Input.is_physical_key_pressed(KEY_SPACE):
+		apply_central_force(gravity_direction * delta * 
+			(jump_impulse * (walk_speed - abs(linear_velocity.y))))
+	
+		
+func _on_body_entered(_body: Node) -> void:
+	on_ground = true
+
+func _on_body_exited(_body: Node) -> void:
+	on_ground = false
+"
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_02r4i"]
+radius = 0.35
+
+[sub_resource type="GDScript" id="GDScript_somg5"]
+resource_name = "Camera"
+script/source = "extends Camera3D
+
+\"\"\"
+Auto-snaps to Character
+Can snap to any other object with set_parent or set_orbital_parent
+
+\"\"\"
+
+var zoom : bool = false
+var last_pos : Vector3
+var velocity : float
+
+var orbitDistance : float = 0.0
+
+var SHARPNESS : float = 40
+var sharpness : float = SHARPNESS
+
+var rotation_speed : float = 3
+
+func _enter_tree() -> void:
+	Global.Camera = self
+
+func _ready() -> void:
+	top_level = true
+	await get_tree().process_frame
+
+	Global.Player.activate()
+	
+	last_pos = global_position
+
+var tween : Tween
+func set_parent(new_parent : Node3D, smoothness : float = 2) -> void:
+	orbitDistance = 0.0
+	_temporary_smoothness(smoothness)
+	get_parent().remove_child(self)
+	new_parent.add_child(self)
+
+func set_orbital_parent(new_parent : Node3D, newOrbitDistance : float, smoothness : float = 1):
+	set_parent(new_parent, smoothness)
+	orbitDistance = newOrbitDistance # Needs to be after set_parent
+
+func _temporary_smoothness( time : float = 2, new_sharpness : float = SHARPNESS/300):
+	if tween: tween.kill()
+	tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	sharpness = new_sharpness
+	tween.tween_property(self, \"sharpness\", SHARPNESS, time)
+
+func _physics_process(delta: float) -> void:
+	if get_parent() is not Node3D: return
+	
+	## Smoothed out camera position ##
+	var target_pos : Transform3D = get_parent().global_transform
+	
+	# Handle Orbital Parent mode
+	if orbitDistance > 0:
+		target_pos.origin += target_pos.basis.z * orbitDistance
+	
+	var lerp_delta : float = 1 - exp(-delta)
+	
+	global_transform = global_transform.interpolate_with(target_pos, sharpness * lerp_delta)
+	
+	## Dynamic FOV Velocity Calculation ##
+	velocity = (global_position - last_pos).length() * lerp_delta
+	last_pos = global_position
+
+	## Dynamic FOV  and Zoom ##
+	if zoom:
+		fov -= (fov-30)*10*lerp_delta
+	else:
+		fov -= (fov-90-velocity*100)*10*lerp_delta
+	fov = clampf(fov, 45, 150)
+	
+	
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"zoom\"):
+		zoom = true
+	elif event.is_action_released(\"zoom\"):
+		zoom = false
+	
+	# Change orbit distance with scroll
+	if orbitDistance > 0:
+		if event is InputEventMouseButton:
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP and orbitDistance > 0.1: # decrease distance
+				orbitDistance *= 0.95
+			if event.button_index == MOUSE_BUTTON_WHEEL_DOWN: # increase distance
+				orbitDistance *= 1.05
+		
+		if event is InputEventMouseMotion:
+			get_parent().rotation.y -= event.relative.x / 1000 * rotation_speed
+			get_parent().rotation.x -= event.relative.y / 1000 * rotation_speed
+"
+
+[sub_resource type="Curve" id="Curve_fp6v5"]
+_data = [Vector2(0, 0), 0.0, 0.0, 0, 0, Vector2(0.503356, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_w48qg"]
+curve = SubResource("Curve_fp6v5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_xkpuy"]
+emission_shape_scale = Vector3(5, 5, 5)
+emission_shape = 2
+emission_sphere_radius = 1.0
+gravity = Vector3(0, 0.61, 0)
+scale_curve = SubResource("CurveTexture_w48qg")
+turbulence_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_vivmo"]
+shading_mode = 0
+
+[sub_resource type="SphereMesh" id="SphereMesh_3l62x"]
+material = SubResource("StandardMaterial3D_vivmo")
+radius = 0.01
+height = 0.02
+radial_segments = 4
+rings = 1
+
+[sub_resource type="GDScript" id="GDScript_fp6v5"]
+resource_name = "HandToolManager"
+script/source = "extends Node3D
+
+var tool_id : int = 1
+var tool_rest_position : Vector3
+var tool_change_tween : Tween
+
+var tool_list : Array[Node3D] = [
+	Node3D.new(),
+	preload(\"res://Components/HandTools/RBgrabber/RBgrabber.tscn\").instantiate(),
+	preload(\"res://Components/HandTools/GunAssault/GunAssault.tscn\").instantiate(),
+]
+
+func _ready() -> void:
+	tool_rest_position = position
+	Global.Player.just_activated.connect(_player_activated)
+	Global.Player.just_deactivated.connect(_player_deactivated)
+
+func _player_activated()   -> void:
+	set_gun(tool_id)
+	process_mode = Node.PROCESS_MODE_INHERIT
+func _player_deactivated() -> void:
+	set_gun(0)
+	process_mode = Node.PROCESS_MODE_DISABLED
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"NextGun\"):
+		if tool_id >= tool_list.size()-1: tool_id = -1 # Loop gun change
+		tool_id += 1
+		set_gun(tool_id)
+	elif event.is_action_pressed(\"PrevGun\"):
+		if tool_id <= 0: tool_id = tool_list.size() # Loop gun change
+		tool_id -= 1
+		set_gun(tool_id)
+
+func set_gun(new_tool_id : int) -> void:
+	if tool_change_tween: tool_change_tween.kill()
+	tool_change_tween = get_tree().create_tween().set_trans(Tween.TRANS_EXPO)
+	
+	tool_change_tween.tween_property(self, \"position:y\", tool_rest_position.y-1, 0.2)
+	tool_change_tween.tween_callback(_instant_replace_gun.bind(new_tool_id))
+	tool_change_tween.tween_property(self, \"position:y\", tool_rest_position.y, 0.2)
+
+func _instant_replace_gun(new_tool_id : int) -> void:
+	if get_children(): remove_child(get_children()[0])
+	add_child(tool_list[new_tool_id])
+"
+
+[node name="CharacterRB" type="RigidBody3D"]
+mass = 80.0
+physics_material_override = SubResource("PhysicsMaterial_x050b")
+contact_monitor = true
+max_contacts_reported = 1
+angular_damp = 50.0
+script = SubResource("GDScript_7fd3y")
+metadata/_edit_group_ = true
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_02r4i")
+debug_color = Color(50, 50, 50, 1)
+
+[node name="cam_holder" type="Marker3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.677531, 0)
+
+[node name="Camera" type="Camera3D" parent="."]
+fov = 90.0
+script = SubResource("GDScript_somg5")
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="Camera"]
+transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0.586125, -1.00337)
+amount = 500
+lifetime = 10.0
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_xkpuy")
+draw_pass_1 = SubResource("SphereMesh_3l62x")
+
+[node name="HandToolManager" type="Node3D" parent="Camera"]
+unique_name_in_owner = true
+script = SubResource("GDScript_fp6v5")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
+[connection signal="body_exited" from="." to="." method="_on_body_exited"]

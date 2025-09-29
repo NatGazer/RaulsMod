@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://durcakaqh7sqx"
+path="res://.godot/imported/Ship Wrek, Zookeepers & Trauzers - Vessel [NCS Release].mp3-86b2ea9a0deccbf8d4f903a3866692e3.mp3str"
+
+[deps]
+
+source_file="res://Music/Ship Wrek, Zookeepers & Trauzers - Vessel [NCS Release].mp3"
+dest_files=["res://.godot/imported/Ship Wrek, Zookeepers & Trauzers - Vessel [NCS Release].mp3-86b2ea9a0deccbf8d4f903a3866692e3.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://dkwgiq7gsuji2"
+path="res://.godot/imported/Electro-Light - Symbolism [NCS Release].mp3-1a5f5efb0f5e19bf521ce4d7af265922.mp3str"
+
+[deps]
+
+source_file="res://Music/Electro-Light - Symbolism [NCS Release].mp3"
+dest_files=["res://.godot/imported/Electro-Light - Symbolism [NCS Release].mp3-1a5f5efb0f5e19bf521ce4d7af265922.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

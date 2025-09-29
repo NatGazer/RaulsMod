@@ -1,0 +1,569 @@
+[gd_scene load_steps=23 format=3 uid="uid://bj4xmnjraoag2"]
+
+[ext_resource type="ArrayMesh" uid="uid://bq28uj01mccf5" path="res://LogicObjects/Vehicles/Tractor/Tractor_Chassi.res" id="1_4kb4f"]
+[ext_resource type="Script" uid="uid://dftf3sg6gpsbp" path="res://LogicObjects/Vehicles/VehicleInput.gd" id="1_hblr1"]
+[ext_resource type="Script" uid="uid://rla4fby2ckfg" path="res://LogicObjects/Vehicles/Vehicle.gd" id="1_t0jrv"]
+[ext_resource type="Script" uid="uid://0tdhexyq6vbf" path="res://scripts/CopyParentPosition.gd" id="2_iirbi"]
+[ext_resource type="ArrayMesh" uid="uid://clq0nqc5obymj" path="res://LogicObjects/Vehicles/Tractor/Tractor_FL.res" id="2_s8hwa"]
+[ext_resource type="Script" uid="uid://d02dy2guf7jtg" path="res://LogicObjects/Vehicles/ChassiControls.gd" id="3_pfij7"]
+[ext_resource type="AudioStream" uid="uid://b7swxphthemv2" path="res://Audio/cars/carSound.wav" id="6_mo374"]
+
+[sub_resource type="Curve" id="Curve_bs2ep"]
+_data = [Vector2(0, 0.590705), 0.0, 0.0704776, 0, 0, Vector2(0.862319, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -21.6771, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6pu4j"]
+points = PackedVector3Array(1.85716, 1.06539, 0.999804, 1.85716, 1.06539, -1, -3.04773, 1.02036, 0.999804, 3.63785, 0.767946, 0.999804, -3.04773, 1.02036, -1, 3.63785, 0.767946, -1, -3.02941, -0.979511, 0.999804, 3.23734, -0.875825, 0.999804, -3.02941, -0.979511, -1, 3.23734, -0.875825, -1, 1.87549, -0.934674, 0.999804, 1.87549, -0.934674, -1)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_6ex02"]
+points = PackedVector3Array(-0.655742, -1.71229, -0.199326, -0.376298, -1.80504, -0.316266, -0.635031, -1.71388, 0.11686, -0.0636995, 2.19918, 0.187504, -0.0636995, 2.19918, -0.0716969, 0.185213, 0.624399, -0.151829, -0.182711, -1.86356, -0.0723828, -0.342559, -1.80743, 0.195277, 0.182782, 2.20157, -0.151829, 0.182782, 2.20157, 0.267636, 0.335144, 2.20316, 0.0578751, 0.337575, 0.625991, 0.0578751, 0.185213, 0.624399, 0.267579)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_3075l"]
+points = PackedVector3Array(-1.42972, -1.48461, -1.00002, -1.42972, -1.48461, 0.999781, -1.26803, 1.48591, -1.23743, -1.34888, 0.000504017, -1.23743, 1.1757, -0.0472507, -1.23743, 0.948721, -1.52558, -1.00002, 0.948721, -1.52558, 0.999781, 1.1757, -0.0472507, 1.23743, -1.34888, 0.000504017, 1.23719, -1.26803, 1.48591, 1.23719, 1.07471, 1.43668, -1.23743, 1.07471, 1.43668, 1.23719)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_pxgg2"]
+points = PackedVector3Array(-0.865922, 0.865281, 0.702367, -0.865922, 0.865281, -0.702505, -1.56946, -0.687609, 0.702367, 1.17981, 0.742613, 0.702367, 1.17981, 0.742613, -0.702505, -1.56946, -0.687609, -0.702505, 1.19279, -0.662376, 0.702367, 1.19252, -0.662376, -0.702505)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_s8hwa"]
+transparency = 3
+alpha_hash_scale = 0.32
+alpha_antialiasing_mode = 0
+albedo_color = Color(0.45, 0.45, 0.45, 0.25098)
+
+[sub_resource type="Curve" id="Curve_iirbi"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.828025, 0.617978), -1.41124, -1.41124, 0, 0, Vector2(1, 0), -4.0321, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="CurveTexture" id="CurveTexture_bs2ep"]
+width = 40
+curve = SubResource("Curve_iirbi")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_4kb4f"]
+spread = 25.247
+initial_velocity_min = 3.0
+initial_velocity_max = 4.0
+gravity = Vector3(0, 2, 0)
+damping_min = 1.5
+damping_max = 1.5
+attractor_interaction_enabled = false
+scale_min = 0.8
+scale_max = 1.2
+scale_curve = SubResource("CurveTexture_bs2ep")
+
+[sub_resource type="SphereMesh" id="SphereMesh_tr181"]
+radius = 0.2
+height = 0.4
+radial_segments = 6
+rings = 3
+
+[sub_resource type="GDScript" id="GDScript_ljxes"]
+resource_name = "VehichleAudio"
+script/source = "extends AudioStreamPlayer3D
+
+var damped_rpm : float = 0.0
+var damped_torque : float = 0.0
+
+func _ready() -> void:
+	pitch_scale = 0.05
+
+func _physics_process(delta: float) -> void:
+	damped_rpm = lerpf(damped_rpm, %Chassi.motor_rpm, delta*10)
+	pitch_scale = max(0.03, abs(damped_rpm) / 4000)
+	
+	damped_torque = lerpf(damped_torque, abs(%Chassi.torque), delta*5)
+	volume_db = -10 + damped_torque*0.01
+"
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_s8hwa"]
+height = 0.826172
+radius = 1.17432
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_1pgrb"]
+height = 1.21387
+radius = 1.68164
+
+[sub_resource type="GDScript" id="GDScript_pfij7"]
+resource_name = "VehicleUI"
+script/source = "extends Control
+
+var properties : Dictionary[String, Label] = {}
+
+## Manages property printing for debugging ##
+func write_number(prop_name : String, prop_value: float, digits : int, unit : String = \"\"):
+	if prop_name not in properties:
+		var label_instance : Label = Label.new()
+		$V.add_child(label_instance)
+		properties[prop_name] = label_instance
+	
+	properties[prop_name].text = prop_name + \": \" + str(prop_value).pad_decimals(digits) + \" \" +  unit
+"
+
+[sub_resource type="GDScript" id="GDScript_mo374"]
+resource_name = "Speedometer"
+script/source = "# Speedometer.gd
+# A custom Control node for drawing a dynamic speedometer.
+# Add this script to a Control node. The @tool annotation allows
+# it to run in the editor for live previews.
+@tool
+extends Control
+
+#-----------------------------------------------------------------------------
+# EXPORTED VARIABLES - Customize these in the Inspector
+#-----------------------------------------------------------------------------
+
+@export_group(\"Core Settings\")
+# The current speed to display.
+@export var speed: float = 0.0 : set = set_speed
+# The maximum speed value on the gauge.
+@export var max_speed: float = 200.0 : set = set_max_speed
+
+@export_group(\"Appearance\")
+# The angle for the start of the gauge (0 speed). 0 degrees is to the right.
+@export_range(-360, 180, 1) var start_angle_deg: float = -135.0 : set = set_start_angle_deg
+# The angle for the end of the gauge (max_speed).
+@export_range(-180, 180, 1) var end_angle_deg: float = 135.0 : set = set_end_angle_deg
+# The color of the speedometer's background circle.
+@export var background_color: Color = Color(0.1, 0.1, 0.1, 0.7)
+# The color of the main gauge arc.
+@export var gauge_color: Color = Color.WHITE
+# The color of the needle.
+@export var needle_color: Color = Color(\"#ff4545\") # A nice red color
+
+@export_group(\"Ticks & Labels\")
+# The value between each major tick mark.
+@export var major_tick_step: int = 40 : set = set_major_tick_step
+# The number of smaller ticks between each major one.
+@export var minor_ticks_per_major: int = 3 : set = set_minor_ticks_per_major
+# Show or hide the speed number labels.
+@export var show_labels: bool = true : set = set_show_labels
+# The font size for the speed labels.
+@export var label_font_size: int = 16 : set = set_label_font_size
+
+
+#-----------------------------------------------------------------------------
+# INTERNAL VARIABLES
+#-----------------------------------------------------------------------------
+
+var start_angle_rad: float
+var end_angle_rad: float
+var angle_range_rad: float
+
+
+#-----------------------------------------------------------------------------
+# SETTERS - These functions are called when you change the exported variables.
+#-----------------------------------------------------------------------------
+
+func set_speed(value: float):
+	# Clamp the speed between 0 and max_speed and request a redraw.
+	speed = clampf(value, 0.0, max_speed)
+	queue_redraw()
+
+func set_max_speed(value: float):
+	# Ensure max_speed is a positive number.
+	max_speed = max(1.0, value)
+	# If the current speed is now over the new max, clamp it.
+	if speed > max_speed:
+		speed = max_speed
+	queue_redraw()
+
+# Setters for appearance and tick properties.
+# These now correctly update the variable before redrawing.
+func set_start_angle_deg(value: float):
+	start_angle_deg = value
+	queue_redraw()
+
+func set_end_angle_deg(value: float):
+	end_angle_deg = value
+	queue_redraw()
+
+func set_major_tick_step(value: int):
+	major_tick_step = value
+	queue_redraw()
+
+func set_minor_ticks_per_major(value: int):
+	minor_ticks_per_major = value
+	queue_redraw()
+
+func set_show_labels(value: bool):
+	show_labels = value
+	queue_redraw()
+
+func set_label_font_size(value: int):
+	label_font_size = value
+	queue_redraw()
+
+
+#-----------------------------------------------------------------------------
+# GODOT BUILT-IN FUNCTIONS
+#-----------------------------------------------------------------------------
+
+func _draw():
+	# This is the main drawing function. It's called automatically whenever
+	# the control needs to be redrawn (e.g., after queue_redraw() is called).
+
+	# First, update the angle values from our degree-based exports.
+	start_angle_rad = deg_to_rad(start_angle_deg)
+	end_angle_rad = deg_to_rad(end_angle_deg)
+	angle_range_rad = end_angle_rad - start_angle_rad
+
+	# Define the drawing area based on the control's size.
+	var center = size / 2.0
+	var radius = min(size.x, size.y) / 2.0 * 0.95 # Use 95% of the control's bounds
+
+	# 1. Draw the background circle
+	draw_circle(center, radius, background_color)
+
+	# 2. Draw the main gauge arc
+	var gauge_width = radius * 0.1
+	draw_arc(center, radius - gauge_width / 2.0, start_angle_rad, end_angle_rad, 64, gauge_color, gauge_width, true)
+
+	# 3. Draw the tick marks and text labels
+	_draw_ticks_and_labels(center, radius, gauge_width)
+
+	# 4. Draw the needle
+	_draw_needle(center, radius)
+
+	# 5. Draw the center pivot point for the needle
+	draw_circle(center, radius * 0.08, needle_color)
+	draw_circle(center, radius * 0.05, Color.BLACK)
+
+
+#-----------------------------------------------------------------------------
+# HELPER DRAWING FUNCTIONS
+#-----------------------------------------------------------------------------
+
+func _draw_ticks_and_labels(center: Vector2, radius: float, gauge_width: float):
+	if major_tick_step <= 0: return
+
+	var tick_outer_radius = radius - gauge_width
+	var major_tick_length = radius * 0.1
+	var minor_tick_length = radius * 0.05
+
+	var num_major_ticks = floori(max_speed / major_tick_step) + 1
+
+	for i in range(num_major_ticks):
+		var current_speed_val = float(i * major_tick_step)
+		if current_speed_val > max_speed: continue
+
+		var angle = _get_angle_for_speed(current_speed_val)
+		var direction_vec = Vector2.from_angle(angle)
+
+		# Draw Major Tick
+		var major_start_pos = center + direction_vec * (tick_outer_radius - major_tick_length)
+		var major_end_pos = center + direction_vec * tick_outer_radius
+		draw_line(major_start_pos, major_end_pos, gauge_color, 2.0, true)
+		
+		# Draw Minor Ticks (between this major tick and the next)
+		if i < num_major_ticks - 1 and minor_ticks_per_major > 0:
+			var minor_step = float(major_tick_step) / float(minor_ticks_per_major + 1)
+			for j in range(1, minor_ticks_per_major + 2):
+				var minor_speed = current_speed_val + float(j) * minor_step
+				if minor_speed > max_speed: break
+				
+				var minor_angle = _get_angle_for_speed(minor_speed)
+				var minor_dir_vec = Vector2.from_angle(minor_angle)
+				var minor_start_pos = center + minor_dir_vec * (tick_outer_radius - minor_tick_length)
+				var minor_end_pos = center + minor_dir_vec * tick_outer_radius
+				draw_line(minor_start_pos, minor_end_pos, gauge_color, 1.0, true)
+		
+		# Draw Labels
+		if show_labels:
+			var label_radius = tick_outer_radius - major_tick_length - label_font_size * 0.7
+			var label_pos = center + direction_vec * label_radius
+			var theme_font = get_theme_font(\"font\", \"Label\")
+			# Center the text on its position
+			var text_size = theme_font.get_string_size(str(current_speed_val), HORIZONTAL_ALIGNMENT_CENTER, -1, label_font_size)
+			draw_string(theme_font, label_pos - text_size / 2.0, str(current_speed_val), HORIZONTAL_ALIGNMENT_CENTER, -1, label_font_size)
+
+func _draw_needle(center: Vector2, radius: float):
+	var needle_angle = _get_angle_for_speed(speed)
+	var needle_length = radius * 0.9
+	var needle_base_width = radius * 0.05
+
+	# Define the needle as a triangle
+	var tip = center + Vector2.from_angle(needle_angle) * needle_length
+	var base1 = center + Vector2.from_angle(needle_angle + PI / 2) * needle_base_width
+	var base2 = center + Vector2.from_angle(needle_angle - PI / 2) * needle_base_width
+
+	var points = PackedVector2Array([tip, base1, base2])
+	var colors = PackedColorArray([needle_color, needle_color, needle_color])
+	draw_polygon(points, colors)
+
+#-----------------------------------------------------------------------------
+# UTILITY FUNCTION
+#-----------------------------------------------------------------------------
+
+func _get_angle_for_speed(value: float) -> float:
+	# Maps a speed value (e.g., 0 to 200) to an angle in radians
+	# within our defined start and end angles.
+	var speed_ratio = clampf(value / max_speed, 0.0, 1.0)
+	return start_angle_rad + speed_ratio * angle_range_rad
+"
+
+[node name="Tractor" type="Node3D" groups=["machines"]]
+script = ExtResource("1_t0jrv")
+
+[node name="VehicleInput" type="Node" parent="."]
+script = ExtResource("1_hblr1")
+
+[node name="Tractor" type="Node3D" parent="."]
+
+[node name="Chassi" type="RigidBody3D" parent="Tractor" node_paths=PackedStringArray("torque_wheels", "steering_wheels", "all_and_brake_wheels", "hand_brake_wheels")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.145076, 2.05957, 0)
+mass = 5000.0
+script = ExtResource("3_pfij7")
+base_gear_ratio = 60.0
+gear_ratios = PackedFloat32Array(-2.5, 0, 2.71, 1.79, 1.3, 0.8)
+TORQUE = 500.0
+TORQUE_CURVE = SubResource("Curve_bs2ep")
+MAX_RPM = 2500.0
+MOTOR_FRICTION = 0.005
+MAX_TURN_RADIUS = 8.0
+BRAKE = 30000.0
+CLUTCH_DISENGAGE_TIME = 0.5
+CLUTCH_ENGAGE_TIME = 0.9
+torque_wheels = [NodePath("../RL/Generic6DOFJoint3D"), NodePath("../RR/Generic6DOFJoint3D")]
+steering_wheels = [NodePath("../FR/Generic6DOFJoint3D"), NodePath("../FL/Generic6DOFJoint3D")]
+all_and_brake_wheels = [NodePath("../FL/Generic6DOFJoint3D"), NodePath("../FR/Generic6DOFJoint3D"), NodePath("../RL/Generic6DOFJoint3D"), NodePath("../RR/Generic6DOFJoint3D")]
+hand_brake_wheels = [NodePath("../RL/Generic6DOFJoint3D"), NodePath("../RR/Generic6DOFJoint3D")]
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tractor/Chassi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0274248, 0.296699, 0)
+shape = SubResource("ConvexPolygonShape3D_6pu4j")
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="Tractor/Chassi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.314253, 1.31594, 1.31557)
+shape = SubResource("ConvexPolygonShape3D_6ex02")
+
+[node name="CollisionShape3D3" type="CollisionShape3D" parent="Tractor/Chassi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.43136, 2.11953, 0)
+shape = SubResource("ConvexPolygonShape3D_3075l")
+
+[node name="CollisionShape3D4" type="CollisionShape3D" parent="Tractor/Chassi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.49501, 0.283387, 0)
+shape = SubResource("ConvexPolygonShape3D_pxgg2")
+
+[node name="Chassi2" type="MeshInstance3D" parent="Tractor/Chassi"]
+mesh = ExtResource("1_4kb4f")
+skeleton = NodePath("")
+metadata/extras = {
+"ant_landscape": {}
+}
+
+[node name="Exaust" type="GPUParticles3D" parent="Tractor/Chassi"]
+unique_name_in_owner = true
+transform = Transform3D(0.779845, -0.0725911, -0.62175, 0.0926834, 0.995696, -8.92823e-09, 0.619073, -0.0576259, 0.783216, 0.0354104, 3.48337, 1.55753)
+material_override = SubResource("StandardMaterial3D_s8hwa")
+amount = 1024
+process_material = SubResource("ParticleProcessMaterial_4kb4f")
+draw_pass_1 = SubResource("SphereMesh_tr181")
+
+[node name="CamHolder" type="Marker3D" parent="Tractor/Chassi"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.657248, 2.49754, 0)
+script = ExtResource("2_iirbi")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="Tractor/Chassi"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.74104, 0.0325775, 0)
+stream = ExtResource("6_mo374")
+autoplay = true
+doppler_tracking = 1
+script = SubResource("GDScript_ljxes")
+
+[node name="FL" type="RigidBody3D" parent="Tractor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.58731, 1.22277, -1.61789)
+mass = 60.0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tractor/FL"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_s8hwa")
+
+[node name="FL" type="MeshInstance3D" parent="Tractor/FL"]
+mesh = ExtResource("2_s8hwa")
+skeleton = NodePath("")
+metadata/extras = {
+"ant_landscape": {}
+}
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Tractor/FL"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+node_a = NodePath("../../Chassi")
+node_b = NodePath("..")
+linear_limit_y/upper_distance = 0.1
+linear_limit_y/lower_distance = -0.3
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 80000.0
+linear_spring_y/damping = 1200.0
+linear_spring_y/equilibrium_point = -0.365
+angular_limit_x/enabled = false
+
+[node name="FR" type="RigidBody3D" parent="Tractor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.58731, 1.22277, 1.61789)
+mass = 60.0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tractor/FR"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_s8hwa")
+
+[node name="FR" type="MeshInstance3D" parent="Tractor/FR"]
+transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0, 0)
+mesh = ExtResource("2_s8hwa")
+skeleton = NodePath("")
+metadata/extras = {
+"ant_landscape": {}
+}
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Tractor/FR"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+node_a = NodePath("../../Chassi")
+node_b = NodePath("..")
+linear_limit_y/upper_distance = 0.1
+linear_limit_y/lower_distance = -0.3
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 80000.0
+linear_spring_y/damping = 1200.0
+linear_spring_y/equilibrium_point = -0.365
+angular_limit_x/enabled = false
+
+[node name="RL" type="RigidBody3D" parent="Tractor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.10996, 1.78087, -1.85033)
+mass = 200.0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tractor/RL"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_1pgrb")
+
+[node name="RL" type="MeshInstance3D" parent="Tractor/RL"]
+transform = Transform3D(1.41, 0, 0, 0, 1.41, 0, 0, 0, 1.41, 0, 0, 0)
+mesh = ExtResource("2_s8hwa")
+skeleton = NodePath("")
+metadata/extras = {
+"ant_landscape": {}
+}
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Tractor/RL"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+node_a = NodePath("../../Chassi")
+node_b = NodePath("..")
+linear_limit_y/upper_distance = 0.1
+linear_limit_y/lower_distance = -0.3
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 80000.0
+linear_spring_y/damping = 1200.0
+linear_spring_y/equilibrium_point = -0.365
+angular_limit_x/enabled = false
+
+[node name="RR" type="RigidBody3D" parent="Tractor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.10996, 1.78087, 1.85033)
+mass = 200.0
+metadata/_edit_group_ = true
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Tractor/RR"]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0, 0)
+shape = SubResource("CylinderShape3D_1pgrb")
+
+[node name="RR" type="MeshInstance3D" parent="Tractor/RR"]
+transform = Transform3D(-1.41, 0, -1.23266e-07, 0, 1.41, 0, 1.23266e-07, 0, -1.41, 0, 0, 0)
+mesh = ExtResource("2_s8hwa")
+skeleton = NodePath("")
+metadata/extras = {
+"ant_landscape": {}
+}
+
+[node name="Generic6DOFJoint3D" type="Generic6DOFJoint3D" parent="Tractor/RR"]
+transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, 0, 0, 0)
+node_a = NodePath("../../Chassi")
+node_b = NodePath("..")
+linear_limit_y/upper_distance = 0.1
+linear_limit_y/lower_distance = -0.3
+linear_spring_y/enabled = true
+linear_spring_y/stiffness = 80000.0
+linear_spring_y/damping = 1200.0
+linear_spring_y/equilibrium_point = -0.365
+angular_limit_x/enabled = false
+
+[node name="UI" type="Control" parent="."]
+unique_name_in_owner = true
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_pfij7")
+
+[node name="V" type="VBoxContainer" parent="UI"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -40.0
+offset_right = 57.0
+grow_vertical = 0
+
+[node name="Speedometer" type="Control" parent="UI"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -266.0
+offset_top = -190.0
+offset_right = 267.0
+offset_bottom = 75.0
+grow_horizontal = 2
+grow_vertical = 0
+script = SubResource("GDScript_mo374")
+max_speed = 70.0
+start_angle_deg = -200.0
+end_angle_deg = 20.0
+background_color = Color(0.101563, 0.101563, 0.101563, 0.7)
+gauge_color = Color(0.435161, 0.541868, 0.558594, 1)
+major_tick_step = 10
+minor_ticks_per_major = 1
+label_font_size = 13
+
+[node name="RPM" type="Control" parent="UI"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -553.0
+offset_top = -108.0
+offset_right = -204.0
+offset_bottom = 38.0
+grow_horizontal = 0
+grow_vertical = 0
+script = SubResource("GDScript_mo374")
+max_speed = 3.0
+start_angle_deg = -200.0
+end_angle_deg = 20.0
+gauge_color = Color(0.435161, 0.541868, 0.558594, 1)
+major_tick_step = 1
+minor_ticks_per_major = 2
+label_font_size = 13
+
+[node name="Gear" type="Label" parent="UI/RPM"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -19.5
+offset_top = -40.0
+offset_right = 20.5
+offset_bottom = 6.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "5"
+horizontal_alignment = 1

@@ -1,0 +1,49 @@
+[gd_scene load_steps=3 format=3 uid="uid://c7d6xs8i0quml"]
+
+[sub_resource type="AudioStreamMP3" id="AudioStreamMP3_amj5n"]
+
+[sub_resource type="GDScript" id="GDScript_1oomg"]
+resource_name = "MusicPlayer"
+script/source = "extends AudioStreamPlayer
+
+const MUSIC_FOLDER := \"res://Music\"
+
+# Stores the list of music files
+var music_files: Array = []
+
+func _ready():
+	load_music_files()
+	play_random_song()
+
+# Load all audio files from the specified folder
+func load_music_files():
+	var dir = DirAccess.open(MUSIC_FOLDER)
+	if dir:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != \"\":
+			if not dir.current_is_dir() and file_name.get_extension() == \"mp3\":
+				music_files.append(MUSIC_FOLDER + \"/\" + file_name)
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	else:
+		push_error(\"Could not open music folder: \" + MUSIC_FOLDER)
+
+# Select a random song and play it
+func play_random_song():
+	if music_files.size() == 0:
+		push_error(\"No music files found in: \" + MUSIC_FOLDER)
+		return
+
+	var random_file = music_files[randi() % music_files.size()]
+	var new_stream = load(random_file)
+	if new_stream:
+		self.stream = new_stream
+		play()
+	else:
+		push_error(\"Failed to load audio stream: \" + random_file)
+"
+
+[node name="MusicPlayer" type="AudioStreamPlayer"]
+stream = SubResource("AudioStreamMP3_amj5n")
+script = SubResource("GDScript_1oomg")

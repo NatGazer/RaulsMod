@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://3k03eth4tsxm"
+path="res://.godot/imported/Spektrem - Shine [NCS Release].mp3-89b2205afe01b9e5ddbc634ca5bc74e3.mp3str"
+
+[deps]
+
+source_file="res://Music/Spektrem - Shine [NCS Release].mp3"
+dest_files=["res://.godot/imported/Spektrem - Shine [NCS Release].mp3-89b2205afe01b9e5ddbc634ca5bc74e3.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

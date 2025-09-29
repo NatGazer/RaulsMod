@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cc1rdsim0lfko"]
+
+[ext_resource type="PackedScene" uid="uid://do780ctnt6l0f" path="res://LogicObjects/SempreEmPe/SempreEmPeFoot.blend" id="1_mx47r"]
+[ext_resource type="Material" uid="uid://dsj00mb37p6k3" path="res://Materials/Ice/ice_material.tres" id="2_dflu1"]
+
+[node name="SempreEmPeFoot" instance=ExtResource("1_mx47r")]
+
+[node name="Sphere" parent="." index="1"]
+material_override = ExtResource("2_dflu1")

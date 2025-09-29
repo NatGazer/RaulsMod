@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://cun04au6b28vb"
+path="res://.godot/imported/Laszlo - Fall To Light [NCS Release].mp3-3e0fc76b703cdc63b9b428ebb5f6551d.mp3str"
+
+[deps]
+
+source_file="res://Music/Laszlo - Fall To Light [NCS Release].mp3"
+dest_files=["res://.godot/imported/Laszlo - Fall To Light [NCS Release].mp3-3e0fc76b703cdc63b9b428ebb5f6551d.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

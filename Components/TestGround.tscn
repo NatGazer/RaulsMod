@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwbe0aprocknu"]
+
+[ext_resource type="Material" uid="uid://d0qswfyc1o6ec" path="res://Materials/[2K]Copper_tiles/copper_tiles.tres" id="1_ojcgd"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_ph78t"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_plksb"]
+size = Vector2(2000, 2000)
+
+[node name="Ground" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("WorldBoundaryShape3D_ph78t")
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+material_override = ExtResource("1_ojcgd")
+mesh = SubResource("PlaneMesh_plksb")
+skeleton = NodePath("../../..")

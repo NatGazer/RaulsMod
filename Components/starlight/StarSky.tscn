@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ba1pl1rxplo8v"]
+
+[ext_resource type="PackedScene" path="res://Components/starlight/Stars.tscn" id="1_3hipr"]
+[ext_resource type="Script" uid="uid://d3kba2prsmkn4" path="res://Components/starlight/StarGenerator.gd" id="2_skkup"]
+
+[node name="StarSky" type="Node3D"]
+
+[node name="Stars" parent="." instance=ExtResource("1_3hipr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1500, 0)
+script = ExtResource("2_skkup")
+size = 4000.0
+star_count = 20000
+rng_seed = 1234
+generate_at_origin = false
+shader_params/blur_amount = 0.2010000095475
+shader_params/billboard_size_deg = 66.4290031553775
+shader_params/meters_per_lightyear = 150.0

@@ -1,0 +1,81 @@
+[gd_scene load_steps=11 format=3 uid="uid://dp03s6uoaykyn"]
+
+[ext_resource type="Texture2D" uid="uid://cnhghbahksjc0" path="res://Components/HandTools/GunAssault/bullet_hole/bullet_hole_color_2k.png" id="1_6v1qb"]
+[ext_resource type="Texture2D" uid="uid://25cwf8jeblt8" path="res://Components/HandTools/GunAssault/bullet_hole/bullet_hole_normal_opengl_2k.png" id="2_vf7dt"]
+[ext_resource type="Texture2D" uid="uid://o427da5kwlwn" path="res://Components/HandTools/GunAssault/bullet_hole/bullet_hole_roughness_2k.jpg" id="3_0tb5b"]
+[ext_resource type="Texture2D" uid="uid://4a8yh3bd5cjq" path="res://Components/HandTools/GunAssault/bullet_hole/bullet_hole_emission_2k.png" id="4_vf7dt"]
+
+[sub_resource type="GDScript" id="GDScript_6v1qb"]
+resource_name = "BulletHit"
+script/source = "extends Node3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	$GPUParticles3D.one_shot = true
+	$GPUParticles3D.restart()
+	$Decal.emission_energy = 50
+
+
+func _process(delta: float) -> void:
+	if $Decal.emission_energy > 0.00000001:
+		$Decal.emission_energy -= 5*delta*$Decal.emission_energy
+	else:
+		$Decal.emission_energy = 0.0
+	
+		if $Decal.modulate.a > 0.0:
+			$Decal.modulate.a -= delta*0.1
+		else:
+			queue_free()
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6v1qb"]
+albedo_color = Color(0.988317, 1, 0, 1)
+emission_enabled = true
+emission = Color(0.988317, 1, 0, 1)
+emission_energy_multiplier = 50.0
+
+[sub_resource type="Curve" id="Curve_vf7dt"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0tb5b"]
+curve = SubResource("Curve_vf7dt")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_pan3v"]
+direction = Vector3(0, 0, -1)
+spread = 16.744
+initial_velocity_min = 2.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -5, 0)
+scale_min = 2.0
+scale_max = 2.0
+scale_curve = SubResource("CurveTexture_0tb5b")
+
+[sub_resource type="SphereMesh" id="SphereMesh_j3byy"]
+radius = 0.01
+height = 0.02
+radial_segments = 4
+rings = 1
+
+[node name="BulletHit" type="Node3D"]
+script = SubResource("GDScript_6v1qb")
+
+[node name="Decal" type="Decal" parent="."]
+transform = Transform3D(-1, -8.74228e-08, 3.82137e-15, 0, -4.37114e-08, -1, 8.74228e-08, -1, 4.37114e-08, 0, 0, 0)
+size = Vector3(0.1, 0.1, 0.1)
+texture_albedo = ExtResource("1_6v1qb")
+texture_normal = ExtResource("2_vf7dt")
+texture_orm = ExtResource("3_0tb5b")
+texture_emission = ExtResource("4_vf7dt")
+emission_energy = 0.0
+distance_fade_enabled = true
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0.0421519)
+material_override = SubResource("StandardMaterial3D_6v1qb")
+amount = 32
+lifetime = 0.2
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_pan3v")
+draw_pass_1 = SubResource("SphereMesh_j3byy")

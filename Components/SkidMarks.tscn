@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=3 uid="uid://capymtuibpox7"]
+
+[sub_resource type="GDScript" id="GDScript_pe0y1"]
+resource_name = "SkidMarks"
+script/source = "class_name SkidMark
+extends MeshInstance3D
+
+@export var width: float = 0.2  # width of the tire mark in world units
+@export var fade_duration: float = 2.0  # fade-out time in seconds
+
+var points: Array = []
+var is_fading: bool = false
+var fade_time_left: float = 0.0
+
+func _init():
+	# Prepare an empty mesh and a default material
+	mesh = ArrayMesh.new()
+	self.mesh = mesh
+	var mat = StandardMaterial3D.new()
+	mat.albedo_color = Color(0, 0, 0, 1)  # black color for tire mark
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA  # enable alpha transparency
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED            # render on both sides
+	self.material_override = mat
+
+func add_point(pos: Vector3):
+	# Add a new point (slightly above ground) and rebuild the mesh
+	var offset_pos = pos + Vector3.UP * 0.05
+	points.append(offset_pos)
+	_rebuild_mesh()
+
+func _rebuild_mesh():
+	if points.size() < 2:
+		return
+	var st = SurfaceTool.new()
+	st.begin(Mesh.PRIMITIVE_TRIANGLES)
+	st.set_material(self.material_override)
+	var base = 0
+	# Build a quad for each segment between successive points
+	for i in range(points.size() - 1):
+		var A = points[i]
+		var B = points[i + 1]
+		# Compute right vector perpendicular to (B-A)
+		var dir = (B - A).normalized()
+		var right = dir.cross(Vector3.UP).normalized() * (width * 0.5)
+		# Four corners of the quad segment
+		var A_left  = A - right
+		var A_right = A + right
+		var B_left  = B - right
+		var B_right = B + right
+		# Add vertices (two triangles)
+		st.add_vertex(A_left)
+		st.add_vertex(B_left)
+		st.add_vertex(A_right)
+		st.add_vertex(B_right)
+		st.add_index(base + 0)
+		st.add_index(base + 1)
+		st.add_index(base + 2)
+		st.add_index(base + 1)
+		st.add_index(base + 3)
+		st.add_index(base + 2)
+		base += 4
+	# Commit the geometry to the mesh
+	mesh.clear_surfaces()
+	self.mesh = st.commit(self.mesh)
+
+func start_fade():
+	is_fading = true
+	fade_time_left = fade_duration
+
+func _process(delta):
+	if is_fading:
+		fade_time_left -= delta
+		var t : float = fade_time_left / fade_duration
+		t = t if t > 0 else 0.0
+		self.material_override.albedo_color.a = t
+		if fade_time_left <= 0:
+			queue_free()
+"
+
+[node name="SkidMarks" type="MeshInstance3D"]
+script = SubResource("GDScript_pe0y1")

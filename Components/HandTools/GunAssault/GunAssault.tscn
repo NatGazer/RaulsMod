@@ -1,0 +1,144 @@
+[gd_scene load_steps=7 format=3 uid="uid://5tg7uc2wk18h"]
+
+[ext_resource type="PackedScene" uid="uid://21ud1q0x3u3m" path="res://Components/HandTools/GunAssault/GunAssault.blend" id="1_0ylyl"]
+[ext_resource type="PackedScene" uid="uid://dl1dx8e1bpsl7" path="res://Components/RayCast.tscn" id="2_11def"]
+
+[sub_resource type="GDScript" id="GDScript_0ylyl"]
+resource_name = "GunAssault"
+script/source = "extends Node3D
+
+var auto_shot_delay : float = 0.1
+var shot_strength : float = 200
+var tool_rest_position : Vector3
+var decal : PackedScene = preload(\"res://Components/HandTools/GunAssault/bullet_hole/decal.tscn\")
+var bullet_trail : PackedScene = preload(\"res://Components/HandTools/GunAssault/bullet_hole/bullet_trail.tscn\")
+
+var tween : Tween
+var shooting : bool = false
+var time : float = 0.0
+
+func _ready() -> void:
+	tool_rest_position = position
+
+func _shoot() -> void:
+	## Player Knockback
+	Global.Player.apply_impulse(0.5*shot_strength * Global.Camera.global_basis.z, Vector3(0, 0.67, 0))
+	
+	## Gun Knockback
+	if tween: tween.kill()
+	tween = get_tree().create_tween()
+	tween.tween_property($GunMesh, \"position\", Vector3(0, 0, 0.08), 0.02)
+	tween.tween_property($GunMesh, \"position\", Vector3(0, 0, 0.0), 0.2)
+
+	## Overheating Effect
+	%OverHeatingEffect.emission_energy += 0.05+%OverHeatingEffect.emission_energy * 0.02
+	
+	## Gun Tip Effect (Smoke + Spark)
+	
+	## Get Info about Ray Cast ## Code After this Only executes if there's a collision
+	var ray_cast_result : Array = %RayCast.search_body()
+	if ray_cast_result[0] == null: return
+	
+	var physics_body : Node3D = ray_cast_result[0]
+	var global_collision_pos : Vector3 = ray_cast_result[1]
+	var collision_normal : Vector3 = ray_cast_result[2]
+	
+	## Object Knockback
+	if physics_body is RigidBody3D:
+		var shot_direction = (global_collision_pos - global_position).normalized()
+		physics_body.apply_impulse(shot_strength * shot_direction, global_collision_pos)
+	
+	## Decal
+	var new_decal : Node3D = decal.instantiate()
+	physics_body.add_child(new_decal)
+	new_decal.global_position = global_collision_pos
+	new_decal.global_transform = new_decal.global_transform.looking_at(
+		new_decal.global_position+collision_normal, Global.Camera.global_transform.basis.z)
+
+	## Bullet Trail
+	var new_bullet_trail : Node3D = bullet_trail.instantiate()
+	Global.World.add_child(new_bullet_trail)
+	new_bullet_trail.global_position =(global_collision_pos + %GunTip.global_position) / 2
+	new_bullet_trail.global_transform = new_bullet_trail.global_transform.looking_at(
+		%GunTip.global_position, Global.Camera.global_transform.basis.z)
+	new_bullet_trail.set_length((%GunTip.global_position - global_collision_pos).length())
+
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"Shoot\"):
+		shooting = true
+		_shoot()
+	if event.is_action_released(\"Shoot\"):
+		shooting = false
+
+func _process(delta: float) -> void:
+	time += delta
+	
+	## hadle Zoom / Aim movement
+	var lerp_delta : float = 1-exp(-delta*15)
+	if Global.Camera.zoom:
+		position.x = lerpf(position.x, 0.0, lerp_delta)
+		position.y = lerpf(position.y, 0.0, lerp_delta)
+	else:
+		position.x = lerpf(position.x, tool_rest_position.x, lerp_delta)
+		position.y = lerpf(position.y, tool_rest_position.y, lerp_delta)
+	
+	## Automatic Shooting
+	if shooting and time > auto_shot_delay:
+		_shoot()
+		time = 0.0
+	
+	## Overheating Effect (Cooling)
+	if %OverHeatingEffect.emission_energy > 0:
+		%OverHeatingEffect.emission_energy -= %OverHeatingEffect.emission_energy*time*0.002
+	else:
+		%OverHeatingEffect.emission_energy = 0
+"
+
+[sub_resource type="Gradient" id="Gradient_11def"]
+offsets = PackedFloat32Array(0.436214)
+colors = PackedColorArray(1, 0.228168, 0, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_4ka1g"]
+gradient = SubResource("Gradient_11def")
+width = 1
+
+[sub_resource type="LabelSettings" id="LabelSettings_nbqn5"]
+line_spacing = 1.56
+font_size = 23
+
+[node name="GunAssault" type="Node3D"]
+
+[node name="GunAssault" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.258791, -0.0809821, -0.335949)
+script = SubResource("GDScript_0ylyl")
+
+[node name="GunMesh" parent="GunAssault" instance=ExtResource("1_0ylyl")]
+
+[node name="RayCast" parent="GunAssault/GunMesh" instance=ExtResource("2_11def")]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.621801)
+
+[node name="GunTip" type="Marker3D" parent="GunAssault/GunMesh"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0866492, -0.621946)
+
+[node name="OverHeatingEffect" type="Decal" parent="GunAssault/GunMesh"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, -0.0647849, -0.354812)
+size = Vector3(0.0839844, 0.600922, 0.133209)
+texture_emission = SubResource("GradientTexture1D_4ka1g")
+emission_energy = 0.0
+lower_fade = 4.03631
+
+[node name="CenterContainer" type="CenterContainer" parent="GunAssault"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Label" type="Label" parent="GunAssault/CenterContainer"]
+layout_mode = 2
+text = "+"
+label_settings = SubResource("LabelSettings_nbqn5")

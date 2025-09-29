@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://du40o2uq01vah"
+path="res://.godot/imported/Tobu - Life [NCS Release].mp3-bd04bda726dff5851b90c6bb5d5c3df5.mp3str"
+
+[deps]
+
+source_file="res://Music/Tobu - Life [NCS Release].mp3"
+dest_files=["res://.godot/imported/Tobu - Life [NCS Release].mp3-bd04bda726dff5851b90c6bb5d5c3df5.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

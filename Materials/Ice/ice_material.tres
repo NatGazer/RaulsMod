@@ -1,0 +1,89 @@
+[gd_resource type="ShaderMaterial" load_steps=6 format=3 uid="uid://dsj00mb37p6k3"]
+
+[ext_resource type="Texture2D" uid="uid://5qy212lg0u4m" path="res://Materials/Ice/Ice004_4K-JPG/Ice004_4K-JPG_Color.jpg" id="1_4n0bq"]
+[ext_resource type="Texture2D" uid="uid://cu3tmbk5xok1n" path="res://Materials/Ice/Ice004_4K-JPG/Ice004_4K-JPG_NormalDX.jpg" id="2_i28vd"]
+[ext_resource type="Texture2D" uid="uid://rnf5h7nsebhi" path="res://Materials/Ice/Ice004_4K-JPG/Ice004_4K-JPG_Roughness.jpg" id="3_07l1a"]
+[ext_resource type="Texture2D" uid="uid://vyf53smq3kf8" path="res://Materials/Ice/Ice004_4K-JPG/Ice003_4K-JPG_Color.jpg" id="4_v548a"]
+
+[sub_resource type="Shader" id="Shader_dil03"]
+code = "// Saw a few of these in Unreal Engine and Unity but no Godot :(
+// So I made one, check other comments for free textures and more info on the shader
+shader_type spatial;
+
+uniform sampler2D over_texture : hint_default_black;
+uniform sampler2D under_texture : hint_default_white;
+uniform sampler2D surface_normalmap : hint_normal;
+uniform sampler2D texture_roughness : hint_roughness_r, filter_linear_mipmap, repeat_enable;
+
+// Here's a free CC0 ice texture -> https://ambientcg.com/view?id=Ice003
+// You can use that for the over_texture and surface_normalmap
+// Here's another CC0 ice texture -> https://ambientcg.com/view?id=Ice002
+// You can use the displacement map of this texture as the under_texture
+
+uniform vec4 top_color : source_color = vec4(0.6764, 0.980092, 1.0, 1.0);
+uniform float depth = 0.1;
+uniform float normal_depth = 1.0;
+uniform float metallic : hint_range(0.0, 1.0) = 0.7;
+uniform float refractive_index = 0.1;
+uniform float uv_scale = 1.0;
+
+// ========= ↓↓↓ From u/lexpartizan the GOAT ↓↓↓ ==============
+float blendOverlay_f(float base, float blend) {
+	float branchless = step (base,0.5);
+	return (2.0*base*blend)*branchless + (1.0-2.0*(1.0-base)*(1.0-blend))*(1.0-branchless); //This is branchless version
+}
+// ======== ↑↑↑ From u/lexpartizan the GOAT ↑↑↑ ==============
+
+vec3 blendOverlay(vec3 base, vec3 blend) {
+	return vec3(blendOverlay_f(base.r,blend.r),blendOverlay_f(base.g,blend.g),blendOverlay_f(base.b,blend.b));
+}
+
+// ============= ↓↓↓ More from u/lexpartizan the GOAT ========================
+varying vec3 ro;
+varying vec3 p;
+varying vec3 vertex_normal_ws;
+void vertex()
+{
+	ro = (INV_VIEW_MATRIX * vec4(0.0, 0.0, 0.0, 1.0)).xyz;// Get camera position in World space coordinates
+	p = ((MODEL_MATRIX)*vec4(VERTEX,1.0)).xyz;// Get fragment position in world space coordinates
+	vertex_normal_ws = ((MODEL_MATRIX)*vec4(NORMAL,1.0)).xyz;
+}
+// ============= ↑↑↑ More from u/lexpartizan the GOAT ↑↑↑ ====================
+
+void fragment(){
+	vec2 uv = UV * uv_scale;
+	vec3 normal = texture(surface_normalmap, uv).xyz * 2.0 - 1.0;
+
+	vec3 refraction;
+	vec3 rd = normalize(p - ro - normal * refractive_index) * depth;
+	vec2 offset = rd.xz;
+
+	NORMAL_MAP = texture(surface_normalmap, uv).xyz;
+	NORMAL_MAP_DEPTH = normal_depth;
+
+	vec3 over_color = texture(over_texture, uv).rgb;
+	vec3 color = blendOverlay(over_color, top_color.rgb);
+
+	vec3 under_color = texture(under_texture, uv + offset + (normal.xy)).rgb;
+	ALBEDO = blendOverlay(color, under_color);
+	METALLIC = metallic;
+
+	vec4 roughness_texture_channel = vec4(1.0, 0.0, 0.0, 0.0);
+	float roughness_tex = dot(texture(texture_roughness, uv), roughness_texture_channel);
+	ROUGHNESS = roughness_tex;
+}
+"
+
+[resource]
+render_priority = 0
+shader = SubResource("Shader_dil03")
+shader_parameter/over_texture = ExtResource("1_4n0bq")
+shader_parameter/under_texture = ExtResource("4_v548a")
+shader_parameter/surface_normalmap = ExtResource("2_i28vd")
+shader_parameter/texture_roughness = ExtResource("3_07l1a")
+shader_parameter/top_color = Color(0.742188, 0.742188, 0.742188, 1)
+shader_parameter/depth = 0.31
+shader_parameter/normal_depth = 1.0
+shader_parameter/metallic = 0.504
+shader_parameter/refractive_index = 0.1
+shader_parameter/uv_scale = 0.06

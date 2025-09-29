@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://ig6jlyl7lwai"
+path="res://.godot/imported/Elektronomia - Sky High [NCS Release].mp3-bea27bc62e59a0cac8e4524900832d86.mp3str"
+
+[deps]
+
+source_file="res://Music/Elektronomia - Sky High [NCS Release].mp3"
+dest_files=["res://.godot/imported/Elektronomia - Sky High [NCS Release].mp3-bea27bc62e59a0cac8e4524900832d86.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

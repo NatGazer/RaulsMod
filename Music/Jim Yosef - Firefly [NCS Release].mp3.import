@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b1sgi2dkmsjls"
+path="res://.godot/imported/Jim Yosef - Firefly [NCS Release].mp3-7920342513d0dcf092069c6457e811c2.mp3str"
+
+[deps]
+
+source_file="res://Music/Jim Yosef - Firefly [NCS Release].mp3"
+dest_files=["res://.godot/imported/Jim Yosef - Firefly [NCS Release].mp3-7920342513d0dcf092069c6457e811c2.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
