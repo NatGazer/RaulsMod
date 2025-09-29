@@ -1,7 +1,11 @@
-# RaulsMod
+# Raul's Mod  
 
-Get Started
+An experimental sandbox project for creativity and physics.  
 
-This is a Project aimed at creating random sfuff focusing more on Physics and inspired in Garry's Mod versatility and never ending possibilities. But this one goes further then that. I present you Raul's Mod:
+![Raul's Mod Cover](GitCover.png)  
 
-![Alt text](./GitCover.png)
+## About the Project  
+Raul's Mod is a project inspired by the versatility of Garry’s Mod, but better, at least for me!  
+
+## Getting Started  
+Download a Release, play. If would like to participate open issues and make proposals!
