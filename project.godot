@@ -26,6 +26,10 @@ Shortcuts="*res://Autoload/shortcuts.gd"
 
 gdscript/warnings/unused_signal=0
 
+[display]
+
+window/size/mode=3
+
 [editor_plugins]
 
 enabled=PackedStringArray("res://addons/SphynxMotionBlurToolkit/plugin.cfg", "res://addons/terrain_3d/plugin.cfg")
