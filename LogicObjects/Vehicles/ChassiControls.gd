@@ -201,7 +201,10 @@ func _process(delta: float) -> void:
 	
 	## Auto Shift ##
 	auto_shift_timer += delta
-	if auto_shift and auto_shift_timer > (CLUTCH_DISENGAGE_TIME+CLUTCH_ENGAGE_TIME)*1.4:
+	var gear_shift_delay_slow : float = (CLUTCH_DISENGAGE_TIME+CLUTCH_ENGAGE_TIME)*1.4
+	var gear_shift_delay_fast : float = 0.2
+	var gear_shift_delay : float = gear_shift_delay_fast if (torque < max_torque * 0.1) else gear_shift_delay_slow
+	if auto_shift and auto_shift_timer > gear_shift_delay:
 		# Gear Up
 		if (motor_rpm > 0.8 * MAX_RPM and gear < gear_ratios.size()-2) or gear <= 0:
 			input_gear(gear + 1)
