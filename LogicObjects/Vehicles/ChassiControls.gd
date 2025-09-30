@@ -42,7 +42,7 @@ var gear_tween : Tween
 var motor_rpm : float
 var wheels_rpm : float
 var max_torque : float
-var torque : float
+var wheels_torque : float
 var torque_wheel_amount : int
 var torque_wheel_radius : Dictionary[Generic6DOFJoint3D, float]
 
@@ -97,7 +97,6 @@ func input_auto_shift(new_auto_shift : bool) -> void:
 	%UI.write_number("Auto Shift", int(auto_shift), 0)
 
 func input_gear(new_gear : int) -> int:
-	print(new_gear)
 	if new_gear+2 > gear_ratios.size() or new_gear < -1:
 		return gear_ratios.size()
 	
@@ -122,10 +121,10 @@ func _set_clutch_engage(new_clutch: float) -> void:
 	
 func input_acc_pedal(acc_pedal : float) -> void:
 	max_torque = TORQUE_CURVE.sample_baked(motor_rpm / MAX_RPM) * TORQUE
-	torque = acc_pedal * max_torque * gear_ratio
+	wheels_torque = acc_pedal * max_torque * gear_ratio
 
-	_set_engine_torque(torque * clutch)
-	%UI.write_number("Torque", torque * clutch, 0)
+	_set_engine_torque(wheels_torque * clutch)
+	%UI.write_number("Torque", wheels_torque * clutch, 0)
 
 ## Target Angular Velocity and adjust to avoid too much slip/acceleration
 func _set_engine_torque(new_torque : float) -> void:
@@ -203,7 +202,7 @@ func _process(delta: float) -> void:
 	auto_shift_timer += delta
 	var gear_shift_delay_slow : float = (CLUTCH_DISENGAGE_TIME+CLUTCH_ENGAGE_TIME)*1.4
 	var gear_shift_delay_fast : float = 0.2
-	var gear_shift_delay : float = gear_shift_delay_fast if (torque < max_torque * 0.1) else gear_shift_delay_slow
+	var gear_shift_delay : float = gear_shift_delay_fast if (wheels_torque < max_torque * 0.1) else gear_shift_delay_slow
 	if auto_shift and auto_shift_timer > gear_shift_delay:
 		# Gear Up
 		if (motor_rpm > 0.8 * MAX_RPM and gear < gear_ratios.size()-2) or gear <= 0:

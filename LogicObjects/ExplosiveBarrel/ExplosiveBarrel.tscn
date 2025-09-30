@@ -57,6 +57,7 @@ func impact_surroudings() -> void:
 		if rb is RigidBody3D:
 			var disp : Vector3 = rb.global_position - explosion_area.global_position
 			var dist : float = max(1, disp.length())
+			rb.freeze = false
 			rb.apply_central_force(explosion_area_force * disp/(dist*dist))
 
 func _finished() -> void:
@@ -76,7 +77,7 @@ script = SubResource("GDScript_33mbd")
 rigid_body = NodePath("ExplosiveBarrel")
 trigger_acceleration = 2.0
 explosion_area = NodePath("ExplosiveBarrel/Area3D")
-explosion_area_force = 1e+06
+explosion_area_force = 1000000.0
 
 [node name="ExplosiveBarrel" type="RigidBody3D" parent="."]
 mass = 80.0

@@ -43,6 +43,10 @@ func _shoot() -> void:
 	var global_collision_pos : Vector3 = ray_cast_result[1]
 	var collision_normal : Vector3 = ray_cast_result[2]
 	
+	## Object Activation (If frozen)
+	if physics_body is RigidBody3D:
+		physics_body.freeze = false
+	
 	## Object Knockback
 	if physics_body is RigidBody3D:
 		var shot_direction = (global_collision_pos - global_position).normalized()

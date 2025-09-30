@@ -70,7 +70,7 @@ func _physics_process(delta: float) -> void:
 	damped_rpm = lerpf(damped_rpm, %Chassi.motor_rpm, delta*10)
 	pitch_scale = max(0.03, abs(damped_rpm) / 4000)
 	
-	damped_torque = lerpf(damped_torque, abs(%Chassi.torque), delta*5)
+	damped_torque = lerpf(damped_torque, abs(%Chassi.wheels_torque), delta*5)
 	volume_db = -10 + damped_torque*0.01
 "
 
