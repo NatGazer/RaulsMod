@@ -31,12 +31,12 @@ func _physics_process(delta: float) -> void:
 	#LERP smoothing is broken, this fixes it
 	var weight : float  = 1 - exp(-delta)
 	
-	clutch_pedal += (input_clutch - clutch_pedal) * weight * (1 + int(input_clutch==0)*10)
+	clutch_pedal += (input_clutch - clutch_pedal) * weight * (3 + int(input_clutch==0)*10)
 	acc_pedal += (input_acc - acc_pedal) * weight * (1 + int(input_acc==0)*20)
 	steering_wheel += (input_steering - steering_wheel) * (weight * (1 + int(input_steering==0)*5) * 1.5)
 	brake_pedal += (input_brake - brake_pedal) * (weight * (1 + int(input_brake==0)*5) * 15)
 	hand_brake_pedal += (input_hand_brake - hand_brake_pedal) * (weight * (1 + int(input_hand_brake==0)*5) * 15)
-	
+
 	if brake_pedal >= 0.01:
 		acc_pedal = 0.0
 	

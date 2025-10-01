@@ -114,7 +114,7 @@ func input_gear(new_gear : int) -> int:
 	return gear
 
 func input_clutch_pedal(clutch_pedal : float) -> void:
-	if gear_tween: return
+	if gear_tween.is_running(): return
 	_set_clutch_engage(clutch_pedal)
 
 func _set_clutch_engage(new_clutch: float) -> void:
