@@ -1,0 +1,20 @@
+[gd_scene load_steps=6 format=3 uid="uid://djafn2s0nhi16"]
+
+[ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_ff8hl"]
+[ext_resource type="PackedScene" uid="uid://bwbe0aprocknu" path="res://Components/TestGround.tscn" id="2_8pk1l"]
+[ext_resource type="PackedScene" uid="uid://bj4xmnjraoag2" path="res://LogicObjects/Vehicles/Tractor/Tractor.tscn" id="3_ew50x"]
+[ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="4_narca"]
+[ext_resource type="PackedScene" uid="uid://cdhl7t2v8xuqt" path="res://Components/MachineSwitching.tscn" id="5_narca"]
+
+[node name="SceneForTests" type="Node3D"]
+
+[node name="BaseWorld" parent="." instance=ExtResource("1_ff8hl")]
+
+[node name="TestGround" parent="." instance=ExtResource("2_8pk1l")]
+
+[node name="CharacterRB" parent="." instance=ExtResource("4_narca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.13688326, 0.988, -3.798984)
+
+[node name="MachineSwitching" parent="." instance=ExtResource("5_narca")]
+
+[node name="Tractor" parent="." instance=ExtResource("3_ew50x")]

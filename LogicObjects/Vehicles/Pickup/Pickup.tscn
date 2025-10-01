@@ -81,7 +81,7 @@ func _physics_process(delta: float) -> void:
 	damped_rpm = lerpf(damped_rpm, %Chassi.motor_rpm, delta*10)
 	pitch_scale = max(0.03, abs(damped_rpm) / 4000)
 	
-	damped_torque = lerpf(damped_torque, abs(%Chassi.wheels_torque), delta*5)
+	damped_torque = lerpf(damped_torque, abs(%Chassi.gear_box_torque), delta*5)
 	volume_db = -10 + damped_torque*0.01
 "
 
@@ -539,12 +539,14 @@ center_of_mass_mode = 1
 center_of_mass = Vector3(0.8, -0.4, 0)
 script = ExtResource("3_lc81h")
 gear_ratios = PackedFloat32Array(-2.5, 0, 2.71, 1.79, 1.3, 1, 0.86, 0.75)
+TORQUE = 400.0
 TORQUE_CURVE = SubResource("Curve_bs2ep")
+MOTOR_FRICTION = 20.0
+AIR_FRICTION = 5.0
 torque_wheels = [NodePath("../FL2/FL2_6DOF"), NodePath("../FR2/FR2_6DOF"), NodePath("../FL3/FL3_6DOF"), NodePath("../FR3/FR3_6DOF")]
 steering_wheels = [NodePath("../FL/FL_6DOF"), NodePath("../FR/FR_6DOF")]
 all_and_brake_wheels = [NodePath("../FL/FL_6DOF"), NodePath("../FR/FR_6DOF"), NodePath("../FL2/FL2_6DOF"), NodePath("../FR2/FR2_6DOF"), NodePath("../FL3/FL3_6DOF"), NodePath("../FR3/FR3_6DOF")]
 hand_brake_wheels = [NodePath("../FL2/FL2_6DOF"), NodePath("../FR2/FR2_6DOF"), NodePath("../FL3/FL3_6DOF"), NodePath("../FR3/FR3_6DOF")]
-metadata/_edit_group_ = true
 
 [node name="CamHolder" type="Node3D" parent="Chassi"]
 unique_name_in_owner = true

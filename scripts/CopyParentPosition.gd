@@ -7,5 +7,5 @@ func _ready() -> void:
 	top_level = true
 
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	global_position = parent.global_position

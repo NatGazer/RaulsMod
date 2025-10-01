@@ -42,7 +42,8 @@ var gear_tween : Tween
 var motor_rpm : float
 var wheels_rpm : float
 var max_torque : float
-var wheels_torque : float
+var gear_box_torque : float
+var wheels_torque  : float
 var torque_wheel_amount : int
 var torque_wheel_radius : Dictionary[Generic6DOFJoint3D, float]
 
@@ -121,19 +122,20 @@ func _set_clutch_engage(new_clutch: float) -> void:
 	
 func input_acc_pedal(acc_pedal : float) -> void:
 	max_torque = TORQUE_CURVE.sample_baked(motor_rpm / MAX_RPM) * TORQUE
-	wheels_torque = acc_pedal * max_torque * gear_ratio
+	gear_box_torque = acc_pedal * max_torque * gear_ratio
+	wheels_torque = gear_box_torque * clutch
+	#_set_engine_torque is now in Process to integrate motor_friction
+	%UI.write_number("Torque", wheels_torque, 0)
 
-	_set_engine_torque(wheels_torque * clutch)
-	%UI.write_number("Torque", wheels_torque * clutch, 0)
 
-## Target Angular Velocity and adjust to avoid too much slip/acceleration
 func _set_engine_torque(new_torque : float) -> void:
+	## Target Angular Velocity and adjust to avoid too much slip/acceleration
 	var wheel_rel_torque : Dictionary[Generic6DOFJoint3D, float]
 	var total_rel_torque : float = 0.0
 	for wheel : Generic6DOFJoint3D in torque_wheels:
 		wheel_rel_torque[wheel] = 1/pow(wheel_rpm(wheel)+0.1, 4)
 		total_rel_torque += wheel_rel_torque[wheel]/torque_wheels.size()
-	
+
 	for wheel : Generic6DOFJoint3D in torque_wheels:
 		wheel.set_flag_x(Generic6DOFJoint3D.FLAG_ENABLE_MOTOR, new_torque!=0.0)
 		var diferential_torque = wheel_rel_torque[wheel] / total_rel_torque
@@ -194,7 +196,7 @@ func wheel_velocity() -> float:
 		velocity += (wheel_rb.angular_velocity * wheel_rb.basis).z * torque_wheel_radius[wheel]
 	return velocity / torque_wheels.size()
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	wheels_rpm = _wheels_rpm()
 	motor_rpm = lerpf(motor_rpm, wheels_rpm*gear_ratio, 20*delta)
 	
@@ -202,7 +204,7 @@ func _process(delta: float) -> void:
 	auto_shift_timer += delta
 	var gear_shift_delay_slow : float = (CLUTCH_DISENGAGE_TIME+CLUTCH_ENGAGE_TIME)*1.4
 	var gear_shift_delay_fast : float = 0.2
-	var gear_shift_delay : float = gear_shift_delay_fast if (wheels_torque < max_torque * 0.1) else gear_shift_delay_slow
+	var gear_shift_delay : float = gear_shift_delay_fast if (gear_box_torque < max_torque * 0.1) else gear_shift_delay_slow
 	if auto_shift and auto_shift_timer > gear_shift_delay:
 		# Gear Up
 		if (motor_rpm > 0.8 * MAX_RPM and gear < gear_ratios.size()-2) or gear <= 0:
@@ -213,15 +215,13 @@ func _process(delta: float) -> void:
 			input_gear(gear - 1)
 			auto_shift_timer = 0.0
 		
-
-	## FIXME NOT REALISTIC (USE TORQUE REDUCTION INSTEAD)
-	## Wheel Damping (Motor Friction + Air Friction) ##
-	var motor_friction : float = gear_ratio * gear_ratio * MOTOR_FRICTION
-	for wheel:Generic6DOFJoint3D in torque_wheels:
-		var wheel_rb : RigidBody3D = wheel.get_parent()
-		wheel_rb.angular_damp = motor_friction
-	
-	var air_friction : float = pow(%Chassi.linear_velocity.length(), 2) * AIR_FRICTION
+	## Torque Management ##
+	#Motor Friction
+	var motor_friction : float = clutch * gear_ratio * gear_ratio * wheels_rpm * MOTOR_FRICTION*1E-3
+	#Torque - Motor Friction
+	_set_engine_torque(wheels_torque - motor_friction)
+	# Air Friction
+	var air_friction : float = pow(%Chassi.linear_velocity.length(), 2) * AIR_FRICTION * 1E-6
 	%Chassi.linear_damp = air_friction
 	
 	%UI/RPM.speed = abs(motor_rpm) / 1000.0
