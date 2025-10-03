@@ -7,11 +7,11 @@
 sky_top_color = Color(0.24299335, 0.44807208, 1, 1)
 sky_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
 sky_curve = 0.06091904
-sky_energy_multiplier = 0.9
-ground_bottom_color = Color(0, 0, 0, 1)
+sky_energy_multiplier = 0.8
+ground_bottom_color = Color(0.049646985, 0.421875, 0, 1)
 ground_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
 ground_curve = 0.06091904
-ground_energy_multiplier = 0.9
+ground_energy_multiplier = 0.8
 sun_angle_max = 15.0
 
 [sub_resource type="Sky" id="Sky_1w6v2"]
@@ -52,7 +52,7 @@ adjustment_brightness = 1.2
 
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_twgwy"]
 auto_exposure_enabled = true
-auto_exposure_scale = 0.65
+auto_exposure_scale = 0.75
 dof_blur_near_distance = 0.5
 dof_blur_near_transition = 0.5
 

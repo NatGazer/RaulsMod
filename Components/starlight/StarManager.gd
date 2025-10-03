@@ -15,10 +15,10 @@ class Star:
 	# Temperature of the star, in kelvin.
 	var temperature: float
 
-	func _init(position: Vector3, luminosity: float, temperature: float):
-		self.position = position
-		self.luminosity = luminosity
-		self.temperature = temperature
+	func _init(_position: Vector3, _luminosity: float, _temperature: float):
+		self.position = _position
+		self.luminosity = _luminosity
+		self.temperature = _temperature
 
 
 ## Most stars have an "Effective temperature" which is the black body temperature that most closely
@@ -172,8 +172,8 @@ func set_star_list(star_list: Array[Star]):
 
 	for i in range(star_list.size()):
 		var star = star_list[i]
-		var transform = Transform3D().translated(star.position)
-		mesh.set_instance_transform(i, transform)
+		var star_transform = Transform3D().translated(star.position)
+		mesh.set_instance_transform(i, star_transform)
 		mesh.set_instance_color(i, blackbody_to_rgb(star.temperature))
 		mesh.set_instance_custom_data(i, Color(star.luminosity, 0, 0))
 

@@ -1,0 +1,123 @@
+[gd_scene load_steps=7 format=3 uid="uid://cn3n3bw23k5h4"]
+
+[ext_resource type="ArrayMesh" uid="uid://bymwb4npo5u88" path="res://LogicObjects/ProceduralTreeGen/3_TRUNCK_002.res" id="1_euula"]
+[ext_resource type="ArrayMesh" uid="uid://bsstswnpg7qxy" path="res://LogicObjects/ProceduralTreeGen/3_BRANCH_002.res" id="2_8mv0o"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_narca"]
+transform_format = 1
+use_custom_data = true
+mesh = ExtResource("1_euula")
+
+[sub_resource type="GDScript" id="GDScript_ljj2s"]
+resource_name = "TrunckMultimeshInstance"
+script/source = "extends MultiMeshInstance3D
+
+@export var tree_amount : int = 150
+@export var spawn_range : float = 100
+@export var initial_scale : float = 0.1 # m
+@export var final_scale : float = 5.0 # m
+@export var scale_variation : float = 0.3
+@export var minimum_scale : float = 0.5
+@export_range(0, 1) var root_show_off : float = 0.5
+@export var growth_time : float = 5.0
+
+func _ready() -> void:
+	multimesh.instance_count = 0
+	multimesh.use_custom_data = true
+	multimesh.set_transform_format(MultiMesh.TRANSFORM_3D)
+	multimesh.instance_count = tree_amount
+
+	for i in tree_amount:
+		
+		# Trunk Position (Spread in a circle and Y offset)
+		var origin := Vector3(spawn_range*sqrt(randf()),
+			final_scale*0.1*(root_show_off-1), 0).rotated(Vector3.UP, randf_range(-PI, PI))
+		
+		# Randomize trunk Y rotation
+		var trunk_basis : Basis =  Basis().rotated(Vector3(0, 1, 0), randf_range(-PI, PI))
+		
+		# Trunk Scale
+		trunk_basis = trunk_basis.scaled(Vector3.ONE * initial_scale)
+		multimesh.set_instance_transform(i, Transform3D(trunk_basis, origin))
+		
+		# Trunk Custom Data
+		##(Life Time, Max Life Time, Maximum Scale, null)
+		var max_life = max(growth_time / 3, randfn(growth_time, 1))
+		var max_scale = max(minimum_scale, randfn(final_scale, scale_variation*final_scale))
+		multimesh.set_instance_custom_data(i, Color(0.0, max_life, max_scale, 0))
+
+func _process(delta: float) -> void:
+	for i in tree_amount:
+		# Exit if growth time finished + handle time
+		var custom_data : Color = multimesh.get_instance_custom_data(i)
+		if custom_data.r > custom_data.g: continue
+		custom_data.r += delta
+		multimesh.set_instance_custom_data(i, custom_data)
+		var final_height : float = custom_data.b
+		var life_ratio : float = custom_data.r / custom_data.g
+		
+		# Calculate current scale
+		var new_height : float = initial_scale + (
+			final_height - initial_scale) * ease(life_ratio, -1.6521)
+		var new_thickness : float = initial_scale + (
+			final_height - initial_scale) * ease(life_ratio, -3.5)
+		
+		var inst_transf : Transform3D = multimesh.get_instance_transform(i)
+		inst_transf.basis = inst_transf.basis.scaled((Vector3(new_thickness,
+			new_height, new_thickness)) / inst_transf.basis.get_scale())
+		multimesh.set_instance_transform(i, inst_transf)
+"
+
+[sub_resource type="MultiMesh" id="MultiMesh_566gq"]
+transform_format = 1
+use_custom_data = true
+mesh = ExtResource("2_8mv0o")
+
+[sub_resource type="GDScript" id="GDScript_narca"]
+resource_name = "BranchMultiMeshInstance"
+script/source = "extends MultiMeshInstance3D
+
+@onready var trunck_multimesh_instance: MultiMeshInstance3D = %TrunckMultimeshInstance
+
+@export var initial_scale : float = 5.0
+
+var trunks : MultiMesh
+var trunk_amount : int
+
+func _ready() -> void:
+	trunk_amount = trunck_multimesh_instance.tree_amount
+	trunks = trunck_multimesh_instance.multimesh
+	
+	multimesh.instance_count = 0
+	multimesh.use_custom_data = true
+	multimesh.set_transform_format(MultiMesh.TRANSFORM_3D)
+	multimesh.instance_count = trunk_amount
+	
+	for i in trunk_amount:
+		# Randomize trunk Y rotation
+		var branch_basis : Basis = Basis().rotated(Vector3(0, 1, 0), randf_range(-PI, PI))
+		branch_basis = branch_basis.scaled(Vector3.ONE * initial_scale)
+		multimesh.set_instance_transform(i, Transform3D(branch_basis, Vector3()))
+
+func _process(_delta : float) -> void:
+	for i in trunk_amount:
+		# Branch Position
+		var inst_transf : Transform3D = multimesh.get_instance_transform(i)
+		
+		var trunk_transf : Transform3D = trunks.get_instance_transform(i)
+		inst_transf.origin = (trunk_transf.origin + Vector3.UP * trunk_transf.basis.get_scale()) 
+		inst_transf.basis = inst_transf.basis.scaled(trunk_transf.basis.get_scale() / inst_transf.basis.get_scale())
+		multimesh.set_instance_transform(i, inst_transf)
+"
+
+[node name="ProceduralTreeGen" type="Node3D"]
+
+[node name="TrunckMultimeshInstance" type="MultiMeshInstance3D" parent="."]
+unique_name_in_owner = true
+multimesh = SubResource("MultiMesh_narca")
+script = SubResource("GDScript_ljj2s")
+
+[node name="BranchMultiMeshInstance" type="MultiMeshInstance3D" parent="."]
+unique_name_in_owner = true
+multimesh = SubResource("MultiMesh_566gq")
+script = SubResource("GDScript_narca")

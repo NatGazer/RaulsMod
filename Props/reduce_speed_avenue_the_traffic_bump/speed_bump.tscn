@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://xksql0nxsuwk"]
+
+[ext_resource type="PackedScene" uid="uid://c8n02k62hc6i0" path="res://Props/reduce_speed_avenue_the_traffic_bump/scene.gltf" id="1_cm8t6"]
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_cm8t6"]
+points = PackedVector3Array(-250, -4.5528917, -51.036297, -250, -4.5528917, 51.03629, -250, -3.4422998, -49.517597, 250, -4.5528917, -51.036297, -250, -3.4422998, 49.507603, 250, -4.5528917, 51.03629, -250, 8.669034, -23.280066, 250, -3.4422998, -49.517597, -250, 8.669034, 23.260082, 250, -3.4422998, 49.507603, -250, 11.941981, -14.407665, 250, 8.669034, -23.280066, -250, 11.941981, 14.397671, 250, 8.669034, 23.260082, -250, 13.658675, -4.8858185, 250, 11.941981, -14.407665, -250, 13.658675, 4.875824, 250, 11.941981, 14.397671, 250, 13.658675, -4.8858185, 250, 13.658675, 4.875824)
+
+[node name="SpeedBump" type="StaticBody3D"]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(0.01, 0, 0, 0, 0.01, -2.220446e-18, 0, 2.220446e-18, 0.01, -7.105427e-17, 0.03373375, 1.010945e-17)
+shape = SubResource("ConvexPolygonShape3D_cm8t6")
+
+[node name="Sketchfab_Scene" parent="." instance=ExtResource("1_cm8t6")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.011795163, 0)

@@ -36,15 +36,15 @@ func _set_generate_at_origin(value):
 
 
 class RangeF:
-	var min: float
-	var max: float
+	var rmin: float
+	var rmax: float
 
-	func _init(min: float, max: float):
-		self.min = min
-		self.max = max
+	func _init(_min: float, _max: float):
+		self.rmin = _min
+		self.rmax = _max
 
 	func sample(value: float):
-		return (max - min) * value + min
+		return (rmax - rmin) * value + rmin
 
 
 class StarClass:
@@ -158,7 +158,6 @@ func random_category(rng: RandomNumberGenerator):
 
 	sum = 0
 	for category in star_table:
-		var prev = sum
 		sum += category.weight;
 		if weight <= sum:
 			return category

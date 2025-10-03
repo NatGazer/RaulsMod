@@ -1,4 +1,4 @@
-[gd_scene load_steps=399 format=4 uid="uid://d171ldr3x265t"]
+[gd_scene load_steps=401 format=4 uid="uid://d171ldr3x265t"]
 
 [ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_yaehf"]
 [ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="2_4c57u"]
@@ -27,6 +27,8 @@
 [ext_resource type="Texture2D" uid="uid://d2ask1g7semm0" path="res://Props/Rocks_Diffuse.png" id="24_3pmx8"]
 [ext_resource type="Material" uid="uid://d0hyi5n6ng25w" path="res://demo/assets/materials/M_rock23_black_tp.tres" id="25_ueoa1"]
 [ext_resource type="Script" uid="uid://btyiucuxdhvig" path="res://addons/voronoishatter/tools/voronoicollection.gd" id="27_6vcvc"]
+[ext_resource type="PackedScene" uid="uid://xksql0nxsuwk" path="res://Props/reduce_speed_avenue_the_traffic_bump/speed_bump.tscn" id="28_ueoa1"]
+[ext_resource type="PackedScene" uid="uid://cn3n3bw23k5h4" path="res://LogicObjects/ProceduralTreeGen/ProceduralTreeGen.tscn" id="29_6vcvc"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_g4437"]
 inner_radius = 0.6
@@ -4376,7 +4378,7 @@ transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10.122
 global_thickness = 0.055
 
 [node name="Pickup2" parent="." instance=ExtResource("7_5vw27")]
-transform = Transform3D(-0.999848, 8.74094e-08, 0.0174524, 9.86408e-08, 1, 5.90054e-07, -0.0174524, 6.19896e-07, -0.999848, -10.822053, 0.28498057, 20.916279)
+transform = Transform3D(-0.99984837, 8.740945e-08, 0.017452406, 9.8640854e-08, 1, 5.9005407e-07, -0.017452408, 6.19896e-07, -0.9998481, -10.377279, 0.2540803, 5.154816)
 
 [node name="ExplosiveBarrel" parent="Pickup2" instance=ExtResource("23_d13ii")]
 transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 0.989726, -1.10203e-08)
@@ -4393,7 +4395,7 @@ transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -
 transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -21.8634, 0.0834956, -15.695)
 
 [node name="ramp" parent="." instance=ExtResource("11_efxa6")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -144.26, 0, 2.78465)
+transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -120.96548, 0, 16.249254)
 
 [node name="Tractor" parent="." instance=ExtResource("12_dg77c")]
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.19153672, 8.92878e-05, 4.719249)
@@ -6633,3 +6635,48 @@ shape = SubResource("ConvexPolygonShape3D_x1oo2")
 [node name="FracturedPiece_RID(13811532492179824)" type="MeshInstance3D" parent="VoronoiShatter/Fractured_Rock_Medium_3_1518330/Rigid_FracturedPiece_RID(13811532492179824)"]
 transform = Transform3D(0.99, 0, 0, 0, 0.99, 0, 0, 0, 0.99, 0, 0, 0)
 mesh = SubResource("ArrayMesh_itjre")
+
+[node name="Node3D" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -26.2659, 0, 21.109509)
+
+[node name="SpeedBump" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+
+[node name="SpeedBump2" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.0841637, 0, 0)
+
+[node name="SpeedBump3" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -6.450531, 0, 0)
+
+[node name="SpeedBump4" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -9.5346985, 0, 0)
+
+[node name="SpeedBump5" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -14.2225685, 0, 2.2882328)
+
+[node name="SpeedBump6" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -15.590576, 0, -2.4286308)
+
+[node name="SpeedBump7" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -17.178349, 0, 2.2882328)
+
+[node name="SpeedBump8" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -18.546356, 0, -2.4286308)
+
+[node name="SpeedBump9" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -20.240284, 0, 2.2882328)
+
+[node name="SpeedBump10" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -21.608292, 0, -2.4286308)
+
+[node name="SpeedBump11" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -23.364998, 0, 2.2882347)
+
+[node name="SpeedBump13" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -26.452396, 0, 2.2882347)
+
+[node name="SpeedBump12" parent="Node3D" instance=ExtResource("28_ueoa1")]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -24.733006, 0, -2.4286308)
+
+[node name="ProceduralTreeGen" parent="." instance=ExtResource("29_6vcvc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.207577, 0, 28.856506)

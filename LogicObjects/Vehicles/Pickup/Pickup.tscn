@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://capymtuibpox7" path="res://Components/SkidMarks.tscn" id="8_ils85"]
 
 [sub_resource type="Curve" id="Curve_bs2ep"]
-_data = [Vector2(0, 0.361738), 0.0, 0.0704776, 0, 0, Vector2(0.803922, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -14.4554, 0.0, 0, 0]
-point_count = 3
+_data = [Vector2(0, 0.361738), 0.0, 0.0704776, 0, 0, Vector2(0.5730337, 1), 0.0, 0.0, 0, 0, Vector2(0.8089888, 0.9085938), -1.2590111, -1.2590111, 0, 0, Vector2(1, 0), -8.465454, 0.0, 0, 0]
+point_count = 4
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_as6hs"]
 points = PackedVector3Array(2.81636, -0.539157, 0, 2.80731, 0.308635, 0, 2.61733, 0.376727, 1.01122, 2.54787, -0.539157, 1.00774, 2.54787, -0.539157, -1.00794, 2.61733, 0.376727, -1.01143, 2.20501, 0.485334, 1.04625, 2.14506, -0.539157, 1.04625, 2.14506, -0.539157, -1.04625, 2.20501, 0.485334, -1.04625, 1.24989, 0.477311, 1.04625, 1.30187, -0.539157, 1.04625, 1.30187, -0.539157, -1.04625, 1.24989, 0.477311, -1.04625)
@@ -534,7 +534,7 @@ unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.935878, 0)
 collision_layer = 2
 collision_mask = 4294967291
-mass = 1800.0
+mass = 1500.0
 center_of_mass_mode = 1
 center_of_mass = Vector3(0.8, -0.4, 0)
 script = ExtResource("3_lc81h")

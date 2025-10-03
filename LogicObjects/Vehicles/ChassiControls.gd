@@ -10,6 +10,8 @@ extends RigidBody3D
 @export var MAX_RPM : float = 6500
 @export var MOTOR_FRICTION : float = 0.1
 @export var AIR_FRICTION : float = 3E-6
+@export var MOTOR_INERTIA_MULTIPLIER : float = 10.0
+@export var WHEEL_MASS_MULTIPLIER : float = 0.2
 
 @export_group("Steering Wheel")
 @export var MAX_TURN_RADIUS : float = 5 # meters (average radius from wheel to turn center)
@@ -50,12 +52,20 @@ var torque_wheel_radius : Dictionary[Generic6DOFJoint3D, float]
 func _ready() -> void:
 	torque_wheel_amount = torque_wheels.size()
 	
-	## Compute Torque Wheel radius ##
 	for wheel : Generic6DOFJoint3D in torque_wheels:
+		## Set motor inertia by setting wheel Inertia
+		var wheel_rb : RigidBody3D = wheel.get_parent()
+		wheel_rb.inertia *= MOTOR_INERTIA_MULTIPLIER
+	
+		## Compute Torque Wheel radius ##
 		for sibling : Node in wheel.get_parent().get_children():
 			if sibling is CollisionShape3D:
 				torque_wheel_radius[wheel] = sibling.shape.radius
 				break
+	
+	for wheel:Generic6DOFJoint3D in all_and_brake_wheels:
+		var wheel_rb : RigidBody3D = wheel.get_parent()
+		wheel_rb.mass *= WHEEL_MASS_MULTIPLIER
 	
 	## Find variables for Ackerman Steering ##
 	_compute_wheel_geometry()

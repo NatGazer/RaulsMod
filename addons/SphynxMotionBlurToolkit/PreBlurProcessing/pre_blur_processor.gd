@@ -15,6 +15,8 @@ class_name PreBlurProcessor
 
 var custom_velocity : StringName = "custom_velocity"
 
+lerp()
+
 func _init():
 	needs_motion_vectors = true
 	set_deferred("context", "MotionBlur")
