@@ -48,10 +48,13 @@ func _shoot() -> void:
 		physics_body.freeze = false
 	
 	## Object Knockback
-	if physics_body is RigidBody3D:
+	if physics_body is RigidBody3D or physics_body is SoftBody3D:
 		var shot_direction = (global_collision_pos - global_position).normalized()
-		physics_body.apply_impulse(shot_strength * shot_direction, global_collision_pos)
-	
+		if physics_body is RigidBody3D:
+			physics_body.apply_impulse(shot_strength * shot_direction, global_collision_pos)
+		if physics_body is SoftBody3D:
+			physics_body.apply_impulse(0, shot_strength * shot_direction)
+			physics_body.pressure_coefficient *= 0.5
 	## Decal
 	var new_decal : Node3D = decal.instantiate()
 	physics_body.add_child(new_decal)

@@ -1,4 +1,4 @@
-[gd_scene load_steps=401 format=4 uid="uid://d171ldr3x265t"]
+[gd_scene load_steps=403 format=4 uid="uid://d171ldr3x265t"]
 
 [ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_yaehf"]
 [ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="2_4c57u"]
@@ -29,6 +29,8 @@
 [ext_resource type="Script" uid="uid://btyiucuxdhvig" path="res://addons/voronoishatter/tools/voronoicollection.gd" id="27_6vcvc"]
 [ext_resource type="PackedScene" uid="uid://xksql0nxsuwk" path="res://Props/reduce_speed_avenue_the_traffic_bump/speed_bump.tscn" id="28_ueoa1"]
 [ext_resource type="PackedScene" uid="uid://cn3n3bw23k5h4" path="res://LogicObjects/ProceduralTreeGen/ProceduralTreeGen.tscn" id="29_6vcvc"]
+[ext_resource type="PackedScene" uid="uid://l116mvalhb7c" path="res://LogicObjects/Spider/Spider.tscn" id="30_7k868"]
+[ext_resource type="PackedScene" uid="uid://d2jbmy00ext3r" path="res://LogicObjects/BeachBall/BeachBall.tscn" id="31_hpc6h"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_g4437"]
 inner_radius = 0.6
@@ -4380,15 +4382,6 @@ global_thickness = 0.055
 [node name="Pickup2" parent="." instance=ExtResource("7_5vw27")]
 transform = Transform3D(-0.99984837, 8.740945e-08, 0.017452406, 9.8640854e-08, 1, 5.9005407e-07, -0.017452408, 6.19896e-07, -0.9998481, -10.377279, 0.2540803, 5.154816)
 
-[node name="ExplosiveBarrel" parent="Pickup2" instance=ExtResource("23_d13ii")]
-transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 0.989726, -1.10203e-08)
-
-[node name="ExplosiveBarrel2" parent="Pickup2" instance=ExtResource("23_d13ii")]
-transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 1.51191, 0.460514)
-
-[node name="ExplosiveBarrel3" parent="Pickup2" instance=ExtResource("23_d13ii")]
-transform = Transform3D(0, 1, 4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 1, 0, -4.37114e-08, -2.61416, 1.57721, -0.395195)
-
 [node name="MachineSwitching" parent="." instance=ExtResource("8_5vw27")]
 
 [node name="BrickWall" parent="." instance=ExtResource("9_kek77")]
@@ -4398,7 +4391,7 @@ transform = Transform3D(-4.37114e-08, 0, -1, 0, 1, 0, 1, 0, -4.37114e-08, -21.86
 transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -120.96548, 0, 16.249254)
 
 [node name="Tractor" parent="." instance=ExtResource("12_dg77c")]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.19153672, 8.92878e-05, 4.719249)
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, -0.19153696, 8.92878e-05, 7.377251)
 
 [node name="WakoSpawner" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.7934, 1.90735e-06, 31.6273)
@@ -6680,3 +6673,25 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-
 
 [node name="ProceduralTreeGen" parent="." instance=ExtResource("29_6vcvc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.207577, 0, 28.856506)
+
+[node name="Spider" parent="." instance=ExtResource("30_7k868")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.701358, 0.04271412, -12.886487)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="."]
+transform = Transform3D(0.9714291, 0.060168248, -0.22957624, -0.23732987, 0.24627821, -0.93969226, -1.0035096e-08, 0.96732974, 0.25352156, -7.8867188, -0.07706726, -2.329318)
+use_collision = true
+polygon = PackedVector2Array(0.02724266, -3.1436734, -0.0071134567, 2.3815718, 5.57753, 2.2094507, 0.86154175, 1.5794727)
+depth = 5.06
+
+[node name="BeachBall" parent="." instance=ExtResource("31_hpc6h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.82514143, 0.982556, 2.5572488)
+
+[node name="BeachBall2" parent="." instance=ExtResource("31_hpc6h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.0381656, 0.98255575, -3.214654)
+
+[node name="BeachBall3" parent="." instance=ExtResource("31_hpc6h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.315237, 0.982556, -3.6275287)
+
+[node name="BeachBall4" parent="." instance=ExtResource("31_hpc6h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.380456, 0.982556, 19.36338)
+pressure_coefficient = 1000.0

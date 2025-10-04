@@ -99,7 +99,7 @@ func _ready() -> void:
 		branch_basis = branch_basis.scaled(Vector3.ONE * initial_scale)
 		multimesh.set_instance_transform(i, Transform3D(branch_basis, Vector3()))
 
-func _process(_delta : float) -> void:
+func _physics_process(_delta: float) -> void:
 	for i in trunk_amount:
 		# Branch Position
 		var inst_transf : Transform3D = multimesh.get_instance_transform(i)

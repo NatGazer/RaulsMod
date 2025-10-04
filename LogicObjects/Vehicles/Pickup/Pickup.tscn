@@ -1,4 +1,4 @@
-[gd_scene load_steps=37 format=4 uid="uid://dhlpsnomij3fr"]
+[gd_scene load_steps=36 format=4 uid="uid://dhlpsnomij3fr"]
 
 [ext_resource type="ArrayMesh" uid="uid://gubklvblfrgt" path="res://LogicObjects/Vehicles/Pickup/Pickup_Chassi.res" id="1_3gorw"]
 [ext_resource type="Script" uid="uid://rla4fby2ckfg" path="res://LogicObjects/Vehicles/Vehicle.gd" id="1_bvcr3"]
@@ -10,8 +10,8 @@
 [ext_resource type="PackedScene" uid="uid://capymtuibpox7" path="res://Components/SkidMarks.tscn" id="8_ils85"]
 
 [sub_resource type="Curve" id="Curve_bs2ep"]
-_data = [Vector2(0, 0.361738), 0.0, 0.0704776, 0, 0, Vector2(0.5730337, 1), 0.0, 0.0, 0, 0, Vector2(0.8089888, 0.9085938), -1.2590111, -1.2590111, 0, 0, Vector2(1, 0), -8.465454, 0.0, 0, 0]
-point_count = 4
+_data = [Vector2(0, 0), 0.0, 0.052147847, 0, 0, Vector2(0.71161056, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), -8.465454, 0.0, 0, 0]
+point_count = 3
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_as6hs"]
 points = PackedVector3Array(2.81636, -0.539157, 0, 2.80731, 0.308635, 0, 2.61733, 0.376727, 1.01122, 2.54787, -0.539157, 1.00774, 2.54787, -0.539157, -1.00794, 2.61733, 0.376727, -1.01143, 2.20501, 0.485334, 1.04625, 2.14506, -0.539157, 1.04625, 2.14506, -0.539157, -1.04625, 2.20501, 0.485334, -1.04625, 1.24989, 0.477311, 1.04625, 1.30187, -0.539157, 1.04625, 1.30187, -0.539157, -1.04625, 1.24989, 0.477311, -1.04625)
@@ -252,10 +252,6 @@ shadow_mesh = SubResource("ArrayMesh_bjvqw")
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_3gorw"]
 friction = 2.0
-rough = true
-
-[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bs2ep"]
-friction = 5.0
 rough = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_osbih"]
@@ -541,7 +537,8 @@ script = ExtResource("3_lc81h")
 gear_ratios = PackedFloat32Array(-2.5, 0, 2.71, 1.79, 1.3, 1, 0.86, 0.75)
 TORQUE = 400.0
 TORQUE_CURVE = SubResource("Curve_bs2ep")
-MOTOR_FRICTION = 20.0
+MIN_RPM = 850.0
+MOTOR_FRICTION = 10.0
 AIR_FRICTION = 5.0
 torque_wheels = [NodePath("../FL2/FL2_6DOF"), NodePath("../FR2/FR2_6DOF"), NodePath("../FL3/FL3_6DOF"), NodePath("../FR3/FR3_6DOF")]
 steering_wheels = [NodePath("../FL/FL_6DOF"), NodePath("../FR/FR_6DOF")]
@@ -707,7 +704,7 @@ angular_limit_x/enabled = false
 [node name="FR2" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.65613, 0.378, 1.05)
 mass = 25.0
-physics_material_override = SubResource("PhysicsMaterial_bs2ep")
+physics_material_override = SubResource("PhysicsMaterial_3gorw")
 inertia = Vector3(0.59, 0.59, 0.95)
 metadata/_edit_group_ = true
 
@@ -737,7 +734,7 @@ angular_limit_x/enabled = false
 [node name="FL3" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.71794, 0.378, -1.05)
 mass = 25.0
-physics_material_override = SubResource("PhysicsMaterial_bs2ep")
+physics_material_override = SubResource("PhysicsMaterial_3gorw")
 inertia = Vector3(0.59, 0.59, 0.95)
 metadata/_edit_group_ = true
 
@@ -767,7 +764,7 @@ angular_limit_x/enabled = false
 [node name="FR3" type="RigidBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.71794, 0.378, 1.05)
 mass = 25.0
-physics_material_override = SubResource("PhysicsMaterial_bs2ep")
+physics_material_override = SubResource("PhysicsMaterial_3gorw")
 inertia = Vector3(0.59, 0.59, 0.95)
 metadata/_edit_group_ = true
 

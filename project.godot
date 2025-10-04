@@ -32,7 +32,7 @@ movie_writer/movie_file="C:/Users/Raul/Desktop/movie/any.avi"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/SphynxMotionBlurToolkit/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/voronoishatter/plugin.cfg")
+enabled=PackedStringArray("res://addons/SphynxMotionBlurToolkit/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/voronoishatter/plugin.cfg")
 
 [input]
 

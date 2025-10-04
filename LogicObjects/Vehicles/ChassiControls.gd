@@ -7,6 +7,7 @@ extends RigidBody3D
 @export_group("Motor")
 @export var TORQUE : float = 300
 @export var TORQUE_CURVE : Curve
+@export var MIN_RPM : float = 816
 @export var MAX_RPM : float = 6500
 @export var MOTOR_FRICTION : float = 0.1
 @export var AIR_FRICTION : float = 3E-6
@@ -43,6 +44,7 @@ var gear_ratio : float
 var gear_tween : Tween
 var motor_rpm : float
 var wheels_rpm : float
+var acc_pedal : float
 var max_torque : float
 var gear_box_torque : float
 var wheels_torque  : float
@@ -124,13 +126,14 @@ func input_gear(new_gear : int) -> int:
 	return gear
 
 func input_clutch_pedal(clutch_pedal : float) -> void:
-	if gear_tween.is_running(): return
+	if gear_tween and gear_tween.is_running(): return
 	_set_clutch_engage(clutch_pedal)
 
 func _set_clutch_engage(new_clutch: float) -> void:
 	clutch = clampf(new_clutch, 0, 1)
 	
-func input_acc_pedal(acc_pedal : float) -> void:
+func input_acc_pedal(new_acc_pedal : float) -> void:
+	acc_pedal = new_acc_pedal
 	max_torque = TORQUE_CURVE.sample_baked(motor_rpm / MAX_RPM) * TORQUE
 	gear_box_torque = acc_pedal * max_torque * gear_ratio
 	wheels_torque = gear_box_torque * clutch
@@ -206,9 +209,16 @@ func wheel_velocity() -> float:
 		velocity += (wheel_rb.angular_velocity * wheel_rb.basis).z * torque_wheel_radius[wheel]
 	return velocity / torque_wheels.size()
 
+
+## IMPLEENT LIMITATOR (TIME BASED + remove TORQUE CURVE ENDING AT ZERO)
 func _physics_process(delta: float) -> void:
 	wheels_rpm = _wheels_rpm()
-	motor_rpm = lerpf(motor_rpm, wheels_rpm*gear_ratio, 20*delta)
+	motor_rpm = lerpf(motor_rpm, max(MIN_RPM, wheels_rpm*gear_ratio), 20*delta)
+	## FIXME THIS SHOW ALLOW ONLY DRIFT WHEN CLUTCH NOT ENGAGED
+	## CLUTCH BEHAIOUR HSA TO BE IMPROVED
+	## LIMITADOR HAS TO BE IMPLEMENTED
+	motor_rpm += acc_pedal*MIN_RPM*clutch*0.2 + acc_pedal*(1-clutch) * MAX_RPM*0.1
+
 	
 	## Auto Shift ##
 	auto_shift_timer += delta

@@ -1,0 +1,253 @@
+{
+	"categories": [
+		{
+			"uuid": "c5878ebc-aaff-4cf9-85ba-8102e669d336",
+			"title": "Task",
+			"color": "70bafa"
+		},
+		{
+			"uuid": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"title": "System",
+			"color": "21ee4f"
+		},
+		{
+			"uuid": "380c16e0-8418-41a7-8100-e14fe3bb4c4a",
+			"title": "Bug",
+			"color": "f08514"
+		},
+		{
+			"uuid": "5cf39da9-7a23-4d85-bef7-a4ae4c8bac68",
+			"title": "Breaking Bug",
+			"color": "ff0000"
+		}
+	],
+	"stages": [
+		{
+			"uuid": "1733057b-baea-4510-a671-f7983929a4cf",
+			"title": "Todo",
+			"tasks": [
+				"d3b21e06-e1f7-4189-af49-5e093adc31e3",
+				"30a0ec2b-caeb-45a3-af27-0dd13fe2568c",
+				"9b2de53e-eaa4-450d-bd55-91082db060c9",
+				"a327cb63-788a-4c70-8a7c-5fa0e0d3856d",
+				"b19b6919-e810-4f61-8930-d34c92f0a2dd",
+				"71adaa45-ebff-48ec-a6e6-02165aa98dda"
+			]
+		},
+		{
+			"uuid": "12c25ed7-6a7b-4c27-9449-a3fc0b3588fd",
+			"title": "Doing",
+			"tasks": [
+				"94e2c0f4-d597-44c2-8c48-2ee34e9c5f16",
+				"891861a6-f031-4674-b6e8-33fe3b325680"
+			]
+		},
+		{
+			"uuid": "bf838b76-b0c9-4fb8-911d-55e4030b09ed",
+			"title": "Done",
+			"tasks": []
+		}
+	],
+	"tasks": [
+		{
+			"uuid": "d3b21e06-e1f7-4189-af49-5e093adc31e3",
+			"title": "Physics Based Sword / Axe",
+			"description": "Controlled by mouse intensity and angle). Should include spinning attack and jump extra damage",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "Sword Model",
+					"done": false
+				},
+				{
+					"details": "Make Sword Grabbable",
+					"done": false
+				}
+			]
+		},
+		{
+			"uuid": "94e2c0f4-d597-44c2-8c48-2ee34e9c5f16",
+			"title": "Iterative Tree System",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "Base trunk that shows up more with growth",
+					"done": true
+				},
+				{
+					"details": "Trunk divided into 1 to 4 parts",
+					"done": false
+				},
+				{
+					"details": "Each division has small change of spliting in two",
+					"done": false
+				},
+				{
+					"details": "Branches hierachy in 2/3 levels",
+					"done": false
+				},
+				{
+					"details": "Leaves or group of leaves swing in the wind",
+					"done": false
+				},
+				{
+					"details": "Leaves get old and fall (replaced by particles), then grow as new again (replicate leave rain with turbulence wind)",
+					"done": false
+				},
+				{
+					"details": "After Full grown tree, flowers show up",
+					"done": false
+				},
+				{
+					"details": "Flowers transform into Fruit",
+					"done": false
+				},
+				{
+					"details": "Fruit transforms to Rigid Body 3D and falls (moves away with turbulence wind)",
+					"done": false
+				},
+				{
+					"details": "fruit disapears after a while. If far away from tree area and some chance, new tree is born",
+					"done": false
+				},
+				{
+					"details": "Branches iteratively try to be aligned up but also far appart from each other",
+					"done": false
+				}
+			]
+		},
+		{
+			"uuid": "891861a6-f031-4674-b6e8-33fe3b325680",
+			"title": "Vehicles",
+			"description": "Physics Based Rigid Body Vehicle Simulation with joints and Jolt Physics. Includes gear system with auto-shift and clutch dynamics",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "A bunch of crazy things already done",
+					"done": true
+				},
+				{
+					"details": "ABS breaking system",
+					"done": false
+				},
+				{
+					"details": "Hand brake System",
+					"done": false
+				},
+				{
+					"details": "Drift smoke particles",
+					"done": false
+				},
+				{
+					"details": "Refactor Clutch System",
+					"done": false
+				}
+			]
+		},
+		{
+			"uuid": "30a0ec2b-caeb-45a3-af27-0dd13fe2568c",
+			"title": "Physics Based Planes",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "Visible row/pitch/yaw parts",
+					"done": false
+				},
+				{
+					"details": "Integrate Aerodynamics addon or make own",
+					"done": false
+				},
+				{
+					"details": "Jet Engine with Dry/Wet Mode",
+					"done": false
+				},
+				{
+					"details": "Parachute?!",
+					"done": false
+				}
+			]
+		},
+		{
+			"uuid": "9b2de53e-eaa4-450d-bd55-91082db060c9",
+			"title": "Character Player",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "Delta Wing Flying",
+					"done": false
+				},
+				{
+					"details": "Greatly reduce side drift for better handling",
+					"done": false
+				},
+				{
+					"details": "Improve climbing experience (Force follows contact normal)",
+					"done": false
+				}
+			]
+		},
+		{
+			"uuid": "a327cb63-788a-4c70-8a7c-5fa0e0d3856d",
+			"title": "Assault Gun - Improve Overheat appearance",
+			"description": "Remove other objects from being affected by the overheating decal",
+			"category": "c5878ebc-aaff-4cf9-85ba-8102e669d336",
+			"steps": []
+		},
+		{
+			"uuid": "b19b6919-e810-4f61-8930-d34c92f0a2dd",
+			"title": "Sky Worms",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "Make then wiggle around, and sometimes make a scream sound and then Attack Player randomly",
+					"done": false
+				}
+			]
+		},
+		{
+			"uuid": "71adaa45-ebff-48ec-a6e6-02165aa98dda",
+			"title": "Riddable Giant Spiders",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": [
+				{
+					"details": "Disgusting fluffy appearance",
+					"done": false
+				},
+				{
+					"details": "Glowing Eyes with variable size based on attack/rest mode",
+					"done": false
+				},
+				{
+					"details": "Make then riddable when tammed",
+					"done": false
+				},
+				{
+					"details": "They move with Inverse IK legs",
+					"done": false
+				},
+				{
+					"details": "They climb everything",
+					"done": false
+				}
+			]
+		}
+	],
+	"layout": {
+		"columns": [
+			[
+				"1733057b-baea-4510-a671-f7983929a4cf"
+			],
+			[
+				"12c25ed7-6a7b-4c27-9449-a3fc0b3588fd"
+			],
+			[
+				"bf838b76-b0c9-4fb8-911d-55e4030b09ed"
+			]
+		]
+	}
+}

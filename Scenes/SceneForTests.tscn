@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_ff8hl"]
 [ext_resource type="PackedScene" uid="uid://bwbe0aprocknu" path="res://Components/TestGround.tscn" id="2_8pk1l"]
-[ext_resource type="PackedScene" uid="uid://cn3n3bw23k5h4" path="res://LogicObjects/ProceduralTreeGen/ProceduralTreeGen.tscn" id="3_ew50x"]
+[ext_resource type="PackedScene" uid="uid://d2jbmy00ext3r" path="res://LogicObjects/BeachBall/BeachBall.tscn" id="4_ew50x"]
 [ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="4_narca"]
 
 [sub_resource type="GDScript" id="GDScript_ew50x"]
@@ -20,6 +20,9 @@ script = SubResource("GDScript_ew50x")
 
 [node name="TestGround" parent="." instance=ExtResource("2_8pk1l")]
 
-[node name="ProceduralTreeGen" parent="." instance=ExtResource("3_ew50x")]
-
 [node name="CharacterRB" parent="." instance=ExtResource("4_narca")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1449881, 0)
+
+[node name="BeachBall" parent="." instance=ExtResource("4_ew50x")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.2629223, 0.92875695, 3.236957)
+shrinking_factor = 0.3
