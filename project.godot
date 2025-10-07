@@ -156,7 +156,6 @@ jolt_physics_3d/limits/world_boundary_shape_size=20000.0
 jolt_physics_3d/limits/max_angular_velocity=471.239
 3d/default_linear_damp=0.0
 3d/default_angular_damp=0.0
-common/physics_interpolation=true
 
 [rendering]
 

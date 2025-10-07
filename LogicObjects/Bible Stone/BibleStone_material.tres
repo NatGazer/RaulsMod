@@ -1,0 +1,15 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://coa6enlskttcb"]
+
+[ext_resource type="Texture2D" uid="uid://b6dkxtfaywwta" path="res://Materials/[2K]Marble03/Marble03_diffuse_xtm.jpg" id="1_uoe1v"]
+[ext_resource type="Texture2D" uid="uid://8pgssn3l16my" path="res://LogicObjects/Bible Stone/textures/BibleStone_AO.png" id="2_vv3ld"]
+[ext_resource type="Texture2D" uid="uid://bp5ggf2e1gl6t" path="res://Materials/[2K]Marble03/Marble03_normal_xtm.jpg" id="3_vv3ld"]
+[ext_resource type="Texture2D" uid="uid://d2e7fwar5bc4v" path="res://Materials/[2K]Marble03/Marble03_roughness_xtm.jpg" id="4_ys3cx"]
+
+[resource]
+albedo_texture = ExtResource("1_uoe1v")
+roughness_texture = ExtResource("4_ys3cx")
+normal_enabled = true
+normal_texture = ExtResource("3_vv3ld")
+ao_enabled = true
+ao_light_affect = 0.58
+ao_texture = ExtResource("2_vv3ld")

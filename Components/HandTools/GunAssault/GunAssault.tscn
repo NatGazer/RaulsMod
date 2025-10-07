@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://5tg7uc2wk18h"]
+[gd_scene load_steps=8 format=3 uid="uid://5tg7uc2wk18h"]
 
 [ext_resource type="PackedScene" uid="uid://21ud1q0x3u3m" path="res://Components/HandTools/GunAssault/GunAssault.blend" id="1_0ylyl"]
 [ext_resource type="PackedScene" uid="uid://dl1dx8e1bpsl7" path="res://Components/RayCast.tscn" id="2_11def"]
@@ -102,6 +102,16 @@ func _process(delta: float) -> void:
 		%OverHeatingEffect.emission_energy = 0
 "
 
+[sub_resource type="GDScript" id="GDScript_11def"]
+resource_name = "GunMeshLayer"
+script/source = "extends Node3D
+
+func _ready() -> void:
+	for child in get_children(1):
+		if child is MeshInstance3D:
+			child.layers = 2
+"
+
 [sub_resource type="Gradient" id="Gradient_11def"]
 offsets = PackedFloat32Array(0.436214)
 colors = PackedColorArray(1, 0.228168, 0, 1)
@@ -117,10 +127,11 @@ font_size = 23
 [node name="GunAssault" type="Node3D"]
 
 [node name="GunAssault" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.258791, -0.0809821, -0.335949)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.259, -0.081, -0.336)
 script = SubResource("GDScript_0ylyl")
 
 [node name="GunMesh" parent="GunAssault" instance=ExtResource("1_0ylyl")]
+script = SubResource("GDScript_11def")
 
 [node name="RayCast" parent="GunAssault/GunMesh" instance=ExtResource("2_11def")]
 unique_name_in_owner = true
@@ -137,15 +148,19 @@ size = Vector3(0.0839844, 0.600922, 0.133209)
 texture_emission = SubResource("GradientTexture1D_4ka1g")
 emission_energy = 0.0
 lower_fade = 4.03631
+cull_mask = 2
 
-[node name="CenterContainer" type="CenterContainer" parent="GunAssault"]
+[node name="MeshInstance3D" type="MeshInstance3D" parent="GunAssault/GunMesh"]
+
+[node name="UI" type="CenterContainer" parent="GunAssault"]
+unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Label" type="Label" parent="GunAssault/CenterContainer"]
+[node name="Label" type="Label" parent="GunAssault/UI"]
 layout_mode = 2
 text = "+"
 label_settings = SubResource("LabelSettings_nbqn5")

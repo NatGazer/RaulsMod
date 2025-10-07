@@ -1,6 +1,6 @@
 [gd_scene load_steps=16 format=3 uid="uid://divon04875xo7"]
 
-[ext_resource type="ArrayMesh" uid="uid://dsmavqaxun11t" path="res://LogicObjects/MegaPlane/MegaPlane_Cube_002.res" id="1_5ag8h"]
+[ext_resource type="ArrayMesh" uid="uid://dsmavqaxun11t" path="res://LogicObjects/Planes/MegaPlane/MegaPlane_Cube_002.res" id="1_5ag8h"]
 
 [sub_resource type="GDScript" id="GDScript_mvi26"]
 resource_name = "MegaPlane"

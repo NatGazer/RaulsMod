@@ -3,21 +3,23 @@
 importer="scene"
 importer_version=1
 type="PackedScene"
-uid="uid://wuvekrjtwhu6"
-path="res://.godot/imported/MegaPlane.blend-9baa9746237b83a8dd947ac619fef35f.scn"
+uid="uid://b1b8nbw4dk38g"
+path="res://.godot/imported/SimpleTerrain.blend-8a78d58cd0e03a809825cfbd3c204d9d.scn"
 
 [deps]
 
-source_file="res://LogicObjects/MegaPlane/MegaPlane.blend"
-dest_files=["res://.godot/imported/MegaPlane.blend-9baa9746237b83a8dd947ac619fef35f.scn"]
+source_file="res://Props/GrassTerrain/SimpleTerrain.blend"
+dest_files=["res://.godot/imported/SimpleTerrain.blend-8a78d58cd0e03a809825cfbd3c204d9d.scn"]
 
 [params]
 
 nodes/root_type=""
 nodes/root_name=""
+nodes/root_script=null
 nodes/apply_root_scale=true
 nodes/root_scale=1.0
 nodes/import_as_skeleton_bones=false
+nodes/use_name_suffixes=true
 nodes/use_node_type_suffixes=true
 meshes/ensure_tangents=true
 meshes/generate_lods=true
@@ -32,23 +34,28 @@ animation/trimming=false
 animation/remove_immutable_tracks=true
 animation/import_rest_as_RESET=false
 import_script/path=""
+materials/extract=0
+materials/extract_format=0
+materials/extract_path=""
 _subresources={
 "meshes": {
-"MegaPlane_Cube_001": {
+"SimpleTerrain_Grass": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
+"lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://LogicObjects/MegaPlane/col_mesh.res"
+"save_to_file/fallback_path": "res://Props/GrassTerrain/SimpleTerrain_Grass.res",
+"save_to_file/path": "uid://c0qkgagdwnmsq"
 },
-"MegaPlane_Cube_002": {
+"SimpleTerrain_Ground": {
 "generate/lightmap_uv": 0,
 "generate/lods": 0,
 "generate/shadow_meshes": 0,
-"lods/normal_merge_angle": 60.0,
+"lods/normal_merge_angle": 20.0,
 "save_to_file/enabled": true,
-"save_to_file/path": "res://LogicObjects/MegaPlane/MegaPlane_Cube_002.res"
+"save_to_file/fallback_path": "res://Props/GrassTerrain/SimpleTerrain_Ground.res",
+"save_to_file/path": "uid://dbt2he7hkcv2m"
 }
 }
 }
@@ -70,3 +77,4 @@ blender/materials/export_materials=1
 blender/animation/limit_playback=true
 blender/animation/always_sample=true
 blender/animation/group_tracks=true
+gltf/naming_version=2

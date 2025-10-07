@@ -24,7 +24,7 @@ func _ready():
 	await get_tree().process_frame
 	node_a = animatable_body.get_path()
 
-func _process(_delta):
+func _physics_process(_delta: float) -> void:
 	# Animatable Body follows camera motion
 	animatable_body.global_transform = Global.Camera.global_transform
 	
@@ -94,7 +94,6 @@ func _try_grab():
 			if dist < min_dist:
 				pinned_point = i
 				min_dist = dist
-				print(min_dist)
 			i += 1
 		grabbed_body.set_point_pinned(pinned_point, true, self.get_path())
 
@@ -159,7 +158,8 @@ angular_spring_z/damping = 2.0
 script = SubResource("GDScript_jmlhf")
 grab_distance = 20.0
 
-[node name="CenterContainer" type="CenterContainer" parent="."]
+[node name="UI" type="CenterContainer" parent="."]
+unique_name_in_owner = true
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -168,7 +168,7 @@ grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="AimUI" type="TextureRect" parent="CenterContainer"]
+[node name="AimUI" type="TextureRect" parent="UI"]
 modulate = Color(1, 1, 1, 0.509804)
 custom_minimum_size = Vector2(7, 7)
 layout_mode = 2

@@ -271,18 +271,31 @@ func _input(event: InputEvent) -> void:
 		if tool_id <= 0: tool_id = tool_list.size() # Loop gun change
 		tool_id -= 1
 		set_gun(tool_id)
+	
+	elif (event is InputEventKey and
+	event.keycode >= Key.KEY_0 and event.keycode <= Key.KEY_9):
+		var idx : int = event.keycode - Key.KEY_0
+		if idx < tool_list.size() and tool_id != idx:
+			tool_id = idx
+			set_gun(tool_id)
 
 func set_gun(new_tool_id : int) -> void:
 	if tool_change_tween: tool_change_tween.kill()
-	tool_change_tween = get_tree().create_tween().set_trans(Tween.TRANS_EXPO)
+	tool_change_tween = get_tree().create_tween().set_trans(Tween.TRANS_CIRC)
 	
-	tool_change_tween.tween_property(self, \"position:y\", tool_rest_position.y-1, 0.2)
+	_gun_ui_visible(false)
+	tool_change_tween.tween_property(self, \"position:y\", tool_rest_position.y-1, 0.6)
 	tool_change_tween.tween_callback(_instant_replace_gun.bind(new_tool_id))
-	tool_change_tween.tween_property(self, \"position:y\", tool_rest_position.y, 0.2)
+	_gun_ui_visible(true)
+	tool_change_tween.tween_property(self, \"position:y\", tool_rest_position.y, 0.6)
 
 func _instant_replace_gun(new_tool_id : int) -> void:
 	if get_children(): remove_child(get_children()[0])
 	add_child(tool_list[new_tool_id])
+
+func _gun_ui_visible(visibility : bool) -> void:
+	if get_children() and get_children()[0].has_node(\"%UI\"):
+		get_children()[0].get_node(\"%UI\").visible = visibility
 "
 
 [node name="CharacterRB" type="RigidBody3D"]

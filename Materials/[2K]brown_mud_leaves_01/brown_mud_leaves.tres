@@ -1,0 +1,16 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://cbqbggy1cnvyv"]
+
+[ext_resource type="Texture2D" uid="uid://wa66x0anunb" path="res://Materials/[2K]brown_mud_leaves_01/brown_mud_leaves_01_diffuse_xtm.jpg" id="1_bypky"]
+[ext_resource type="Texture2D" uid="uid://dn3uyppq8qyvw" path="res://Materials/[2K]brown_mud_leaves_01/brown_mud_leaves_01_bump_xtm.jpg" id="2_cy3i8"]
+[ext_resource type="Texture2D" uid="uid://buickadkp8n4y" path="res://Materials/[2K]brown_mud_leaves_01/brown_mud_leaves_01_normal_xtm.jpg" id="3_5whkb"]
+[ext_resource type="Texture2D" uid="uid://cmdu2mx2baobh" path="res://Materials/[2K]brown_mud_leaves_01/brown_mud_leaves_01_roughness_xtm.jpg" id="4_oos30"]
+
+[resource]
+albedo_texture = ExtResource("1_bypky")
+roughness_texture = ExtResource("4_oos30")
+normal_enabled = true
+normal_texture = ExtResource("3_5whkb")
+heightmap_enabled = true
+heightmap_scale = 0.4
+heightmap_texture = ExtResource("2_cy3i8")
+uv1_scale = Vector3(3.525, 3.525, 3.525)

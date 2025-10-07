@@ -53,8 +53,7 @@ adjustment_brightness = 1.2
 [sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_twgwy"]
 auto_exposure_enabled = true
 auto_exposure_scale = 0.75
-dof_blur_near_distance = 0.5
-dof_blur_near_transition = 0.5
+dof_blur_near_distance = 1.0
 
 [sub_resource type="Compositor" id="Compositor_0qcgs"]
 

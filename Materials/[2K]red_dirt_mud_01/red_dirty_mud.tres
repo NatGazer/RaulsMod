@@ -1,0 +1,18 @@
+[gd_resource type="StandardMaterial3D" load_steps=5 format=3 uid="uid://dp80bn21c8a3u"]
+
+[ext_resource type="Texture2D" uid="uid://d0eb5lo2ca6jt" path="res://Materials/[2K]red_dirt_mud_01/red_dirt_mud_01_diffuse_xtm.jpg" id="1_at58o"]
+[ext_resource type="Texture2D" uid="uid://dhsmucvqfoj8" path="res://Materials/[2K]red_dirt_mud_01/red_dirt_mud_01_bump_xtm.jpg" id="2_jbg6u"]
+[ext_resource type="Texture2D" uid="uid://bujd4f0ti6nq2" path="res://Materials/[2K]red_dirt_mud_01/red_dirt_mud_01_normal_xtm.jpg" id="3_3745q"]
+[ext_resource type="Texture2D" uid="uid://cbe0wltm8j6vx" path="res://Materials/[2K]red_dirt_mud_01/red_dirt_mud_01_roughness_xtm.jpg" id="4_skj4p"]
+
+[resource]
+albedo_texture = ExtResource("1_at58o")
+roughness_texture = ExtResource("4_skj4p")
+normal_enabled = true
+normal_scale = 1.5
+normal_texture = ExtResource("3_3745q")
+ao_enabled = true
+heightmap_enabled = true
+heightmap_scale = 0.4
+heightmap_texture = ExtResource("2_jbg6u")
+uv1_scale = Vector3(5.855, 5.855, 5.855)

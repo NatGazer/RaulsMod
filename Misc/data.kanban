@@ -29,15 +29,17 @@
 				"d3b21e06-e1f7-4189-af49-5e093adc31e3",
 				"30a0ec2b-caeb-45a3-af27-0dd13fe2568c",
 				"9b2de53e-eaa4-450d-bd55-91082db060c9",
-				"a327cb63-788a-4c70-8a7c-5fa0e0d3856d",
 				"b19b6919-e810-4f61-8930-d34c92f0a2dd",
-				"71adaa45-ebff-48ec-a6e6-02165aa98dda"
+				"71adaa45-ebff-48ec-a6e6-02165aa98dda",
+				"a06b6d63-0b72-4a14-ae1d-a887a95dd16b",
+				"ba393325-511d-4701-9acc-7b898349cc04"
 			]
 		},
 		{
 			"uuid": "12c25ed7-6a7b-4c27-9449-a3fc0b3588fd",
 			"title": "Doing",
 			"tasks": [
+				"231551af-3e9e-4ab4-b648-e30d31abcec9",
 				"94e2c0f4-d597-44c2-8c48-2ee34e9c5f16",
 				"891861a6-f031-4674-b6e8-33fe3b325680"
 			]
@@ -45,7 +47,9 @@
 		{
 			"uuid": "bf838b76-b0c9-4fb8-911d-55e4030b09ed",
 			"title": "Done",
-			"tasks": []
+			"tasks": [
+				"a327cb63-788a-4c70-8a7c-5fa0e0d3856d"
+			]
 		}
 	],
 	"tasks": [
@@ -235,6 +239,27 @@
 					"done": false
 				}
 			]
+		},
+		{
+			"uuid": "a06b6d63-0b72-4a14-ae1d-a887a95dd16b",
+			"title": "Giant Chess Game with megalonic appearance and sounds. Self played?",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": []
+		},
+		{
+			"uuid": "231551af-3e9e-4ab4-b648-e30d31abcec9",
+			"title": "Simple terrain with grass for Off-Road Test",
+			"description": "",
+			"category": "c5878ebc-aaff-4cf9-85ba-8102e669d336",
+			"steps": []
+		},
+		{
+			"uuid": "ba393325-511d-4701-9acc-7b898349cc04",
+			"title": "Chest System Like Zelda",
+			"description": "",
+			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": []
 		}
 	],
 	"layout": {

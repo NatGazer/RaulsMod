@@ -13,6 +13,8 @@ extends RigidBody3D
 @export var AIR_FRICTION : float = 3E-6
 @export var MOTOR_INERTIA_MULTIPLIER : float = 10.0
 @export var WHEEL_MASS_MULTIPLIER : float = 0.2
+@export var RPM_CUT : float = 5900
+@export var RPM_CUT_TIME : float = 0.1
 
 @export_group("Steering Wheel")
 @export var MAX_TURN_RADIUS : float = 5 # meters (average radius from wheel to turn center)
@@ -36,13 +38,15 @@ var MAX_SLIP : float = 2 # Must be above 1
 @export var all_and_brake_wheels : Array[Generic6DOFJoint3D]
 @export var hand_brake_wheels : Array[Generic6DOFJoint3D]
 
-var clutch : float = 1.0
+var auto_clutch : float = 1.0
+var manual_clutch : float = 1.0
+var actual_clutch : float = 1.0
 var auto_shift : bool = true
 var auto_shift_timer : float = 0.0
 var gear : int = 0
 var gear_ratio : float
 var gear_tween : Tween
-var motor_rpm : float
+var motor_rpm : float = MIN_RPM
 var wheels_rpm : float
 var acc_pedal : float
 var max_torque : float
@@ -50,6 +54,7 @@ var gear_box_torque : float
 var wheels_torque  : float
 var torque_wheel_amount : int
 var torque_wheel_radius : Dictionary[Generic6DOFJoint3D, float]
+var rpm_cutter : float = RPM_CUT_TIME
 
 func _ready() -> void:
 	torque_wheel_amount = torque_wheels.size()
@@ -116,8 +121,8 @@ func input_gear(new_gear : int) -> int:
 	if gear != new_gear:
 		if gear_tween: gear_tween.kill()
 		gear_tween = get_tree().create_tween() 
-		gear_tween.tween_property(self, "clutch", 0, CLUTCH_DISENGAGE_TIME)
-		gear_tween.tween_property(self, "clutch", 1, CLUTCH_ENGAGE_TIME)
+		gear_tween.tween_property(self, "auto_clutch", 0, CLUTCH_DISENGAGE_TIME)
+		gear_tween.tween_property(self, "auto_clutch", 1, CLUTCH_ENGAGE_TIME)
 	
 	gear = new_gear
 	gear_ratio = gear_ratios[gear+1] * base_gear_ratio
@@ -130,14 +135,10 @@ func input_clutch_pedal(clutch_pedal : float) -> void:
 	_set_clutch_engage(clutch_pedal)
 
 func _set_clutch_engage(new_clutch: float) -> void:
-	clutch = clampf(new_clutch, 0, 1)
+	manual_clutch = clampf(new_clutch, 0, 1)
 	
 func input_acc_pedal(new_acc_pedal : float) -> void:
 	acc_pedal = new_acc_pedal
-	max_torque = TORQUE_CURVE.sample_baked(motor_rpm / MAX_RPM) * TORQUE
-	gear_box_torque = acc_pedal * max_torque * gear_ratio
-	wheels_torque = gear_box_torque * clutch
-	#_set_engine_torque is now in Process to integrate motor_friction
 	%UI.write_number("Torque", wheels_torque, 0)
 
 
@@ -213,12 +214,37 @@ func wheel_velocity() -> float:
 ## IMPLEENT LIMITATOR (TIME BASED + remove TORQUE CURVE ENDING AT ZERO)
 func _physics_process(delta: float) -> void:
 	wheels_rpm = _wheels_rpm()
-	motor_rpm = lerpf(motor_rpm, max(MIN_RPM, wheels_rpm*gear_ratio), 20*delta)
-	## FIXME THIS SHOW ALLOW ONLY DRIFT WHEN CLUTCH NOT ENGAGED
-	## CLUTCH BEHAIOUR HSA TO BE IMPROVED
-	## LIMITADOR HAS TO BE IMPLEMENTED
-	motor_rpm += acc_pedal*MIN_RPM*clutch*0.2 + acc_pedal*(1-clutch) * MAX_RPM*0.1
-
+	
+	max_torque = TORQUE_CURVE.sample_baked(motor_rpm / MAX_RPM) * TORQUE
+	
+	## RPM CUT ##
+	rpm_cutter += delta
+	if motor_rpm > RPM_CUT:rpm_cutter = 0.0
+	if rpm_cutter < RPM_CUT_TIME:
+		max_torque = 0.0
+	
+	gear_box_torque = acc_pedal * max_torque * gear_ratio
+	wheels_torque = gear_box_torque * actual_clutch
+	
+	var decay : float = 6.0
+	var launch_strength : float = 2.0
+	var launch_rpm_rev : float = launch_strength* acc_pedal * decay / (decay + exp(decay*(wheels_rpm*gear_ratio / MIN_RPM-2)))
+	var dynamic_min_rpm : float = MIN_RPM*(1+launch_rpm_rev)
+	motor_rpm = lerpf(motor_rpm, max(dynamic_min_rpm, wheels_rpm*gear_ratio), 20*delta)
+	
+	var wheel_motor_rpm_ratio : float = clamp(wheels_rpm*gear_ratio / motor_rpm, 0, 1)
+	actual_clutch = auto_clutch * wheel_motor_rpm_ratio
+	actual_clutch += (1-actual_clutch) * acc_pedal*0.5 # Clutch launch rev engage
+	actual_clutch *= manual_clutch
+	
+	## Torque Management ##
+	#Motor Friction
+	var motor_friction : float = actual_clutch * gear_ratio * gear_ratio * wheels_rpm * MOTOR_FRICTION*1E-3
+	#Torque - Motor Friction
+	_set_engine_torque(wheels_torque - motor_friction)
+	# Air Friction
+	var air_friction : float = pow(%Chassi.linear_velocity.length(), 2) * AIR_FRICTION * 1E-6
+	%Chassi.linear_damp = air_friction
 	
 	## Auto Shift ##
 	auto_shift_timer += delta
@@ -234,20 +260,11 @@ func _physics_process(delta: float) -> void:
 		elif motor_rpm < max(800, MAX_RPM * 0.5) and gear > 1 and not (motor_rpm > MAX_RPM * 0.8):
 			input_gear(gear - 1)
 			auto_shift_timer = 0.0
-		
-	## Torque Management ##
-	#Motor Friction
-	var motor_friction : float = clutch * gear_ratio * gear_ratio * wheels_rpm * MOTOR_FRICTION*1E-3
-	#Torque - Motor Friction
-	_set_engine_torque(wheels_torque - motor_friction)
-	# Air Friction
-	var air_friction : float = pow(%Chassi.linear_velocity.length(), 2) * AIR_FRICTION * 1E-6
-	%Chassi.linear_damp = air_friction
 	
 	%UI/RPM.speed = abs(motor_rpm) / 1000.0
 	%UI/RPM/Gear.text = str(gear)
 	%UI/Speedometer.speed = abs(wheel_velocity()*3.6)
-	%UI.write_number("Clutch Engage", clutch*100, 0, "%")
+	%UI.write_number("Clutch Engage", actual_clutch*100, 0, "%")
 	%UI.write_number("Air Friction", air_friction, 2)
 	%UI.write_number("Motor Friction", motor_friction, 2)
 	%UI.write_number("Motor RPM", motor_rpm, 0)

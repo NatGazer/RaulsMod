@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://d2jbmy00ext3r"]
 
-[ext_resource type="ArrayMesh" uid="uid://cujbi772qeg3y" path="res://LogicObjects/BeachBall/2_Sphere_004.res" id="1_lbm0v"]
+[ext_resource type="ArrayMesh" uid="uid://cjf4yxlead040" path="res://LogicObjects/BeachBall/2_Sphere_004.res" id="1_lbm0v"]
 
 [sub_resource type="GDScript" id="GDScript_lbm0v"]
 resource_name = "BeachBall"
@@ -9,11 +9,13 @@ script/source = "extends SoftBody3D
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"K\"):
-		pressure_coefficient = 2000
+		pressure_coefficient = 4000
 "
 
 [node name="BeachBall" type="SoftBody3D"]
 mesh = ExtResource("1_lbm0v")
 total_mass = 15.01
+linear_stiffness = 0.2
+shrinking_factor = 0.3
 pressure_coefficient = 2000.0
 script = SubResource("GDScript_lbm0v")

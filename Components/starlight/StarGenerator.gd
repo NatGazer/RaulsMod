@@ -12,7 +12,7 @@ extends "res://Components/starlight/StarManager.gd"
 @export var generate_at_origin: bool = false: set = _set_generate_at_origin
 
 
-var _regenerate = true
+var _regenerate = false
 
 
 func _set_extents(value):
@@ -167,7 +167,7 @@ func random_category(rng: RandomNumberGenerator):
 func _process(delta):
 	if not _regenerate:
 		return
-
+	
 	_regenerate = false
 
 	var rng = RandomNumberGenerator.new()
