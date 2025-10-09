@@ -1,4 +1,4 @@
-[gd_scene load_steps=158 format=4 uid="uid://d171ldr3x265t"]
+[gd_scene load_steps=157 format=4 uid="uid://d171ldr3x265t"]
 
 [ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_yaehf"]
 [ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="2_4c57u"]
@@ -29,7 +29,6 @@
 [ext_resource type="Script" uid="uid://btyiucuxdhvig" path="res://addons/voronoishatter/tools/voronoicollection.gd" id="27_6vcvc"]
 [ext_resource type="PackedScene" uid="uid://xksql0nxsuwk" path="res://Props/reduce_speed_avenue_the_traffic_bump/speed_bump.tscn" id="28_ueoa1"]
 [ext_resource type="PackedScene" uid="uid://cn3n3bw23k5h4" path="res://LogicObjects/ProceduralTreeGen/ProceduralTreeGen.tscn" id="29_6vcvc"]
-[ext_resource type="PackedScene" uid="uid://l116mvalhb7c" path="res://LogicObjects/Spider/Spider.tscn" id="30_7k868"]
 [ext_resource type="PackedScene" uid="uid://bo7aw8enqyqu1" path="res://Props/GrassTerrain/Grass Terrain.tscn" id="31_hpc6h"]
 [ext_resource type="PackedScene" uid="uid://d2jbmy00ext3r" path="res://LogicObjects/BeachBall/BeachBall.tscn" id="32_kltya"]
 [ext_resource type="PackedScene" uid="uid://ykl0foqklea2" path="res://LogicObjects/Bible Stone/BibleStone.tscn" id="33_e08e2"]
@@ -2553,54 +2552,51 @@ shape = SubResource("ConvexPolygonShape3D_ci23i")
 transform = Transform3D(0.95, 0, 0, 0, 0.95, 0, 0, 0, 0.95, 0, 0, 0)
 mesh = SubResource("ArrayMesh_myryv")
 
-[node name="Node3D" type="Node3D" parent="."]
+[node name="SpeedBumps" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -65.662056, 0, 23.627987)
 metadata/_edit_group_ = true
 
-[node name="SpeedBump" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
 
-[node name="SpeedBump2" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump2" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -3.0841637, 0, 0)
 
-[node name="SpeedBump3" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump3" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -6.450531, 0, 0)
 
-[node name="SpeedBump4" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump4" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -9.5346985, 0, 0)
 
-[node name="SpeedBump5" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump5" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -14.2225685, 0, 2.2882328)
 
-[node name="SpeedBump6" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump6" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -15.590576, 0, -2.4286308)
 
-[node name="SpeedBump7" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump7" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -17.178349, 0, 2.2882328)
 
-[node name="SpeedBump8" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump8" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -18.546356, 0, -2.4286308)
 
-[node name="SpeedBump9" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump9" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -20.240284, 0, 2.2882328)
 
-[node name="SpeedBump10" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump10" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -21.608292, 0, -2.4286308)
 
-[node name="SpeedBump11" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump11" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -23.364998, 0, 2.2882347)
 
-[node name="SpeedBump13" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump13" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -26.452396, 0, 2.2882347)
 
-[node name="SpeedBump12" parent="Node3D" instance=ExtResource("28_ueoa1")]
+[node name="SpeedBump12" parent="SpeedBumps" instance=ExtResource("28_ueoa1")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-08, -24.733006, 0, -2.4286308)
 
 [node name="ProceduralTreeGen" parent="." instance=ExtResource("29_6vcvc")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.207577, 0, 28.856506)
-
-[node name="Spider" parent="." instance=ExtResource("30_7k868")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10.701358, 0.04271412, -12.886487)
 
 [node name="GrassTerrain" parent="." instance=ExtResource("31_hpc6h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.630486, -9.536743e-07, 21.5074)

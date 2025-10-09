@@ -148,18 +148,18 @@ func closest_point_in_ray(ori_1: Vector3, dir_1: Vector3, ori_2: Vector3, dir_2:
 ## that crosses this line
 func perpendicular_vector_crossing(A: Vector3, B: Vector3, C: Vector3) -> Vector3:
 	# Step 1: Compute the vector AB
-	var AB = B - A
+	var AB : Vector3 = B - A
 	
 	# Step 2: Compute the vector perpendicular to AB
-	var reference = Vector3.UP if AB != Vector3.UP else Vector3.FORWARD
-	var perpendicular = AB.cross(reference).normalized()
+	var reference : Vector3 = Vector3.UP if AB != Vector3.UP else Vector3.FORWARD
+	var perpendicular : Vector3 = AB.cross(reference).normalized()
 	
 	# Step 3: Compute the vector from A to C
-	var AC = C - A
+	var AC : Vector3 = C - A
 	
 	# Step 4: Project AC onto the perpendicular direction
-	var projection_length = AC.dot(perpendicular)
-	var perpendicular_vector = projection_length * perpendicular
+	var projection_length : float = AC.dot(perpendicular)
+	var perpendicular_vector : Vector3 = projection_length * perpendicular
 	
 	return perpendicular_vector
 

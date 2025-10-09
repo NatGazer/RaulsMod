@@ -31,7 +31,7 @@ func _input(event: InputEvent) -> void:
 		slow_mo_tween.tween_method(set_global_pitch, 0.1, 1.0, 0.5)
 
 func set_global_pitch(pitch : float) -> void:
-	var bus_idx = AudioServer.get_bus_index("Master")
+	var bus_idx : int = AudioServer.get_bus_index("Master")
 	for i in range(AudioServer.get_bus_effect_count(bus_idx)):
 		var effect_res: AudioEffect = AudioServer.get_bus_effect(bus_idx, i) # This is the *resource*
 		if effect_res is AudioEffectPitchShift:

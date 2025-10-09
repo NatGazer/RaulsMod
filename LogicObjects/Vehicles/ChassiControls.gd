@@ -227,14 +227,14 @@ func _physics_process(delta: float) -> void:
 	wheels_torque = gear_box_torque * actual_clutch
 	
 	var decay : float = 6.0
-	var launch_strength : float = 2.0
+	var launch_strength : float = 3.0
 	var launch_rpm_rev : float = launch_strength* acc_pedal * decay / (decay + exp(decay*(wheels_rpm*gear_ratio / MIN_RPM-2)))
 	var dynamic_min_rpm : float = MIN_RPM*(1+launch_rpm_rev)
 	motor_rpm = lerpf(motor_rpm, max(dynamic_min_rpm, wheels_rpm*gear_ratio), 20*delta)
 	
 	var wheel_motor_rpm_ratio : float = clamp(wheels_rpm*gear_ratio / motor_rpm, 0, 1)
 	actual_clutch = auto_clutch * wheel_motor_rpm_ratio
-	actual_clutch += (1-actual_clutch) * acc_pedal*0.5 # Clutch launch rev engage
+	actual_clutch += (1-actual_clutch) * acc_pedal # Clutch launch rev engage
 	actual_clutch *= manual_clutch
 	
 	## Torque Management ##

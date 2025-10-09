@@ -6,7 +6,7 @@
 resource_name = "RBgrabber"
 script/source = "extends Generic6DOFJoint3D
 
-@export var grab_distance = 5.0
+@export var grab_distance : float = 5.0
 
 signal body_detected()
 signal no_body_detected()
@@ -16,7 +16,7 @@ var grab_pos : Vector3
 var animatable_body : AnimatableBody3D
 var pinned_point : int = -1
 
-func _ready():
+func _ready() -> void:
 	# Create Animatable body to be the joint support
 	animatable_body = AnimatableBody3D.new()
 	
@@ -37,26 +37,26 @@ func _physics_process(_delta: float) -> void:
 		#Utils.draw_line(grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 1.0), 1, false)
 		#Utils.draw_line(grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 0.2), 1, true)
 
-func _input(event):
+func _input(event : InputEvent) -> void:
 	if event.is_action_pressed(\"left_click\"):
 		_try_grab()
 	elif event.is_action_released(\"left_click\"):
 		_release()
 
-func _check_for_body():
-	var ray_origin = get_parent().global_position
-	var ray_direction = -get_parent().global_transform.basis.z
+func _check_for_body() -> void:
+	var ray_origin : Vector3 = get_parent().global_position
+	var ray_direction : Vector3 = -get_parent().global_transform.basis.z
 
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.new()
+	var space_state : PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.new()
 	query.from = ray_origin
 	query.to = ray_origin + ray_direction * grab_distance
 	query.exclude = [get_parent()]
 
-	var result = space_state.intersect_ray(query)
+	var result : Dictionary = space_state.intersect_ray(query)
 
 	if result.size() > 0:
-		var collider = result.collider
+		var collider : Node3D = result.collider
 		if collider is RigidBody3D or collider is SoftBody3D:
 			if grabbed_body == null:
 				emit_signal(\"body_detected\")
@@ -70,7 +70,7 @@ func _check_for_body():
 		grabbed_body = null
 		emit_signal(\"no_body_detected\")
 
-func _try_grab():
+func _try_grab() -> void:
 	# If not body detected return
 	if not grabbed_body:
 		return
@@ -98,7 +98,7 @@ func _try_grab():
 		grabbed_body.set_point_pinned(pinned_point, true, self.get_path())
 
 
-func _release():
+func _release() -> void:
 	# Rigid Body
 	if node_b != NodePath(\"\"):
 		# Deactivate the joint on release

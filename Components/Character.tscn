@@ -57,8 +57,8 @@ func _input(event : InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	# Angular Equilibrium
-	var current_up = global_transform.basis.y
-	var alignment_error = current_up.cross(-gravity_direction.normalized())
+	var current_up : Vector3 = global_transform.basis.y
+	var alignment_error : Vector3 = current_up.cross(-gravity_direction.normalized())
 	var equilibrium_by_velocity : float = clampf(20-0.5*linear_velocity.length(), 0, 1) #Unstabilize with great velocities
 	apply_torque(-alignment_error * equilibrium * equilibrium_by_velocity * delta)
 	
@@ -156,11 +156,11 @@ func set_parent(new_parent : Node3D, smoothness : float = 2) -> void:
 	get_parent().remove_child(self)
 	new_parent.add_child(self)
 
-func set_orbital_parent(new_parent : Node3D, newOrbitDistance : float, smoothness : float = 1):
+func set_orbital_parent(new_parent : Node3D, newOrbitDistance : float, smoothness : float = 1) -> void:
 	set_parent(new_parent, smoothness)
 	orbitDistance = newOrbitDistance # Needs to be after set_parent
 
-func _temporary_smoothness( time : float = 2, new_sharpness : float = SHARPNESS/300):
+func _temporary_smoothness( time : float = 2, new_sharpness : float = SHARPNESS/300) -> void:
 	if tween: tween.kill()
 	tween = get_tree().create_tween().set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	sharpness = new_sharpness

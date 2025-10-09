@@ -11,16 +11,16 @@ const MUSIC_FOLDER := \"res://Music\"
 # Stores the list of music files
 var music_files: Array = []
 
-func _ready():
+func _ready() -> void:
 	load_music_files()
 	play_random_song()
 
 # Load all audio files from the specified folder
-func load_music_files():
-	var dir = DirAccess.open(MUSIC_FOLDER)
+func load_music_files() -> void:
+	var dir := DirAccess.open(MUSIC_FOLDER)
 	if dir:
 		dir.list_dir_begin()
-		var file_name = dir.get_next()
+		var file_name : String = dir.get_next()
 		while file_name != \"\":
 			if not dir.current_is_dir() and file_name.get_extension() == \"mp3\":
 				music_files.append(MUSIC_FOLDER + \"/\" + file_name)
@@ -30,13 +30,13 @@ func load_music_files():
 		push_error(\"Could not open music folder: \" + MUSIC_FOLDER)
 
 # Select a random song and play it
-func play_random_song():
+func play_random_song() -> void:
 	if music_files.size() == 0:
 		push_error(\"No music files found in: \" + MUSIC_FOLDER)
 		return
 
-	var random_file = music_files[randi() % music_files.size()]
-	var new_stream = load(random_file)
+	var random_file : String = music_files[randi() % music_files.size()]
+	var new_stream : AudioStream = load(random_file)
 	if new_stream:
 		self.stream = new_stream
 		play()

@@ -16,25 +16,23 @@ func search_body(grab_distance : float = 9999) -> Array:
 	var result : Dictionary = _ray_cast(grab_distance)
 	if result == {}: return [null]
 	
-	var collider = result.collider
-	
-	var physics_body : Node3D = collider
+	var physics_body : Node3D = result.collider
 	var collision_pos : Vector3 = result.position
 	var collision_normal : Vector3 = result.normal
 	return [physics_body, collision_pos, collision_normal]
 
 
 func _ray_cast(grab_distance : float) -> Dictionary:
-	var ray_origin = global_position
-	var ray_direction = -global_transform.basis.z
+	var ray_origin : Vector3 = global_position
+	var ray_direction : Vector3 = -global_transform.basis.z
 
-	var space_state = get_world_3d().direct_space_state
-	var query = PhysicsRayQueryParameters3D.new()
+	var space_state : PhysicsDirectSpaceState3D = get_world_3d().direct_space_state
+	var query := PhysicsRayQueryParameters3D.new()
 	query.from = ray_origin
 	query.to = ray_origin + ray_direction * grab_distance
 	query.exclude = [get_parent()]
 
-	var result = space_state.intersect_ray(query)
+	var result : Dictionary = space_state.intersect_ray(query)
 
 	if result.size() > 0:
 		return result

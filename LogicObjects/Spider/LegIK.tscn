@@ -1,0 +1,88 @@
+[gd_scene load_steps=7 format=3 uid="uid://0njf2rtnii8o"]
+
+[ext_resource type="PackedScene" uid="uid://va24i3vhugi5" path="res://LogicObjects/Spider/Leg.blend" id="1_4vpep"]
+[ext_resource type="Material" uid="uid://cbqbggy1cnvyv" path="res://Materials/[2K]brown_mud_leaves_01/brown_mud_leaves.tres" id="2_xl2t7"]
+
+[sub_resource type="GDScript" id="GDScript_d57j8"]
+resource_name = "IK_TargetAnimation"
+script/source = "extends Marker3D
+
+@export var step_distance: float = 1.5
+@export var step_height: float = 1.0
+@export var step_speed: float = 0.2
+
+var t : Tween
+
+func _ready() -> void:
+	top_level = true
+	%SkeletonIK3D.start()
+
+func _process(_delta  : float) -> void:
+	if abs(global_position.distance_to(%StepTarget.global_position)) > step_distance and not (t and t.is_running()):
+		step()
+
+func step() -> void:
+	var target_pos : Vector3 = %StepTarget.global_position
+	var half_way : Vector3 = (global_position + target_pos) / 2
+	
+	if t and t.is_running():
+		print(\"###########\")
+		t.kill()
+		#global_position = target_pos
+	t = get_tree().create_tween()
+	t.tween_property(self, \"global_position\", half_way + owner.basis.y * step_height, step_speed/2)
+	t.tween_property(self, \"global_position\", target_pos, step_speed/2)
+"
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xl2t7"]
+albedo_color = Color(0, 0.1178844, 1, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_xl2t7"]
+radius = 0.25
+height = 0.5
+radial_segments = 14
+rings = 8
+
+[sub_resource type="GDScript" id="GDScript_xl2t7"]
+resource_name = "IK_RayCast"
+script/source = "extends RayCast3D
+
+func _physics_process(_delta : float) -> void:
+	var hit_point : Vector3 = get_collision_point()
+	if hit_point:
+		%StepTarget.global_position = hit_point
+"
+
+[node name="LegIK" instance=ExtResource("1_4vpep")]
+
+[node name="Cube" parent="Armature/Skeleton3D" index="0"]
+material_override = ExtResource("2_xl2t7")
+
+[node name="SkeletonIK3D" type="SkeletonIK3D" parent="Armature/Skeleton3D" index="1"]
+unique_name_in_owner = true
+root_bone = &"Bone"
+tip_bone = &"Bone.003"
+use_magnet = true
+magnet = Vector3(0, 0, -1.44)
+target_node = NodePath("../../../Target")
+
+[node name="Target" type="Marker3D" parent="." index="1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3475025, -2.4739301)
+script = SubResource("GDScript_d57j8")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Target" index="0"]
+transform = Transform3D(1.1932079, 0, 0, 0, 0.902187, 0, 0, 0, 0.902187, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_xl2t7")
+mesh = SubResource("SphereMesh_xl2t7")
+
+[node name="StepTarget" type="Marker3D" parent="." index="2"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3475025, -2.4739301)
+
+[node name="RayCast3D" type="RayCast3D" parent="StepTarget" index="0"]
+transform = Transform3D(1, 0, 0, 0, 0.9835967, -0.18038179, 0, 0.1803818, 0.9835966, 0, 2.8382163, 0.5205006)
+target_position = Vector3(0, -5, 0)
+script = SubResource("GDScript_xl2t7")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StepTarget" index="1"]
+mesh = SubResource("SphereMesh_xl2t7")

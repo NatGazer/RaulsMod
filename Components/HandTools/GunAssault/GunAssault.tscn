@@ -49,7 +49,8 @@ func _shoot() -> void:
 	
 	## Object Knockback
 	if physics_body is RigidBody3D or physics_body is SoftBody3D:
-		var shot_direction = (global_collision_pos - global_position).normalized()
+		var shot_direction : Vector3 = (
+			global_collision_pos - global_position).normalized()
 		if physics_body is RigidBody3D:
 			physics_body.apply_impulse(shot_strength * shot_direction, global_collision_pos)
 		if physics_body is SoftBody3D:
