@@ -32,7 +32,8 @@
 				"b19b6919-e810-4f61-8930-d34c92f0a2dd",
 				"71adaa45-ebff-48ec-a6e6-02165aa98dda",
 				"a06b6d63-0b72-4a14-ae1d-a887a95dd16b",
-				"ba393325-511d-4701-9acc-7b898349cc04"
+				"ba393325-511d-4701-9acc-7b898349cc04",
+				"c5e7eb9b-c299-4c8a-bcc4-95ccfa11e476"
 			]
 		},
 		{
@@ -259,6 +260,13 @@
 			"title": "Chest System Like Zelda",
 			"description": "",
 			"category": "2647508d-882b-4fdf-9646-f152c7ad6774",
+			"steps": []
+		},
+		{
+			"uuid": "c5e7eb9b-c299-4c8a-bcc4-95ccfa11e476",
+			"title": "Multiplayer?",
+			"description": "",
+			"category": "c5878ebc-aaff-4cf9-85ba-8102e669d336",
 			"steps": []
 		}
 	],

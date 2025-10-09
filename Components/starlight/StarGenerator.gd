@@ -15,22 +15,22 @@ extends "res://Components/starlight/StarManager.gd"
 var _regenerate = false
 
 
-func _set_extents(value):
+func _set_extents(value) -> void:
 	size = value
 	_regenerate = true
 
 
-func _set_star_count(value):
+func _set_star_count(value) -> void:
 	star_count = value
 	_regenerate = true
 
 
-func _set_rng_seed(value):
+func _set_rng_seed(value) -> void:
 	rng_seed = value
 	_regenerate = true
 
 
-func _set_generate_at_origin(value):
+func _set_generate_at_origin(value) -> void:
 	generate_at_origin = value
 	_regenerate = true
 
@@ -39,11 +39,11 @@ class RangeF:
 	var rmin: float
 	var rmax: float
 
-	func _init(_min: float, _max: float):
+	func _init(_min: float, _max: float) -> void:
 		self.rmin = _min
 		self.rmax = _max
 
-	func sample(value: float):
+	func sample(value: float) -> float:
 		return (rmax - rmin) * value + rmin
 
 

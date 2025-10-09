@@ -12,7 +12,7 @@ config_version=5
 
 config/name="Raul's Mod"
 config/description="Those Who Fall From The Sky is a battle against the unknown... and the unknown wants to kill you"
-run/main_scene="uid://d171ldr3x265t"
+run/main_scene="uid://djafn2s0nhi16"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.png"
 
@@ -21,10 +21,12 @@ config/icon="res://icon.png"
 Utils="*res://Autoload/utils.gd"
 Global="*res://Autoload/global.gd"
 Shortcuts="*res://Autoload/shortcuts.gd"
+AeroUnits="*res://addons/godot_aerodynamic_physics/core/singletons/aero_units.gd"
 
 [debug]
 
 gdscript/warnings/unused_signal=0
+gdscript/warnings/untyped_declaration=1
 
 [editor]
 
@@ -32,7 +34,7 @@ movie_writer/movie_file="C:/Users/Raul/Desktop/movie/any.avi"
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/SphynxMotionBlurToolkit/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/voronoishatter/plugin.cfg")
+enabled=PackedStringArray("res://addons/SphynxMotionBlurToolkit/plugin.cfg", "res://addons/godot_aerodynamic_physics/plugin.cfg", "res://addons/kanban_tasks/plugin.cfg", "res://addons/terrain_3d/plugin.cfg", "res://addons/voronoishatter/plugin.cfg")
 
 [input]
 

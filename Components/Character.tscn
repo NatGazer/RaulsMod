@@ -299,6 +299,7 @@ func _gun_ui_visible(visibility : bool) -> void:
 "
 
 [node name="CharacterRB" type="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_x050b")
 contact_monitor = true
@@ -316,6 +317,7 @@ unique_name_in_owner = true
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.677531, 0)
 
 [node name="Camera" type="Camera3D" parent="."]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.6485385, 0.37383634)
 fov = 90.0
 script = SubResource("GDScript_somg5")
 
