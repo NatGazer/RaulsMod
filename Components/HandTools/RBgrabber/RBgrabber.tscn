@@ -33,9 +33,12 @@ func _physics_process(_delta: float) -> void:
 		_check_for_body()
 	# If grabbing
 	else:
-		pass
-		#Utils.draw_line(grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 1.0), 1, false)
-		#Utils.draw_line(grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 0.2), 1, true)
+		# Convert grab_pos to local to display line????
+		grab_pos -= grabbed_body.global_position
+		grab_pos = grab_pos * grabbed_body.basis
+		
+		Utils.draw_line(\"rb1\", grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 1.0), false)
+		Utils.draw_line(\"rb2\", grabbed_body.global_position+grabbed_body.global_basis*grab_pos, global_position, Color(1, 1, 1, 0.08), true)
 
 func _input(event : InputEvent) -> void:
 	if event.is_action_pressed(\"left_click\"):
@@ -77,19 +80,15 @@ func _try_grab() -> void:
 	if grabbed_body is RigidBody3D:
 		global_position = grab_pos
 		
-		# Convert grab_pos to local
-		#grab_pos -= grabbed_body.global_position
-		#grab_pos = grab_pos * grabbed_body.basis
-		
 		# Activate the joint only when grabbing
 		node_b = grabbed_body.get_path()
 
 	if grabbed_body is SoftBody3D:
 		
-		var i : int = 0
 		var min_dist : float = INF
 		pinned_point = -1
-		while grabbed_body.get_point_transform(i) != Vector3.ZERO:
+
+		for i : int in grabbed_body.point_count:
 			var dist : float = grabbed_body.get_point_transform(i).distance_to(grab_pos)
 			if dist < min_dist:
 				pinned_point = i

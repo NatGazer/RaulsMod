@@ -9,7 +9,7 @@ script/source = "extends Node3D
 const sensed_radius : float = 30
 
 func activate() -> void:
-	%PilotPlane.pilot_mode = true
+	%PilotPlane.pilot_modeu = true
 	Global.Camera.set_orbital_parent(%CamHolder, 11)
 
 func deactivate() -> void:
@@ -29,7 +29,7 @@ var Force : float = 4E8
 var Torque : float = 2E7
 
 func _process(delta: float) -> void:
-	var velocity = rb.linear_velocity
+	var velocity : Vector3 = rb.linear_velocity
 	
 	# --- Local Velocity (relative to plane) ---
 	var local_velocity : Vector3 = rb.basis.inverse() * velocity
@@ -39,16 +39,16 @@ func _process(delta: float) -> void:
 
 	if velocity.length() > 0.5:
 		# --- Sliding Resistance (Yaw and Pitch Damping) ---
-		var yaw_damp = 0.001     # Side slip (yaw correction)
-		var pitch_damp = 0.02   # Vertical slip (pitch correction)
-		var tail_offset = 25.0  # How far back the tail is
+		var yaw_damp : float = 0.001     # Side slip (yaw correction)
+		var pitch_damp: float = 0.02   # Vertical slip (pitch correction)
+		var tail_offset: float = 25.0  # How far back the tail is
 
 		# Pitch resistance (applied at center)
 		var pitch_force_local : Vector3 = Vector3(0, -vertical_slip, 0) * abs(forward_speed) * pitch_damp * Force * delta
 		rb.apply_central_force(rb.basis * pitch_force_local)
 
 		# Yaw resistance (applied at tail to induce torque)
-		var yaw_force_local = Vector3(-side_slip, 0, 0) * abs(forward_speed) * yaw_damp * Force * delta
+		var yaw_force_local : Vector3 = Vector3(-side_slip, 0, 0) * abs(forward_speed) * yaw_damp * Force * delta
 		var yaw_force_world : Vector3 = rb.basis * yaw_force_local
 		var tail_world_position : Vector3 = rb.basis.z * tail_offset
 		rb.apply_force(yaw_force_world, tail_world_position)
@@ -65,7 +65,7 @@ func _process(delta: float) -> void:
 	var y_torque : int = -int(Input.is_key_pressed(KEY_E)) + int(Input.is_key_pressed(KEY_Q))
 	var z_torque : int = -int(Input.is_key_pressed(KEY_D)) + int(Input.is_key_pressed(KEY_A))
 
-	var control_torque = rb.basis * Vector3(x_torque, y_torque, z_torque*0.1) * forward_speed * Torque * delta
+	var control_torque : Vector3 = rb.basis * Vector3(x_torque, y_torque, z_torque*0.1) * forward_speed * Torque * delta
 	rb.apply_torque(control_torque)
 
 
@@ -84,11 +84,11 @@ fractal_type = 0
 [sub_resource type="NoiseTexture2D" id="NoiseTexture2D_h10xb"]
 width = 1024
 height = 1024
-in_3d_space = true
+noise = SubResource("FastNoiseLite_rkwwl")
 seamless = true
+in_3d_space = true
 as_normal_map = true
 bump_strength = 2.0
-noise = SubResource("FastNoiseLite_rkwwl")
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h10xb"]
 albedo_color = Color(0.371938, 0.890625, 0.830679, 1)

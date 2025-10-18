@@ -22,15 +22,21 @@ script = SubResource("GDScript_ew50x")
 [node name="TestGround" parent="." instance=ExtResource("2_8pk1l")]
 
 [node name="CharacterRB" parent="." instance=ExtResource("3_8pk1l")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.021346092, 1, -6.5789003)
+transform = Transform3D(-0.8699858, 0, 0.4930767, 0, 1, 0, -0.4930767, 0, -0.8699858, -4.073557, 1.0608501, -7.9127207)
 
 [node name="ramp" parent="." instance=ExtResource("6_ljj2s")]
-transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, -14.066733, -3.8146973e-06, -0.30960464)
+transform = Transform3D(-2.3316795e-07, 0, 1, 0, 1, 0, -5.3342595, 0, -4.37114e-08, -14.066733, -3.8146973e-06, -0.30960464)
+
+[node name="ramp2" parent="." instance=ExtResource("6_ljj2s")]
+transform = Transform3D(2.3316795e-07, 3.8213718e-15, 1, 4.663358e-07, -1, 0, 5.3342595, 8.742278e-08, -4.37114e-08, -14.524356, 16.678429, -0.30960608)
+
+[node name="ramp3" parent="." instance=ExtResource("6_ljj2s")]
+transform = Transform3D(-6.358933e-07, 3.5527137e-15, -1, -4.6633576e-07, -1, 9.492407e-15, -5.3342595, 8.742277e-08, 1.1920929e-07, -28.39433, 11.144904, -0.30960393)
 
 [node name="CSGBox3D" type="CSGBox3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4827967, -0.34732223, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.4827967, 0.37038803, 0)
 use_collision = true
-size = Vector3(6.9294434, 1, 5.379883)
+size = Vector3(6.9294434, 1, 13.89624)
 
 [node name="Spider" parent="." instance=ExtResource("4_ljj2s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.35715532, 0.41305232, 2.901475)
+transform = Transform3D(0.9926246, 0.121228375, -6.44782e-10, -0.12122839, 0.9926247, -1.0598113e-08, -6.447749e-10, 1.0598117e-08, 0.99999994, -7.8193765, 0.01790899, -1.8235533)

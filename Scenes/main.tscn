@@ -1,4 +1,4 @@
-[gd_scene load_steps=157 format=4 uid="uid://d171ldr3x265t"]
+[gd_scene load_steps=163 format=4 uid="uid://d171ldr3x265t"]
 
 [ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_yaehf"]
 [ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="2_4c57u"]
@@ -8,7 +8,6 @@
 [ext_resource type="PackedScene" uid="uid://divon04875xo7" path="res://LogicObjects/Planes/MegaPlane/mega_plane.tscn" id="6_dg77c"]
 [ext_resource type="PackedScene" uid="uid://dhlpsnomij3fr" path="res://LogicObjects/Vehicles/Pickup/Pickup.tscn" id="7_5vw27"]
 [ext_resource type="PackedScene" uid="uid://ct3gx1tr0ylba" path="res://Components/FootballPlayer/football_player_builder.tscn" id="7_272bh"]
-[ext_resource type="PackedScene" uid="uid://blb2qxfu7qptn" path="res://LogicObjects/Worm/worm.tscn" id="7_ycdy4"]
 [ext_resource type="PackedScene" uid="uid://cdhl7t2v8xuqt" path="res://Components/MachineSwitching.tscn" id="8_5vw27"]
 [ext_resource type="PackedScene" uid="uid://7ehbqwwwipec" path="res://Components/BrickWall.tscn" id="9_kek77"]
 [ext_resource type="PackedScene" uid="uid://dou7bvmqww75" path="res://LogicObjects/Ramp/ramp.tscn" id="11_efxa6"]
@@ -24,7 +23,7 @@
 [ext_resource type="PackedScene" uid="uid://hn8bb2yq3tqo" path="res://Scenes/Forest.tscn" id="23_gt3je"]
 [ext_resource type="PackedScene" uid="uid://bs32p1862kxfr" path="res://LogicObjects/Ship/Ship.tscn" id="24_1u8w0"]
 [ext_resource type="Script" uid="uid://da087cg46iawj" path="res://addons/voronoishatter/tools/voronoishatter.gd" id="24_1w6v2"]
-[ext_resource type="Texture2D" uid="uid://d2ask1g7semm0" path="res://Props/Rocks_Diffuse.png" id="24_3pmx8"]
+[ext_resource type="Texture2D" uid="uid://cegxqgftu2r30" path="res://Props/LowPolyForest/Rocks_Diffuse.png" id="24_3pmx8"]
 [ext_resource type="Material" uid="uid://d0hyi5n6ng25w" path="res://demo/assets/materials/M_rock23_black_tp.tres" id="25_ueoa1"]
 [ext_resource type="Script" uid="uid://btyiucuxdhvig" path="res://addons/voronoishatter/tools/voronoicollection.gd" id="27_6vcvc"]
 [ext_resource type="PackedScene" uid="uid://xksql0nxsuwk" path="res://Props/reduce_speed_avenue_the_traffic_bump/speed_bump.tscn" id="28_ueoa1"]
@@ -32,6 +31,11 @@
 [ext_resource type="PackedScene" uid="uid://bo7aw8enqyqu1" path="res://Props/GrassTerrain/Grass Terrain.tscn" id="31_hpc6h"]
 [ext_resource type="PackedScene" uid="uid://d2jbmy00ext3r" path="res://LogicObjects/BeachBall/BeachBall.tscn" id="32_kltya"]
 [ext_resource type="PackedScene" uid="uid://ykl0foqklea2" path="res://LogicObjects/Bible Stone/BibleStone.tscn" id="33_e08e2"]
+[ext_resource type="PackedScene" uid="uid://l116mvalhb7c" path="res://LogicObjects/Spider/Spider.tscn" id="33_neg2b"]
+[ext_resource type="Material" uid="uid://balkfl35vlb6b" path="res://Materials/FishMaterial/fish_material.tres" id="34_neg2b"]
+[ext_resource type="PackedScene" uid="uid://cn1thdi1wxn0x" path="res://Props/castle_3d_model/CastleWall.tscn" id="35_r33sp"]
+[ext_resource type="PackedScene" uid="uid://dlpu2svpko1r4" path="res://Props/LowPolyForest/TwistedTree_2.gltf" id="36_hdf80"]
+[ext_resource type="PackedScene" uid="uid://blb2qxfu7qptn" path="res://LogicObjects/Worm/SkyWorm.tscn" id="36_jwpg7"]
 
 [sub_resource type="TorusMesh" id="TorusMesh_g4437"]
 inner_radius = 0.6
@@ -69,9 +73,9 @@ script/source = "extends Node3D
 
 func _ready() -> void:
 	for i in range(100):
-		var angle = randf_range(-PI, PI)
-		var radius = sqrt(randf()) * 10
-		var wako_instance = wako.instantiate()
+		var angle : float = randf_range(-PI, PI)
+		var radius : float = sqrt(randf()) * 10
+		var wako_instance : Node3D = wako.instantiate()
 		wako_instance.position = position + Vector3(sin(angle), 0, cos(angle)) * radius
 		add_child(wako_instance)
 "
@@ -1475,6 +1479,14 @@ _surfaces = [{
 "vertex_data": PackedByteArray("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")
 }]
 
+[sub_resource type="CylinderMesh" id="CylinderMesh_r33sp"]
+top_radius = 0.8
+bottom_radius = 0.8
+height = 0.01
+
+[sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_k2e45"]
+points = PackedVector3Array(1.3505628, -0.35189056, -0.87859535, -3.4613826, 9.573859, 3.9338999, -3.7623942, 13.7830715, -5.389603, 2.8545609, 17.39312, 2.4292884, -5.566344, 18.295631, -0.57804996, 2.5535493, 12.279512, -4.4879665, 1.0495512, -0.35189056, 1.2261646, -3.7623942, 5.063183, -4.186479, 4.057547, 17.692701, 0.32358623, -1.0564698, -0.35189056, 1.2261646, 4.057547, 6.566742, -0.87859535, 0.44752824, 7.1677885, -5.0890574, -1.6563731, 15.887677, -4.78757, 3.1545124, 15.286631, 2.730776, -4.964321, 6.868207, 1.8281977, -6.468319, 14.384118, -2.9833553, -4.063406, 18.595215, -2.3822646, 4.057547, 6.868207, -2.080777, -5.265332, 5.364648, -1.7802316, -0.4544466, -0.35189056, -1.4796861, -5.566344, 17.994167, 0.02304089, 2.2525377, 5.666114, -3.8859336, -1.0564698, 14.683699, 3.0303793, 0.7485397, 18.5971, 0.92561924, -2.2583964, 10.174907, -5.6910906, -5.566344, 12.580977, -4.4879665, 1.0495512, 13.182024, 3.3318667, -5.566344, 18.295631, -2.3822646, -6.172438, 8.203068, -2.21619, -6.3079977, 11.7469635, -1.4283487, -4.664369, 9.272394, 3.0313215, -1.3564215, -0.35189056, -0.87859535)
+
 [node name="Main" type="Node"]
 
 [node name="BaseWorld" parent="." instance=ExtResource("1_yaehf")]
@@ -1482,7 +1494,7 @@ _surfaces = [{
 [node name="TestGround" parent="." instance=ExtResource("2_vivmo")]
 
 [node name="CharacterRB" parent="." instance=ExtResource("2_4c57u")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.7995024, 0.988, -0.49625158)
+transform = Transform3D(-0.764494, 0, -0.6446309, 0, 1, 0, 0.6446309, 0, -0.764494, -0.7995024, 0.988, -17.042673)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 9.87067, -0.0845823, 5.06201)
@@ -1518,10 +1530,6 @@ transform = Transform3D(-4.37114e-08, 0, 1, 0, 1, 0, -1, 0, -4.37114e-08, 9.8942
 
 [node name="MegaPlane" parent="." instance=ExtResource("6_dg77c")]
 transform = Transform3D(4.36904, 0, 0, 0, 4.36904, 0, 0, 0, 4.36904, 34.2805, 14.5183, 14.8638)
-
-[node name="TYCS" parent="." instance=ExtResource("7_ycdy4")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 82.3348, 13.6757, 17.4081)
-nSegments = 60
 
 [node name="FootballPlayerBuilder" parent="." instance=ExtResource("7_272bh")]
 transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 10.1229, 0, 13.5707)
@@ -2615,3 +2623,25 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 17.643852, 0.98255503, 13.064
 
 [node name="BibleStone" parent="." instance=ExtResource("33_e08e2")]
 transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 20.972322, 9.536743e-07, -5.277059)
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+transform = Transform3D(2.1557937, 0, 0, 0, 2.1557937, 0, 0, 0, 2.1557937, 0, -0.00049149897, 0)
+material_override = ExtResource("34_neg2b")
+mesh = SubResource("CylinderMesh_r33sp")
+
+[node name="CastleWall" parent="." instance=ExtResource("35_r33sp")]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 121.106186, 0.006235432, -48.441902)
+
+[node name="CollisionShape3D2" type="CollisionShape3D" parent="CastleWall"]
+transform = Transform3D(-5.287506e-08, -4.0082014e-08, 1.517914, -0.9169696, 1.2096404, 0, -1.2096404, -0.9169696, -6.635013e-08, -22.902264, -1.2882355, 56.186333)
+shape = SubResource("ConvexPolygonShape3D_k2e45")
+
+[node name="TwistedTree_22" parent="CastleWall" instance=ExtResource("36_hdf80")]
+transform = Transform3D(-5.287506e-08, -4.0082014e-08, 1.517914, -0.9169696, 1.2096404, 0, -1.2096404, -0.9169696, -6.635013e-08, -22.902264, -1.2882355, 56.186333)
+
+[node name="SkyWorm" parent="." instance=ExtResource("36_jwpg7")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.033714, 9.798546, 25.213257)
+atractor_displacement = Vector3(0, 15, 0)
+
+[node name="Spider2" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9661603, -0.07902956, -12.156644)

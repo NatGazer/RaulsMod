@@ -27,29 +27,28 @@
 			"title": "Todo",
 			"tasks": [
 				"d3b21e06-e1f7-4189-af49-5e093adc31e3",
-				"30a0ec2b-caeb-45a3-af27-0dd13fe2568c",
 				"9b2de53e-eaa4-450d-bd55-91082db060c9",
 				"b19b6919-e810-4f61-8930-d34c92f0a2dd",
-				"71adaa45-ebff-48ec-a6e6-02165aa98dda",
-				"a06b6d63-0b72-4a14-ae1d-a887a95dd16b",
-				"ba393325-511d-4701-9acc-7b898349cc04",
-				"c5e7eb9b-c299-4c8a-bcc4-95ccfa11e476"
+				"ba393325-511d-4701-9acc-7b898349cc04"
 			]
 		},
 		{
 			"uuid": "12c25ed7-6a7b-4c27-9449-a3fc0b3588fd",
 			"title": "Doing",
 			"tasks": [
-				"231551af-3e9e-4ab4-b648-e30d31abcec9",
+				"c5e7eb9b-c299-4c8a-bcc4-95ccfa11e476",
 				"94e2c0f4-d597-44c2-8c48-2ee34e9c5f16",
-				"891861a6-f031-4674-b6e8-33fe3b325680"
+				"71adaa45-ebff-48ec-a6e6-02165aa98dda",
+				"891861a6-f031-4674-b6e8-33fe3b325680",
+				"30a0ec2b-caeb-45a3-af27-0dd13fe2568c"
 			]
 		},
 		{
 			"uuid": "bf838b76-b0c9-4fb8-911d-55e4030b09ed",
 			"title": "Done",
 			"tasks": [
-				"a327cb63-788a-4c70-8a7c-5fa0e0d3856d"
+				"a327cb63-788a-4c70-8a7c-5fa0e0d3856d",
+				"231551af-3e9e-4ab4-b648-e30d31abcec9"
 			]
 		}
 	],
@@ -146,6 +145,10 @@
 				},
 				{
 					"details": "Refactor Clutch System",
+					"done": true
+				},
+				{
+					"details": "Limit max velocity in 6DOF joint  to max_rpm*wheel_ratio",
 					"done": false
 				}
 			]
@@ -171,6 +174,10 @@
 				{
 					"details": "Parachute?!",
 					"done": false
+				},
+				{
+					"details": "Add library",
+					"done": true
 				}
 			]
 		},
@@ -221,7 +228,7 @@
 			"steps": [
 				{
 					"details": "Disgusting fluffy appearance",
-					"done": false
+					"done": true
 				},
 				{
 					"details": "Glowing Eyes with variable size based on attack/rest mode",
@@ -233,7 +240,7 @@
 				},
 				{
 					"details": "They move with Inverse IK legs",
-					"done": false
+					"done": true
 				},
 				{
 					"details": "They climb everything",
@@ -264,10 +271,23 @@
 		},
 		{
 			"uuid": "c5e7eb9b-c299-4c8a-bcc4-95ccfa11e476",
-			"title": "Multiplayer?",
+			"title": "Multiplayer",
 			"description": "",
 			"category": "c5878ebc-aaff-4cf9-85ba-8102e669d336",
-			"steps": []
+			"steps": [
+				{
+					"details": "Follow tutorial with 2D example",
+					"done": false
+				},
+				{
+					"details": "Modify to 3D simple chracter (add world_transform + hand_tool (any mesh instance))",
+					"done": false
+				},
+				{
+					"details": "Integrate in real character",
+					"done": false
+				}
+			]
 		}
 	],
 	"layout": {

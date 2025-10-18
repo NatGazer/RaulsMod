@@ -1,0 +1,42 @@
+[gd_scene load_steps=5 format=3 uid="uid://cw45fu5tnjto1"]
+
+[ext_resource type="Texture2D" uid="uid://couookjxobd2s" path="res://icon.png" id="1_ibave"]
+
+[sub_resource type="GDScript" id="GDScript_5xf22"]
+resource_name = "MultiplayerPlayer"
+script/source = "extends CharacterBody2D
+
+
+const SPEED = 5e4
+
+func _enter_tree() -> void:
+	set_multiplayer_authority(name.to_int(), )
+
+func _physics_process(delta: float) -> void:
+	if not is_multiplayer_authority(): return
+	# Only the authorized client executes the code below
+	
+	velocity = Input.get_vector(\"ui_left\", \"ui_right\", \"ui_up\", \"ui_down\") * SPEED * delta
+	move_and_slide()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0rja4"]
+size = Vector2(94, 74)
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_c70dy"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="MultiplayerPlayer" type="CharacterBody2D"]
+script = SubResource("GDScript_5xf22")
+
+[node name="Icon" type="Sprite2D" parent="."]
+scale = Vector2(0.11550387, 0.11550388)
+texture = ExtResource("1_ibave")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_0rja4")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("SceneReplicationConfig_c70dy")

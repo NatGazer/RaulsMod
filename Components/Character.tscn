@@ -314,10 +314,10 @@ debug_color = Color(50, 50, 50, 1)
 
 [node name="cam_holder" type="Marker3D" parent="."]
 unique_name_in_owner = true
-transform = Transform3D(-1, 0, -8.74228e-08, 0, 1, 0, 8.74228e-08, 0, -1, 0, 0.677531, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.677531, 0)
 
 [node name="Camera" type="Camera3D" parent="."]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0.6485385, 0.37383634)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.6403079, 0)
 fov = 90.0
 script = SubResource("GDScript_somg5")
 

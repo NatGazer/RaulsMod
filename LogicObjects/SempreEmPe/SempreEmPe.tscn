@@ -45,8 +45,8 @@ func _physics_process(delta: float) -> void:
 	
 	## Player center of mass
 	var center_of_mass : Vector3 = owner.get_center_of_mass()
-	#Utils.draw_line(center_of_mass, center_of_mass+Vector3(0, 10, 0), Color.BLUE, 1)
-	##### DRAW LINE became TOO EXPENSIVE IN GODOT 4.4.1??
+	Utils.draw_line(\"sempre_em_pe_CM\", center_of_mass, center_of_mass+Vector3(0, 5, 0), Color.BLUE)
+
 	## Legs contact point
 	var leg_contact_pos : Vector3 = %Legs.get_contact_position()
 
@@ -54,7 +54,7 @@ func _physics_process(delta: float) -> void:
 	if leg_contact_pos == Vector3.INF:
 		return
 	
-	#Utils.draw_line(leg_contact_pos, leg_contact_pos+Vector3(0, 10, 0), Color.RED, 1)
+	Utils.draw_line(\"sempre_em_pe_leg\", leg_contact_pos, leg_contact_pos+Vector3(0, 5, 0), Color.RED)
 	
 	derivative_instability = instability
 

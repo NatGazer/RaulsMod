@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://c7d6xs8i0quml" path="res://Components/MusicPlayer.tscn" id="5_lf0gk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nsea3"]
-sky_top_color = Color(0.24299335, 0.44807208, 1, 1)
+sky_top_color = Color(0.19338065, 0.3844844, 1, 1)
 sky_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
-sky_curve = 0.06091904
+sky_curve = 0.12613471
 sky_energy_multiplier = 0.8
 ground_bottom_color = Color(0.049646985, 0.421875, 0, 1)
 ground_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
@@ -32,6 +32,7 @@ ssao_light_affect = 0.48
 ssao_ao_channel_affect = 1.0
 ssil_enabled = true
 sdfgi_enabled = true
+sdfgi_use_occlusion = true
 sdfgi_min_cell_size = 0.1875
 glow_enabled = true
 glow_levels/1 = 2.0
@@ -45,7 +46,7 @@ glow_strength = 0.67
 glow_blend_mode = 1
 volumetric_fog_enabled = true
 volumetric_fog_density = 0.005
-volumetric_fog_albedo = Color(0.5362243, 0.7478665, 1, 1)
+volumetric_fog_albedo = Color(0.19338065, 0.3844844, 1, 1)
 volumetric_fog_length = 100.0
 adjustment_enabled = true
 adjustment_brightness = 1.2
@@ -54,6 +55,7 @@ adjustment_brightness = 1.2
 auto_exposure_enabled = true
 auto_exposure_scale = 0.75
 dof_blur_near_distance = 1.0
+auto_exposure_min_sensitivity = 10.0
 
 [sub_resource type="Compositor" id="Compositor_0qcgs"]
 

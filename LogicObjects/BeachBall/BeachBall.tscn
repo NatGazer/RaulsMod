@@ -6,6 +6,11 @@
 resource_name = "BeachBall"
 script/source = "extends SoftBody3D
 
+var point_count : float
+
+func _ready() -> void:
+	for i in 12:
+		point_count = mesh.surface_get_arrays(0)[0].size()
 
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed(\"K\"):

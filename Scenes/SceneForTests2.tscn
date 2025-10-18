@@ -1,0 +1,59 @@
+[gd_scene load_steps=9 format=3 uid="uid://ca8w33108vasl"]
+
+[ext_resource type="PackedScene" uid="uid://d2jbmy00ext3r" path="res://LogicObjects/BeachBall/BeachBall.tscn" id="1_3keje"]
+[ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="2_5xucn"]
+[ext_resource type="PackedScene" uid="uid://bwbe0aprocknu" path="res://Components/TestGround.tscn" id="3_8n8hd"]
+[ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="4_qiyoj"]
+
+[sub_resource type="GDScript" id="GDScript_ew50x"]
+resource_name = "SceneForTests"
+script/source = "extends Node3D
+
+func _ready() -> void:
+	DisplayServer.window_set_vsync_mode(DisplayServer.VSYNC_MAILBOX)
+"
+
+[sub_resource type="FontVariation" id="FontVariation_bhqmr"]
+variation_transform = Transform2D(1, 0.14, 0, 1, 0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_oetmy"]
+font = SubResource("FontVariation_bhqmr")
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.65098)
+
+[sub_resource type="GDScript" id="GDScript_bted1"]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = str(Engine.get_frames_per_second()) + \" FPS\"
+"
+
+[node name="SceneForTests" type="Node3D"]
+script = SubResource("GDScript_ew50x")
+
+[node name="MainUI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="MainUI"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 9.0
+offset_right = 70.0
+offset_bottom = 32.0
+text = "100 FPS"
+label_settings = SubResource("LabelSettings_oetmy")
+script = SubResource("GDScript_bted1")
+
+[node name="BaseWorld" parent="." instance=ExtResource("2_5xucn")]
+
+[node name="Ground" parent="." instance=ExtResource("3_8n8hd")]
+
+[node name="CharacterRB" parent="." instance=ExtResource("4_qiyoj")]
+
+[node name="BeachBall" parent="." instance=ExtResource("1_3keje")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 5)

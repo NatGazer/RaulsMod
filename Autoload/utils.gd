@@ -5,80 +5,129 @@ extends Node
 
 #region ########## DRAW TOOLS ##############
 
-## Draw 3D line in space with custom color and lifespan
-func draw_line(pos1: Vector3, pos2: Vector3, color : Color = Color.WHITE_SMOKE, persist_ms : int = 0, no_depth : bool = false) -> void:
-	var mesh_instance := MeshInstance3D.new()
-	var immediate_mesh := ImmediateMesh.new()
-	var material := ORMMaterial3D.new()
+## Stores lines that were requested to be drawn (for performance)
+## {ID : [ImmediateMesh, ORMMaterial3D]}
+var lines : Dictionary[String, Array]
 
-	mesh_instance.mesh = immediate_mesh
-	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-#
-	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
-	immediate_mesh.surface_add_vertex(pos1)
-	immediate_mesh.surface_add_vertex(pos2)
-	immediate_mesh.surface_end()
+## Draw 3D line in space with custom color
+## Make ID random if you want to have single line instances
+func draw_line(id : String, pos1: Vector3, pos2: Vector3, color : Color = Color.WHITE_SMOKE, no_depth : bool = false) -> void:
 
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = color
-	material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	if no_depth: material.no_depth_test = true
+	# If line already exists
+	if lines.has(id):
+		lines[id][0].clear_surfaces()
+		lines[id][0].surface_begin(Mesh.PRIMITIVE_LINES, lines[id][1])
+		lines[id][0].surface_add_vertex(pos1)
+		lines[id][0].surface_add_vertex(pos2)
+		lines[id][0].surface_end()
+	# If line doesn't exist, create one Material and Immediate Mesh for display
+	else:
+		var material := ORMMaterial3D.new()
+		var mesh_instance := MeshInstance3D.new()
+		var immediate_mesh := ImmediateMesh.new()
 
-	await _final_cleanup(mesh_instance, persist_ms)
+		mesh_instance.mesh = immediate_mesh
+		mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		
+		immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
+		immediate_mesh.surface_add_vertex(pos1)
+		immediate_mesh.surface_add_vertex(pos2)
+		immediate_mesh.surface_end()
 
-func draw_vector(pos1: Vector3, pos2: Vector3, color : Color = Color.WHITE_SMOKE, persist_ms : int = 0, no_depth : bool = false) -> void:
-	draw_line(pos1, pos2, color, persist_ms, no_depth)
-	draw_line(pos2 + ((pos1-pos2)*0.1).rotated(Vector3.UP,  0.8), pos2, color, persist_ms, no_depth)
-	draw_line(pos2 + ((pos1-pos2)*0.1).rotated(Vector3.UP, -0.8), pos2, color, persist_ms, no_depth)
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.albedo_color = color
+		material.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		if no_depth: material.no_depth_test = true
+		
+		get_tree().get_root().add_child.call_deferred(mesh_instance)
+		
+		lines[id] = [immediate_mesh, material]
+
+func draw_vector(id : String, pos1: Vector3, pos2: Vector3, color : Color = Color.WHITE_SMOKE, no_depth : bool = false) -> void:
+	draw_line(id+"_vec_base", pos1, pos2, color, no_depth)
+	
+	var diff : Vector3 = pos1-pos2
+	var rot_axis : Vector3 = Vector3.UP
+	if abs(diff.dot(rot_axis)) > 0.95:
+		rot_axis = Vector3.FORWARD
+		
+	draw_line(id+"_vec_arr", pos2 + (diff*0.1).rotated(rot_axis,  0.6), pos2, color, no_depth)
+	draw_line(id+"_vec_ow", pos2 + (diff*0.1).rotated(rot_axis, -0.6), pos2, color, no_depth)
 	
 	
 	
-## Draw 3D point in space with custom color and lifespan
-func draw_point(pos: Vector3, radius : float = 0.05, color : Color = Color.WHITE_SMOKE, persist_ms : int = 0) -> void:
-	var mesh_instance := MeshInstance3D.new()
-	var sphere_mesh := SphereMesh.new()
-	var material := ORMMaterial3D.new()
+## Stores spheres that were requested to be drawn (for performance)
+var spheres : Dictionary[String, MeshInstance3D]
+## Draw 3D sphere in space with custom color
+func draw_sphere(id : String, pos: Vector3, radius : float = 0.05, color : Color = Color.WHITE_SMOKE) -> void:
+	# If sphere already exists
+	if spheres.has(id):
+		spheres[id].position = pos
+		
+	# If sphere doesn't exist
+	else:
+		var mesh_instance := MeshInstance3D.new()
+		var sphere_mesh := SphereMesh.new()
+		var material := ORMMaterial3D.new()
 
-	mesh_instance.mesh = sphere_mesh
-	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mesh_instance.position = pos
+		mesh_instance.mesh = sphere_mesh
+		mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mesh_instance.position = pos
 
-	sphere_mesh.radius = radius
-	sphere_mesh.height = radius*2
-	sphere_mesh.material = material
+		sphere_mesh.radius = radius
+		sphere_mesh.height = radius*2
+		sphere_mesh.material = material
 
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = color
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.albedo_color = color
+		
+		get_tree().get_root().add_child.call_deferred(mesh_instance)
+		
+		spheres[id] = mesh_instance
 
-	await _final_cleanup(mesh_instance, persist_ms)
+## Draw cube in space with custom color
 
-## Draw cube in space with custom color and lifespan
-func draw_cube(pos: Vector3, size: Vector3, color : Color = Color.WHITE, persist_ms : int = 0) -> void:
-	var mesh_instance := MeshInstance3D.new()
-	var box_mesh := BoxMesh.new()
-	var material := ORMMaterial3D.new()
+## Stores cubes that were requested to be drawn (for performance)
+var cubes : Dictionary[String, MeshInstance3D]
 
-	mesh_instance.mesh = box_mesh
-	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	mesh_instance.position = pos
+func draw_cube(id : String, pos: Vector3, size: Vector3, color : Color = Color.WHITE) -> void:
+	# If cube already exists
+	if cubes.has(id):
+		cubes[id].position = pos
+		
+	# If cube doesn't exist
+	else:
+		var mesh_instance := MeshInstance3D.new()
+		var box_mesh := BoxMesh.new()
+		var material := ORMMaterial3D.new()
 
-	box_mesh.size = size
-	box_mesh.material = material
+		mesh_instance.mesh = box_mesh
+		mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		mesh_instance.position = pos
 
-	#material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = color
+		box_mesh.size = size
+		box_mesh.material = material
+		
+		#Important to keep good performance on initialization
+		material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		material.albedo_color = color
+		
+		get_tree().get_root().add_child.call_deferred(mesh_instance)
+		
+		cubes[id] = mesh_instance
 
-	await _final_cleanup(mesh_instance, persist_ms)
-
-## Draw 3D circle in space with custom color and lifespan
-func draw_circle(pos : Vector3, radius : float, direction : Vector3 = Vector3.UP, resolution : int = 48, color : Color = Color.WHITE, persist_ms : int = 0) -> void:
+## Draw 3D circle in space with custom color
+func draw_circle(id : String, pos : Vector3, radius : float, direction : Vector3 = Vector3.UP, resolution : int = 48, color : Color = Color.WHITE) -> void:
+	
+	
 	direction = direction.normalized()
-	var circle_point : Vector3 = pos + get_orthogonal_vector(direction) * radius
+	var circle_point : Vector3 = get_orthogonal_vector(direction) * radius
+	print(get_orthogonal_vector(direction))
 	var next_circle_point : Vector3
 	
 	for i in resolution:
 		next_circle_point = circle_point.rotated(direction, 2*PI/resolution)
-		draw_line(circle_point, next_circle_point, color, persist_ms)
+		draw_line(id+str(i), pos+circle_point, pos+next_circle_point, color)
 		circle_point = next_circle_point
 
 ## Cleanup of 3D meshes for custom lifespan
@@ -162,7 +211,6 @@ func perpendicular_vector_crossing(A: Vector3, B: Vector3, C: Vector3) -> Vector
 	var perpendicular_vector : Vector3 = projection_length * perpendicular
 	
 	return perpendicular_vector
-
 
 #endregion
 
