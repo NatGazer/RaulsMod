@@ -1,0 +1,145 @@
+[gd_scene load_steps=15 format=3 uid="uid://bs64ykkjqgwya"]
+
+[ext_resource type="Texture2D" uid="uid://dstane3g2fry4" path="res://Images&Textures/world.topo.bathy.200401.3x5400x2700.jpg" id="1_aca7m"]
+[ext_resource type="PackedScene" uid="uid://5mmjh2wyc0d8" path="res://Components/switch_scene_manager.tscn" id="1_vwrli"]
+[ext_resource type="Texture2D" uid="uid://brvgr5d5bbrrw" path="res://Images&Textures/dot.png" id="2_58hjg"]
+[ext_resource type="PackedScene" uid="uid://d171ldr3x265t" path="res://Scenes/main.tscn" id="2_gnryd"]
+[ext_resource type="ArrayMesh" uid="uid://kjxnex0dvad1" path="res://Props/Flags/Flags_portugal.res" id="3_pq2b5"]
+[ext_resource type="ArrayMesh" uid="uid://cbxo4nrsqspnt" path="res://Props/Flags/Flags_usa.res" id="4_pd6ue"]
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_58hjg"]
+panorama = ExtResource("1_aca7m")
+
+[sub_resource type="Sky" id="Sky_c0wx6"]
+sky_material = SubResource("PanoramaSkyMaterial_58hjg")
+
+[sub_resource type="Environment" id="Environment_pq2b5"]
+background_mode = 2
+background_energy_multiplier = 2.0
+sky = SubResource("Sky_c0wx6")
+sky_rotation = Vector3(0, 3.1415927, 0)
+
+[sub_resource type="GDScript" id="GDScript_aca7m"]
+resource_name = "CamHolder"
+script/source = "extends Marker3D
+
+func _ready() -> void:
+	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
+
+func _input(event: InputEvent) -> void:
+	if event is InputEventMouseMotion:
+			rotation.y -= event.relative.x / 500
+			rotation.x -= event.relative.y / 500
+"
+
+[sub_resource type="GDScript" id="GDScript_58hjg"]
+resource_name = "Camera"
+script/source = "extends Camera3D
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	top_level = true
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta: float) -> void:
+	var wheight : float = 1 - exp(10 * -delta)
+	global_transform = lerp(global_transform, get_parent().global_transform, wheight)
+"
+
+[sub_resource type="GDScript" id="GDScript_pq2b5"]
+resource_name = "RayCast"
+script/source = "extends RayCast3D
+
+func _input(event: InputEvent) -> void:
+	if event.is_action_pressed(\"left_click\"):
+		if is_colliding():
+			print(\"Language: \", get_collider().name)
+			%SwitchSceneManager.load_scene()
+			
+		
+"
+
+[sub_resource type="GDScript" id="GDScript_c0wx6"]
+resource_name = "AimUI"
+script/source = "extends TextureRect
+
+func _process(_delta: float) -> void:
+	if %RayCast3D.is_colliding():
+		modulate.a = 0.99
+	else:
+		modulate.a = 0.5
+"
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_pd6ue"]
+size = Vector3(4.8945313, 0.30859375, 2.8720703)
+
+[node name="Language" type="Node3D"]
+
+[node name="SwitchSceneManager" parent="." instance=ExtResource("1_vwrli")]
+unique_name_in_owner = true
+scene_to_load = ExtResource("2_gnryd")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_pq2b5")
+
+[node name="CamHolder" type="Marker3D" parent="."]
+script = SubResource("GDScript_aca7m")
+
+[node name="Camera3D" type="Camera3D" parent="CamHolder"]
+script = SubResource("GDScript_58hjg")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="CamHolder/Camera3D"]
+light_energy = 6.827
+omni_range = 64.917656
+
+[node name="RayCast3D" type="RayCast3D" parent="CamHolder/Camera3D"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0)
+target_position = Vector3(0, -500, 0)
+collide_with_areas = true
+collide_with_bodies = false
+debug_shape_thickness = 5
+script = SubResource("GDScript_pq2b5")
+
+[node name="UI" type="CenterContainer" parent="CamHolder/Camera3D"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="AimUI" type="TextureRect" parent="CamHolder/Camera3D/UI"]
+modulate = Color(1, 1, 1, 0.509804)
+custom_minimum_size = Vector2(7, 7)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("2_58hjg")
+expand_mode = 1
+stretch_mode = 5
+script = SubResource("GDScript_c0wx6")
+
+[node name="Portuguese" type="Area3D" parent="."]
+transform = Transform3D(1, 8.742277e-08, 8.742278e-08, 8.742278e-08, -4.371139e-08, -1, -8.7422784e-08, 1, -4.3711395e-08, -3.9999998, -7.452858e-08, -5.294985)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Portuguese"]
+transform = Transform3D(1, 0, -3.2840564e-15, 0, 1, 0, -3.2840556e-15, 0, 1, 0.011060238, -0.15410614, 2.3423752e-10)
+shape = SubResource("BoxShape3D_pd6ue")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Portuguese"]
+transform = Transform3D(1, 0, -3.2840564e-15, 0, 1, 0, -3.2840556e-15, 0, 1, 0, 0, 0)
+mesh = ExtResource("3_pq2b5")
+skeleton = NodePath("../..")
+
+[node name="English" type="Area3D" parent="."]
+transform = Transform3D(1, 8.742277e-08, 8.742278e-08, 8.742278e-08, -4.371139e-08, -1, -8.7422784e-08, 1, -4.3711395e-08, 4, -7.452858e-08, -5.294985)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="English"]
+transform = Transform3D(1, 0, -3.2840564e-15, 0, 1, 0, -3.2840556e-15, 0, 1, 0.011060238, -0.15410614, 2.3423752e-10)
+shape = SubResource("BoxShape3D_pd6ue")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="English"]
+transform = Transform3D(1, 0, -3.2840564e-15, 0, 1, 0, -3.2840556e-15, 0, 1, 0, 0, 0)
+mesh = ExtResource("4_pd6ue")
+skeleton = NodePath("../..")

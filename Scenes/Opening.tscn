@@ -1,6 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://cphpd68yqer5q"]
+[gd_scene load_steps=10 format=3 uid="uid://cphpd68yqer5q"]
 
+[ext_resource type="PackedScene" uid="uid://5mmjh2wyc0d8" path="res://Components/switch_scene_manager.tscn" id="1_76xge"]
 [ext_resource type="Texture2D" uid="uid://bc4jo0bu0g4wy" path="res://Opening/ThunderSpark Interactive.png" id="1_bx74l"]
+[ext_resource type="PackedScene" uid="uid://bs64ykkjqgwya" path="res://Scenes/Language.tscn" id="2_oyf75"]
 
 [sub_resource type="Environment" id="Environment_im5wu"]
 background_mode = 3
@@ -12,7 +14,90 @@ glow_levels/5 = 0.26
 glow_normalized = true
 glow_intensity = 1.11
 glow_strength = 1.28
-glow_blend_mode = 3
+glow_blend_mode = 1
+
+[sub_resource type="Shader" id="Shader_76xge"]
+code = "shader_type canvas_item;
+
+uniform int lightning_number = 5;
+uniform vec2 amplitude = vec2(2.0,1.0);
+uniform float offset = 0.45;
+uniform float thickness = 0.02;
+uniform float speed = 3.0;
+uniform vec4 base_color : source_color = vec4(1.0, 1.0, 1.0, 1.0);
+uniform float glow_thickness = 0.08;
+uniform vec4 glow_color : source_color = vec4(0.2, 0, 0.8, 0.0);
+uniform float alpha : hint_range(0, 1) = 1.0;
+uniform vec2 uv_shift = vec2(0.0, 0.0);
+
+// plot function
+float plot(vec2 st, float pct, float half_width){
+  return  smoothstep( pct-half_width, pct, st.y) -
+          smoothstep( pct, pct+half_width, st.y);
+}
+
+vec2 hash22(vec2 uv) {
+    uv = vec2(dot(uv, vec2(127.1,311.7)),
+              dot(uv, vec2(269.5,183.3)));
+    return 2.0 * fract(sin(uv) * 43758.5453123) - 1.0;
+}
+
+float noise(vec2 uv) {
+    vec2 iuv = floor(uv);
+    vec2 fuv = fract(uv);
+    vec2 blur = smoothstep(0.0, 1.0, fuv);
+    return mix(mix(dot(hash22(iuv + vec2(0.0,0.0)), fuv - vec2(0.0,0.0)),
+                   dot(hash22(iuv + vec2(1.0,0.0)), fuv - vec2(1.0,0.0)), blur.x),
+               mix(dot(hash22(iuv + vec2(0.0,1.0)), fuv - vec2(0.0,1.0)),
+                   dot(hash22(iuv + vec2(1.0,1.0)), fuv - vec2(1.0,1.0)), blur.x), blur.y) + 0.5;
+}
+
+float fbm(vec2 n) {
+    float total = 0.0, amp = 1.0;
+    for (int i = 0; i < 7; i++) {
+        total += noise(n) * amp;
+        n += n;
+        amp *= 0.5;
+    }
+    return total;
+}
+
+
+void fragment(){
+	vec2 uv = UV;
+	uv += uv_shift;
+	vec4 color = vec4(0.0, 0.0, 0.0, 0.0);
+
+	vec2 t ;
+	float y ;
+	float pct ;
+	float buffer;
+	// add more lightning
+	for ( int i = 0; i < lightning_number; i++){
+		t = uv * amplitude + vec2(float(i), -float(i)) - TIME*speed;
+		y = fbm(t)*offset;
+		pct = plot(uv, y, thickness);
+		buffer = plot(uv, y, glow_thickness);
+		color += pct*base_color;
+		color += buffer*glow_color;
+	}
+
+	color.a *= alpha;
+	COLOR = color;
+}"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_oyf75"]
+shader = SubResource("Shader_76xge")
+shader_parameter/lightning_number = 22
+shader_parameter/amplitude = Vector2(1.69, 1)
+shader_parameter/offset = 0.7
+shader_parameter/thickness = 0.005
+shader_parameter/speed = 0.6
+shader_parameter/base_color = Color(1, 1, 1, 1)
+shader_parameter/glow_thickness = 0.08
+shader_parameter/glow_color = Color(0.2, 0, 0.8, 0)
+shader_parameter/alpha = 1.0
+shader_parameter/uv_shift = Vector2(0, 0.355)
 
 [sub_resource type="Animation" id="Animation_akove"]
 resource_name = "Opening"
@@ -24,33 +109,60 @@ tracks/0/path = NodePath("Text:modulate")
 tracks/0/interp = 2
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 2),
+"times": PackedFloat32Array(0, 2.0333333),
 "transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+"values": [Color(0, 0, 0, 0), Color(1, 1, 1, 1)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("WhiteForeground:modulate")
+tracks/1/path = NodePath("Foreground:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0, 4.23333, 4.33333, 4.56667, 4.7, 4.76667, 4.86667, 4.93333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [Color(1.3, 1.3, 1.3, 1), Color(1.30196, 1.30196, 1.30196, 0), Color(1.3, 1.3, 1.3, 1), Color(1.30196, 1.30196, 1.30196, 0), Color(1.3, 1.3, 1.3, 1), Color(1.30196, 1.30196, 1.30196, 0), Color(1.3, 1.3, 1.3, 1), Color(1.30196, 1.30196, 1.30196, 0)]
+"times": PackedFloat32Array(2.0333333, 2.6666667, 4.3333335, 4.56667, 4.7, 4.76667, 4.86667, 4.93333),
+"transitions": PackedFloat32Array(1, 1, 123.63963, 38.054565, 157.58635, 230.72011, 142.0249, 1),
+"update": 0,
+"values": [Color(0, 0, 0, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(0, 0, 0, 1), Color(1.3, 1.3, 1.3, 1), Color(0, 0, 0, 1), Color(1.3, 1.3, 1.3, 1), Color(0, 0, 0, 1)]
 }
 tracks/2/type = "method"
 tracks/2/imported = false
 tracks/2/enabled = true
-tracks/2/path = NodePath(".")
+tracks/2/path = NodePath("SwitchSceneManager")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(),
-"transitions": PackedFloat32Array(),
-"values": []
+"times": PackedFloat32Array(5),
+"transitions": PackedFloat32Array(1),
+"values": [{
+"args": [],
+"method": &"load_scene"
+}]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Thunder:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(4.3333335, 4.5666666, 4.7, 4.766531, 4.866667, 4.933198),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Thunder:material:shader_parameter/lightning_number")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0, 2.0666666),
+"transitions": PackedFloat32Array(1.9318746, 1),
+"update": 0,
+"values": [0, 57]
 }
 
 [sub_resource type="Animation" id="Animation_syi0y"]
@@ -70,7 +182,7 @@ tracks/0/keys = {
 tracks/1/type = "value"
 tracks/1/imported = false
 tracks/1/enabled = true
-tracks/1/path = NodePath("WhiteForeground:modulate")
+tracks/1/path = NodePath("Foreground:modulate")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
@@ -78,6 +190,41 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Color(1.3, 1.3, 1.3, 1)]
+}
+tracks/2/type = "method"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("SwitchSceneManager")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(),
+"transitions": PackedFloat32Array(),
+"values": []
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Thunder:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/4/type = "value"
+tracks/4/imported = false
+tracks/4/enabled = true
+tracks/4/path = NodePath("Thunder:material:shader_parameter/lightning_number")
+tracks/4/interp = 1
+tracks/4/loop_wrap = true
+tracks/4/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [22]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_44nm4"]
@@ -94,10 +241,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
+[node name="SwitchSceneManager" parent="." instance=ExtResource("1_76xge")]
+scene_to_load = ExtResource("2_oyf75")
+
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_im5wu")
 
-[node name="WhiteForeground" type="ColorRect" parent="."]
+[node name="Foreground" type="ColorRect" parent="."]
 modulate = Color(1.3, 1.3, 1.3, 1)
 layout_mode = 1
 anchors_preset = 15
@@ -105,6 +255,15 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = 1.0
 offset_right = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Thunder" type="ColorRect" parent="."]
+material = SubResource("ShaderMaterial_oyf75")
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 

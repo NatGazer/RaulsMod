@@ -245,6 +245,10 @@
 				{
 					"details": "They climb everything",
 					"done": false
+				},
+				{
+					"details": "spider tilts in the direction it moves (forward tilts head down and ass up)",
+					"done": false
 				}
 			]
 		},

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://cwcoh60e1erra"]
+
+[ext_resource type="PackedScene" uid="uid://jteokm0diwvn" path="res://LogicObjects/BaseWorld.tscn" id="1_tsngd"]
+
+[node name="Earth" type="Node3D"]
+
+[node name="BaseWorld" parent="." instance=ExtResource("1_tsngd")]

@@ -20,7 +20,7 @@
 [ext_resource type="PackedScene" uid="uid://bwl5wr22vkunp" path="res://LogicObjects/RobotArmGoose/RobotArmGoose.tscn" id="22_d13ii"]
 [ext_resource type="PackedScene" uid="uid://bwjbc0axpyqyd" path="res://LogicObjects/OldStyleChair/OldStyleChair.tscn" id="22_ryguw"]
 [ext_resource type="PackedScene" uid="uid://dpfa767m8tfny" path="res://LogicObjects/ExplosiveBarrel/ExplosiveBarrel.tscn" id="23_d13ii"]
-[ext_resource type="PackedScene" uid="uid://hn8bb2yq3tqo" path="res://Scenes/Forest.tscn" id="23_gt3je"]
+[ext_resource type="PackedScene" uid="uid://hn8bb2yq3tqo" path="res://Props/LowPolyForest/FOREST.tscn" id="23_gt3je"]
 [ext_resource type="PackedScene" uid="uid://bs32p1862kxfr" path="res://LogicObjects/Ship/Ship.tscn" id="24_1u8w0"]
 [ext_resource type="Script" uid="uid://da087cg46iawj" path="res://addons/voronoishatter/tools/voronoishatter.gd" id="24_1w6v2"]
 [ext_resource type="Texture2D" uid="uid://cegxqgftu2r30" path="res://Props/LowPolyForest/Rocks_Diffuse.png" id="24_3pmx8"]
@@ -111,7 +111,7 @@ script/source = "extends MultiMeshInstance3D
 func _ready() -> void:
 	multimesh.instance_count = 0
 	multimesh.buffer.clear()
-	multimesh.instance_count = 1000
+	multimesh.instance_count = 100
 	multimesh.buffer.clear()
 	for idx in multimesh.instance_count:
 		var boid_position := Vector3(randf_range(-2, 2), randf_range(-2, 2), randf_range(-2, 2))
@@ -1591,7 +1591,7 @@ transform = Transform3D(1, 0, 0, 0, 0.999939, -0.0110652, 0, 0.0110652, 0.999939
 transform = Transform3D(0.8922001, 0, -0.45164114, 0, 1, 0, 0.45164114, 0, 0.8922001, 35.917564, 0.6456209, -27.299564)
 
 [node name="ExplosiveBarrels" type="Node3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 193.263, 0, 72.519)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 193.263, 0, 97.05984)
 
 [node name="ExplosiveBarrel" parent="ExplosiveBarrels" instance=ExtResource("23_d13ii")]
 
@@ -2644,4 +2644,49 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 106.033714, 9.798546, 25.2132
 atractor_displacement = Vector3(0, 15, 0)
 
 [node name="Spider2" parent="." instance=ExtResource("33_neg2b")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.9661603, -0.07902956, -12.156644)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 13.3170395, -0.079033375, 54.038254)
+
+[node name="Spider3" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.8919306, -0.079033375, 60.24923)
+
+[node name="Spider6" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 28.00002, -0.07903528, 53.044556)
+
+[node name="Spider7" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.57491, -0.07903528, 59.25553)
+
+[node name="Spider8" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.039528, -0.07903528, 67.19309)
+
+[node name="Spider9" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.614418, -0.07903528, 73.40407)
+
+[node name="Spider10" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.8852997, -0.07903528, 64.276985)
+
+[node name="Spider11" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.31041, -0.07903528, 70.48796)
+
+[node name="Spider12" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.7011032, -0.07903528, 73.78135)
+
+[node name="Spider13" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9.126213, -0.07903528, 79.992325)
+
+[node name="Spider14" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6.6152115, -0.07903528, 83.60972)
+
+[node name="Spider15" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8098984, -0.07903528, 89.820694)
+
+[node name="Spider16" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -17.893402, -0.07903528, 61.50054)
+
+[node name="Spider17" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -25.318512, -0.07903528, 67.71152)
+
+[node name="Spider4" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.568223, -0.079033375, 50.545456)
+
+[node name="Spider5" parent="." instance=ExtResource("33_neg2b")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -11.333428, -0.079033375, 54.038254)

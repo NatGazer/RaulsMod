@@ -1,0 +1,128 @@
+[gd_scene load_steps=14 format=3 uid="uid://cwf8j6vgwrvd2"]
+
+[ext_resource type="PackedScene" uid="uid://c7d6xs8i0quml" path="res://Components/MusicPlayer.tscn" id="1_7bloo"]
+[ext_resource type="PackedScene" uid="uid://by8i75440pkqi" path="res://Props/Tutorial_Level.blend" id="2_7bloo"]
+[ext_resource type="PackedScene" uid="uid://ba1pl1rxplo8v" path="res://Components/starlight/StarSky.tscn" id="2_rlm2d"]
+[ext_resource type="PackedScene" uid="uid://brive52b6wa42" path="res://Components/Character.tscn" id="3_rlm2d"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nsea3"]
+sky_top_color = Color(0.19338065, 0.3844844, 1, 1)
+sky_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
+sky_curve = 0.12613471
+sky_energy_multiplier = 0.8
+ground_bottom_color = Color(0.049646985, 0.421875, 0, 1)
+ground_horizon_color = Color(0.59480304, 0.6217923, 1, 1)
+ground_curve = 0.06091904
+ground_energy_multiplier = 0.8
+sun_angle_max = 15.0
+
+[sub_resource type="Sky" id="Sky_1w6v2"]
+sky_material = SubResource("ProceduralSkyMaterial_nsea3")
+
+[sub_resource type="Environment" id="Environment_3j26a"]
+resource_local_to_scene = true
+background_mode = 2
+sky = SubResource("Sky_1w6v2")
+tonemap_mode = 4
+ssr_enabled = true
+ssr_fade_in = 0.424264
+ssr_fade_out = 0.554785
+ssao_enabled = true
+ssao_radius = 0.2
+ssao_intensity = 16.0
+ssao_light_affect = 0.48
+ssao_ao_channel_affect = 1.0
+ssil_enabled = true
+glow_enabled = true
+glow_levels/1 = 2.0
+glow_levels/2 = 1.0
+glow_levels/3 = 0.0
+glow_levels/4 = 1.0
+glow_levels/5 = 0.0
+glow_levels/6 = 1.0
+glow_intensity = 0.73
+glow_strength = 0.67
+glow_blend_mode = 1
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.005
+volumetric_fog_albedo = Color(0.19338065, 0.3844844, 1, 1)
+volumetric_fog_length = 100.0
+adjustment_enabled = true
+adjustment_brightness = 1.2
+
+[sub_resource type="CameraAttributesPractical" id="CameraAttributesPractical_twgwy"]
+auto_exposure_enabled = true
+auto_exposure_scale = 0.75
+dof_blur_near_distance = 1.0
+auto_exposure_min_sensitivity = 10.0
+
+[sub_resource type="Compositor" id="Compositor_0qcgs"]
+
+[sub_resource type="GDScript" id="GDScript_v1oql"]
+resource_name = "WorldEnvironment"
+script/source = "extends WorldEnvironment
+
+var motion_blur_compositor : Compositor = compositor
+
+func _enter_tree() -> void:
+	Global.World = self
+
+func motion_blur(active : bool) -> void:
+	if active:
+		compositor = motion_blur_compositor
+	else:
+		compositor = null
+"
+
+[sub_resource type="FontVariation" id="FontVariation_bhqmr"]
+variation_transform = Transform2D(1, 0.14, 0, 1, 0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_pgbrn"]
+font = SubResource("FontVariation_bhqmr")
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+shadow_size = 6
+shadow_color = Color(0, 0, 0, 0.65098)
+
+[sub_resource type="GDScript" id="GDScript_fj76g"]
+script/source = "extends Label
+
+func _process(_delta: float) -> void:
+	text = str(Engine.get_frames_per_second()) + \" FPS\"
+"
+
+[node name="Tutorial" type="Node3D"]
+
+[node name="BaseWorld" type="Node3D" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="BaseWorld"]
+environment = SubResource("Environment_3j26a")
+camera_attributes = SubResource("CameraAttributesPractical_twgwy")
+compositor = SubResource("Compositor_0qcgs")
+script = SubResource("GDScript_v1oql")
+
+[node name="MusicPlayer" parent="BaseWorld" instance=ExtResource("1_7bloo")]
+volume_db = -45.0
+bus = &"Music"
+
+[node name="MainUI" type="Control" parent="BaseWorld"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Label" type="Label" parent="BaseWorld/MainUI"]
+layout_mode = 0
+offset_left = 11.0
+offset_top = 9.0
+offset_right = 70.0
+offset_bottom = 32.0
+text = "100 FPS"
+label_settings = SubResource("LabelSettings_pgbrn")
+script = SubResource("GDScript_fj76g")
+
+[node name="StarSky" parent="BaseWorld" instance=ExtResource("2_rlm2d")]
+
+[node name="Tutorial_Level" parent="." instance=ExtResource("2_7bloo")]
+
+[node name="CharacterRB" parent="." instance=ExtResource("3_rlm2d")]

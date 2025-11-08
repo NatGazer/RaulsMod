@@ -1,1 +1,1 @@
-godot --fullscreen Scenes/main.tscn
+godot --fullscreen Scenes/Opening.tscn

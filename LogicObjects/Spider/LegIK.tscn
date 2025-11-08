@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://0njf2rtnii8o"]
+[gd_scene load_steps=9 format=3 uid="uid://0njf2rtnii8o"]
 
 [ext_resource type="PackedScene" uid="uid://va24i3vhugi5" path="res://LogicObjects/Spider/Leg.blend" id="1_4vpep"]
 [ext_resource type="Material" uid="uid://cbqbggy1cnvyv" path="res://Materials/[2K]brown_mud_leaves_01/brown_mud_leaves.tres" id="2_xl2t7"]
@@ -7,31 +7,48 @@
 resource_name = "LegIK"
 script/source = "extends Node3D
 
-@export var adjacent_leg: Node3D
-var is_on_ground : bool
+@export_enum(\"Left\", \"Right\") var side : int
+
+var is_on_ground : bool = false
 
 func is_steeping() -> bool:
-	return $Target.t and $Target.t.is_running()
+	return $LegTip.step_tween and $LegTip.step_tween.is_running()
 
-func step() -> void:
-	$Target.step()
+func step(step_time : float) -> void:
+	$LegTip.step(step_time)
 
-func target_pos() -> Vector3:
+func get_leg_tip_pos() -> Vector3:
+	return %LegTip.global_position
+
+func dist_to_target() -> float:
+	return %LegTip.global_position.distance_to(%Target.global_position)
+
+func get_target_pos() -> Vector3:
 	return %Target.global_position
+
+func set_target_shift_pos(shift_pos : Vector3) -> void:
+	%RayCast3D.shift_pos = shift_pos
 "
 
 [sub_resource type="GDScript" id="GDScript_xl2t7"]
 resource_name = "IK_RayCast"
 script/source = "extends RayCast3D
 
+var ray_cast_pos : Vector3
+var shift_pos : Vector3
+
+func _ready() -> void:
+	ray_cast_pos = position
 
 func _physics_process(_delta : float) -> void:
+	# Set StepTarget Position live + Check if Leg touching Ground
+	position = ray_cast_pos + shift_pos * global_basis
 	var hit_point : Vector3 = get_collision_point()
 	if is_colliding():
-		%StepTarget.global_position = hit_point
+		%Target.global_position = hit_point
 		owner.is_on_ground = true
 	else:
-		%StepTarget.global_position = %DeadPosition.global_position
+		%Target.global_position = %DeadPosition.global_position
 		owner.is_on_ground = false
 "
 
@@ -39,53 +56,45 @@ func _physics_process(_delta : float) -> void:
 resource_name = "IK_TargetAnimation"
 script/source = "extends Marker3D
 
-@export var step_distance: float = 2.5
 @export var step_height: float = 1.0
-@export var step_speed: float = 0.2
-@export var step_dist_deviation : float = 0.0
 
-var adjacent_leg : Node3D
-var step_dist_rand : float
-var t : Tween
+var step_tween : Tween
 
 func _ready() -> void:
 	top_level = true
 	%SkeletonIK3D.start()
-	adjacent_leg = owner.adjacent_leg
 
-# Check if leg should step
-func _physics_process(_delta: float) -> void:
-	if owner.is_on_ground and not adjacent_leg.is_steeping() and (global_position.distance_to(%StepTarget.global_position) > step_dist_rand):
-		step_dist_rand = step_distance + randf_range(-step_dist_deviation, step_dist_deviation)
-		step()
-		adjacent_leg.step()
-
-func step() -> void:
+func step(step_time : float) -> void:
 	if owner.is_steeping(): return
 	
-	var target_pos : Vector3 = %StepTarget.global_position
+	var target_pos : Vector3 = %Target.global_position
 	var half_way : Vector3 = (global_position + target_pos) / 2
 	
-	t = get_tree().create_tween()
-	t.tween_property(self, \"global_position\", half_way + owner.basis.y * step_height, step_speed/2)
-	t.tween_property(self, \"global_position\", target_pos, step_speed/2)
+	step_tween = get_tree().create_tween()
+	step_tween.tween_property(self, \"global_position\", half_way + owner.basis.y * step_height, step_time/2)
+	step_tween.tween_property(self, \"global_position\", target_pos, step_time/2)
 "
 
 [sub_resource type="GDScript" id="GDScript_v6jhw"]
 resource_name = "VelocityOffset"
 script/source = "extends Node3D
 
-@export var offset: float = 0.0
+@export var offset: float = -30.0
 
 @onready var parent : Node3D = get_parent_node_3d()
 @onready var previous_position : Vector3 = parent.global_position
 
-func _physics_process(_delta: float) -> void:
-	var velocity : Vector3 = parent.global_position - previous_position
+func _physics_process(delta: float) -> void:
+	var velocity : Vector3 = (parent.global_position - previous_position)*delta
 	global_position = parent.global_position + velocity * offset
 	
 	previous_position = parent.global_position
 "
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_xl2t7"]
+albedo_color = Color(0.9778857, 1, 0, 1)
+
+[sub_resource type="SphereMesh" id="SphereMesh_xl2t7"]
 
 [node name="LegIK" instance=ExtResource("1_4vpep")]
 script = SubResource("GDScript_qwxs0")
@@ -98,28 +107,35 @@ unique_name_in_owner = true
 root_bone = &"Bone"
 tip_bone = &"Bone.003"
 use_magnet = true
-magnet = Vector3(0, 10.425, -6.505)
-target_node = NodePath("../../../Target")
+magnet = Vector3(0, 8.135, -4.205)
+target_node = NodePath("../../../LegTip")
 
 [node name="RayCast3D" type="RayCast3D" parent="." index="1"]
+unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 0.95251286, -0.30449855, 0, 0.30449855, 0.9525128, 0, 2.0372398, -1.3918984)
 target_position = Vector3(0, -4.695, 0)
+hit_back_faces = false
 script = SubResource("GDScript_xl2t7")
 
 [node name="DeadPosition" type="Marker3D" parent="." index="2"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.39799476, -0.5862175)
 
-[node name="Target" type="Marker3D" parent="." index="3"]
+[node name="LegTip" type="Marker3D" parent="." index="3"]
 unique_name_in_owner = true
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3475025, -2.4739301)
 script = SubResource("GDScript_d57j8")
-step_distance = 1.0
 step_height = 0.4
 
 [node name="VelocityOffset" type="Node3D" parent="." index="4"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1.3475025, -2.4739301)
 script = SubResource("GDScript_v6jhw")
 
-[node name="StepTarget" type="Marker3D" parent="VelocityOffset" index="0"]
+[node name="Target" type="Marker3D" parent="VelocityOffset" index="0"]
 unique_name_in_owner = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="VelocityOffset/Target" index="0"]
+transform = Transform3D(0.7261475, 0, 0, 0, 0.7261475, 0, 0, 0, 0.7261475, 0, 0, 0)
+visible = false
+material_override = SubResource("StandardMaterial3D_xl2t7")
+mesh = SubResource("SphereMesh_xl2t7")

@@ -85,7 +85,6 @@ physics_material_override = SubResource("PhysicsMaterial_e380t")
 shape = SubResource("ConcavePolygonShape3D_6bs4b")
 
 [node name="Stars" parent="." instance=ExtResource("7_sgwtx")]
-size = 5000.0
 shader_params/blur_amount = 0.193
 shader_params/billboard_size_deg = 90.0
 
