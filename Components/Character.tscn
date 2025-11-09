@@ -1,24 +1,24 @@
 [gd_scene load_steps=11 format=3 uid="uid://brive52b6wa42"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_x050b"]
-friction = 1.6
 rough = true
+absorbent = true
 
 [sub_resource type="GDScript" id="GDScript_7fd3y"]
 script/source = "extends RigidBody3D
 
-const walk_force = 30000.0
-const run_force  = 35000.0
+const walk_force = 600.0
+const run_force  = 700.0
 
-const walk_speed = 8.0
-const run_speed = 12.0
+const walk_speed = 6.0
+const run_speed = 10.0
 
 const equilibrium = 1500000.0
 var gravity_direction := Vector3(0, 1, 0)
-const jump_impulse = 150000.0
+var normal_contact_point : Vector3 = gravity_direction
+const jump_impulse = 3000.0
 const cam_sensitivity = 3
 var on_ground : bool = true
-var softned_direction : Vector3
 
 @onready var cam_holder : Node3D = %cam_holder
 var active : bool = true
@@ -54,6 +54,18 @@ func _input(event : InputEvent) -> void:
 		%cam_holder.rotation.y -= event.relative.x / 1000 * cam_sensitivity
 		%cam_holder.rotation.x -= event.relative.y / 1000 * cam_sensitivity
 		%cam_holder.rotation.x = clamp(%cam_holder.rotation.x, PI/-2, PI/2)
+		
+
+func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
+	if state.get_contact_count() > 0:
+		on_ground = true
+		normal_contact_point = Vector3.ZERO
+		for i in state.get_contact_count():
+			normal_contact_point += state.get_contact_local_normal(i)
+		normal_contact_point /= state.get_contact_count()
+		normal_contact_point = normal_contact_point.normalized()
+	else:
+		on_ground = false
 
 func _physics_process(delta: float) -> void:
 	# Angular Equilibrium
@@ -65,23 +77,29 @@ func _physics_process(delta: float) -> void:
 	if not active: return
 	
 	# Absolute direction based on input
-	var raw_direction := Vector3(
+	var direction := Vector3(
 			float(Input.is_physical_key_pressed(KEY_D)) - float(Input.is_physical_key_pressed(KEY_A)),
 			float(Input.is_physical_key_pressed(KEY_E)) - float(Input.is_physical_key_pressed(KEY_Q)), 
 			float(Input.is_physical_key_pressed(KEY_S)) - float(Input.is_physical_key_pressed(KEY_W))
 		).normalized()
 	
-	# Soften Direction input
-	softned_direction = lerp(softned_direction, raw_direction, 1-exp(-delta*10))
-
-	# Convert direction to local coordinates
-	var direction : Vector3 = basis * softned_direction
-	
 	# Rotate direction so that forward is where the camera is pointing
-	direction = direction.rotated(basis.y, %cam_holder.rotation.y)
+	direction = direction.rotated(basis.y, %cam_holder.global_rotation.y)
 	
-	#Direction is contrained to the Y plane, no up or down force
-	direction.y = 0
+	# Project direction into contact plane
+	direction = direction.slide(normal_contact_point)
+	
+	# Normalize
+	direction = direction.normalized()
+	
+	# Friction Control (Greater when no direction input)
+	if direction.length() > 0.1:
+		physics_material_override.friction = 1.0
+	else:
+		physics_material_override.friction = 1.6
+	
+	
+	#Utils.draw_vector(\"i\", position, position + direction)
 	
 	# Apply force multiplier run/walk and damp max velocity
 	if Input.is_physical_key_pressed(KEY_SHIFT):
@@ -95,7 +113,7 @@ func _physics_process(delta: float) -> void:
 	if not on_ground:
 		direction *= 0.2
 	
-	apply_central_force(direction*delta)
+	apply_central_force(direction)
 	
 	# Avoid jump when not touching anything
 	if not on_ground:
@@ -103,15 +121,8 @@ func _physics_process(delta: float) -> void:
 	
 	# Impulse Jump + Climbing
 	if Input.is_physical_key_pressed(KEY_SPACE):
-		apply_central_force(gravity_direction * delta * 
+		apply_central_force(gravity_direction * 
 			(jump_impulse * (walk_speed - abs(linear_velocity.y))))
-	
-		
-func _on_body_entered(_body: Node) -> void:
-	on_ground = true
-
-func _on_body_exited(_body: Node) -> void:
-	on_ground = false
 "
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_02r4i"]
@@ -133,7 +144,7 @@ var velocity : float
 
 var orbitDistance : float = 0.0
 
-var SHARPNESS : float = 40
+var SHARPNESS : float = 30
 var sharpness : float = SHARPNESS
 
 var rotation_speed : float = 3
@@ -176,20 +187,25 @@ func _physics_process(delta: float) -> void:
 	if orbitDistance > 0:
 		target_pos.origin += target_pos.basis.z * orbitDistance
 	
-	var lerp_delta : float = 1 - exp(-delta)
+	var lerp_delta : float = 1 - exp(sharpness * -delta)
 	
-	global_transform = global_transform.interpolate_with(target_pos, sharpness * lerp_delta)
+	global_transform = global_transform.interpolate_with(target_pos, lerp_delta)
 	
 	## Dynamic FOV Velocity Calculation ##
 	velocity = (global_position - last_pos).length() * lerp_delta
 	last_pos = global_position
 
 	## Dynamic FOV  and Zoom ##
+	var min_fov : float = 45
+	var stationary_fov : float = 90
+	var max_fov : float = 150
+	var velocity_fov_multiplier : float = 450
+	var zoom_sharpness : float = 0.5
 	if zoom:
-		fov -= (fov-30)*10*lerp_delta
+		fov -= (fov-min_fov) * zoom_sharpness * lerp_delta
 	else:
-		fov -= (fov-90-velocity*100)*10*lerp_delta
-	fov = clampf(fov, 45, 150)
+		fov -= (fov-stationary_fov-velocity*velocity_fov_multiplier) * zoom_sharpness * lerp_delta
+	fov = clampf(fov, min_fov, max_fov)
 	
 	
 func _input(event: InputEvent) -> void:
@@ -303,7 +319,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mass = 80.0
 physics_material_override = SubResource("PhysicsMaterial_x050b")
 contact_monitor = true
-max_contacts_reported = 1
+max_contacts_reported = 5
 angular_damp = 50.0
 script = SubResource("GDScript_7fd3y")
 metadata/_edit_group_ = true
@@ -332,6 +348,3 @@ draw_pass_1 = SubResource("SphereMesh_3l62x")
 [node name="HandToolManager" type="Node3D" parent="Camera"]
 unique_name_in_owner = true
 script = SubResource("GDScript_fp6v5")
-
-[connection signal="body_entered" from="." to="." method="_on_body_entered"]
-[connection signal="body_exited" from="." to="." method="_on_body_exited"]

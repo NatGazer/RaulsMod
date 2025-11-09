@@ -2607,7 +2607,7 @@ transform = Transform3D(-4.371139e-08, 0, 1, 0, 1.6300492, 0, -1, 0, -4.371139e-
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.207577, 0, 28.856506)
 
 [node name="GrassTerrain" parent="." instance=ExtResource("31_hpc6h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.630486, -9.536743e-07, 21.5074)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.630486, -0.27527618, 21.5074)
 
 [node name="BeachBall" parent="." instance=ExtResource("32_kltya")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.340194, 0.98255503, -0.44308376)
